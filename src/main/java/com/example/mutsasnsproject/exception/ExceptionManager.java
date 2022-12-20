@@ -10,6 +10,12 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 //특정 예외처리를 받아 처리하게 할 수 있음
 @RestControllerAdvice
 public class ExceptionManager {
+    @ExceptionHandler(AppException.class)
+    public ResponseEntity<?> appExceptionHandler(AppException e){
+        return ResponseEntity.status(e.getErrorCode().getHttpStatus())
+                .body(e.getErrorCode().name() + " " + e.getMessage());
+    }
+
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<?> runtimeExceptionHandler(RuntimeException e){
         return ResponseEntity.status(HttpStatus.CONFLICT)

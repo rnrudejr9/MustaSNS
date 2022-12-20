@@ -13,6 +13,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -40,11 +42,15 @@ class UserControllerTest {
                 .andExpect(status().isOk());
     }
 
-    @Test
     @DisplayName("f-1")
+    @Test
     void join_fail() throws Exception {
+
         String userName = "hello";
         String password = "1234";
+
+        when(userService.join(any(),any()))
+                .thenThrow(new RuntimeException("해당유저는 중복됨"));
         mockMvc.perform(post("/api/v1/users/join")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsBytes(new UserJoinRequest(userName,password))))

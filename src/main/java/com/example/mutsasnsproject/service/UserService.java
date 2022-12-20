@@ -1,6 +1,8 @@
 package com.example.mutsasnsproject.service;
 
 import com.example.mutsasnsproject.domain.entity.User;
+import com.example.mutsasnsproject.exception.AppException;
+import com.example.mutsasnsproject.exception.ErrorCode;
 import com.example.mutsasnsproject.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,7 +21,7 @@ public class UserService {
 
         userRepository.findByUserName(userName)
                 .ifPresent(user -> {
-                    throw new RuntimeException(userName + "는 존재합니다");
+                    throw new AppException(ErrorCode.USERNAME_DUPLICATED,userName+" 은 이미있음");
                 });
         //userName 중복체크
 

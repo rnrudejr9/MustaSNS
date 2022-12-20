@@ -1,14 +1,11 @@
 # MustaSNS
 * **멋쟁이사자처럼 백엔드스쿨 2기 개인프로젝트**
-~~~~
-* swagger주소
-http://ec2-54-180-91-171.ap-northeast-2.compute.amazonaws.com:8080/swagger-ui/
-~~~~
-~~~~
-* ec2 주소
-~~~~
 
-## ENDPOINT
+    * swagger주소 <br>
+😊 http://ec2-54-180-91-171.ap-northeast-2.compute.amazonaws.com:8080/swagger-ui/
+    * ec2 주소
+
+## ✏ ENDPOINT
 
 |API 종류|HTTP|URI|API 설명|
 |:-----:|:------------------:|:-----------------------------:|:-----------------------------:|

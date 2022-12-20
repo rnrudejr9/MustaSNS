@@ -10,6 +10,7 @@
 |API 종류|HTTP|URI|API 설명|
 |:-----:|:------------------:|:-----------------------------:|:-----------------------------:|
 | hello | GET | /api/v1/hello | testAPI return bye |
+| join | POST | /api/v1/users/join | 회원가입기능 |
 
 
 ## ERD

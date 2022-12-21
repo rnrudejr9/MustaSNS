@@ -3,6 +3,7 @@ package com.example.mutsasnsproject.controller;
 import com.example.mutsasnsproject.domain.dto.Response;
 import com.example.mutsasnsproject.domain.dto.user.UserJoinRequest;
 import com.example.mutsasnsproject.domain.dto.user.UserLoginRequest;
+import com.example.mutsasnsproject.domain.dto.user.UserLoginResponse;
 import com.example.mutsasnsproject.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -18,12 +19,14 @@ public class UserController {
     @PostMapping("/join")
     public ResponseEntity<Response> join(@RequestBody UserJoinRequest userJoinRequest){
         Response response =userService.join(userJoinRequest.getUserName(),userJoinRequest.getPassword());
-        return ResponseEntity.ok().body(response);
+        return ResponseEntity.ok().body(Response.success(response));
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Response> login(@RequestBody UserLoginRequest userLoginRequest){
+    public ResponseEntity<?> login(@RequestBody UserLoginRequest userLoginRequest){
+
         Response response = userService.login(userLoginRequest.getUserName(),userLoginRequest.getPassword());
-        return ResponseEntity.ok().body(response);
+        return ResponseEntity.ok().body(new UserLoginResponse(response.getResult().toString()));
+        //return ResponseEntity.ok().body(Response.success(response));
     }
 }

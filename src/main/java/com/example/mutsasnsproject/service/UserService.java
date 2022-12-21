@@ -3,6 +3,7 @@ package com.example.mutsasnsproject.service;
 import com.example.mutsasnsproject.domain.dto.Response;
 import com.example.mutsasnsproject.domain.dto.user.UserJoinResponse;
 import com.example.mutsasnsproject.domain.dto.user.UserLoginRequest;
+import com.example.mutsasnsproject.domain.dto.user.UserLoginResponse;
 import com.example.mutsasnsproject.domain.entity.User;
 import com.example.mutsasnsproject.exception.AppException;
 import com.example.mutsasnsproject.exception.ErrorCode;
@@ -27,7 +28,7 @@ public class UserService {
     private final BCryptPasswordEncoder encoder;
     @Value("${jwt.token.secret}")
     private String key;
-    public Response<UserJoinResponse> join(String userName, String password){
+    public Response<?> join(String userName, String password){
         Optional<User> optionalUser = userRepository.findByUserName(userName);
 
         //userName 중복체크
@@ -48,10 +49,10 @@ public class UserService {
                 .userName(user.getUserName())
                 .createdAt(user.getRegisteredAt())
                 .build();
-        return new Response<>("가입성공했습니다.",userJoinResponse);
+        return new Response<>("UserJoinSuccess",userJoinResponse);
     }
 
-    public Response<String> login(String userName,String password){
+    public Response<?> login(String userName,String password){
         //username 없음
         User loginUser = userRepository.findByUserName(userName)
                 .orElseThrow(()->new AppException(ErrorCode.USERNAME_NOT_FOUND,userName+"없습니다.!"));
@@ -63,9 +64,12 @@ public class UserService {
         }
         long expireTimeMs = 10000;
         String token = JwtTokenUtil.createToken(loginUser.getUserName(),key,expireTimeMs);
-
+        UserLoginResponse userLoginResponse = UserLoginResponse
+                .builder()
+                .jwt(token)
+                .build();
         //앞에서 예외처리 안되었으면 토큰 발행
-        return new Response<>("로그인 성공",token);
+        return new Response<>("UserLoginSuccess",userLoginResponse);
     }
 
 }

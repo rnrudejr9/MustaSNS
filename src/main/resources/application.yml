@@ -27,5 +27,4 @@ spring:
       ddl-auto: create
 
 jwt:
-  token:
-    secret: "secretKey"
+  secretKey: secretKey

@@ -20,6 +20,7 @@ public class UserController {
     public ResponseEntity<Response> join(@RequestBody UserJoinRequest userJoinRequest){
         Response response =userService.join(userJoinRequest.getUserName(),userJoinRequest.getPassword());
         return ResponseEntity.ok().body(Response.success(response));
+
     }
 
     @PostMapping("/login")

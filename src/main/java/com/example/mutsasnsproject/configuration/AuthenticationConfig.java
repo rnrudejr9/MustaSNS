@@ -2,13 +2,15 @@ package com.example.mutsasnsproject.configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
-public class SecurityConfig {
+@EnableWebSecurity
+public class AuthenticationConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception{
         return httpSecurity
@@ -19,8 +21,10 @@ public class SecurityConfig {
                 .cors().and()
                 //도메인달라도 허용해준다
                 .authorizeRequests()
-                .antMatchers("/api/**").permitAll()
                 .antMatchers("/api/v1/users/join","/api/v1/users/login").permitAll()
+                //로그인, 회원가입은 허용
+                .antMatchers(HttpMethod.POST,"/api/v1/posts").authenticated()
+                //게시글 작성은 로그인 필요!
                 //허용해주는 단계
                 .and()
                 .sessionManagement()
@@ -30,3 +34,4 @@ public class SecurityConfig {
                 .build();
     }
 }
+

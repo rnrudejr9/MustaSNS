@@ -26,7 +26,7 @@ public class UserService {
     private final UserRepository userRepository;
     //join 결과에 대한 메세지를 리턴
     private final BCryptPasswordEncoder encoder;
-    @Value("${jwt.secret}")
+//    @Value("${jwt.secret}")
     private String key;
     public Response<?> join(String userName, String password){
         Optional<User> optionalUser = userRepository.findByUserName(userName);

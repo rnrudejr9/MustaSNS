@@ -19,6 +19,7 @@ public class UserController {
     @PostMapping("/join")
     public ResponseEntity<Response> join(@RequestBody UserJoinRequest userJoinRequest){
         Response response =userService.join(userJoinRequest.getUserName(),userJoinRequest.getPassword());
+        System.out.println("회원가입 성공!");
         return ResponseEntity.ok().body(Response.success(response));
 
     }
@@ -29,5 +30,10 @@ public class UserController {
         Response response = userService.login(userLoginRequest.getUserName(),userLoginRequest.getPassword());
         return ResponseEntity.ok().body(response);
         //return ResponseEntity.ok().body(Response.success(response));
+    }
+
+    @PostMapping("/temp")
+    public void temp(@RequestBody String str1, String str2){
+        System.out.println("응애");
     }
 }

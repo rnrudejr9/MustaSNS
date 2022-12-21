@@ -1,5 +1,6 @@
 package com.example.mutsasnsproject.exception;
 
+import com.example.mutsasnsproject.domain.dto.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -12,8 +13,15 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class ExceptionManager {
     @ExceptionHandler(AppException.class)
     public ResponseEntity<?> appExceptionHandler(AppException e){
+        Response response = Response.builder()
+                .resultCode(e.getErrorCode().name())
+                .result(ErrorResponse.builder()
+                        .errorCode(e.getErrorCode())
+                        .message(e.getMessage())
+                        .build()
+                ).build();
         return ResponseEntity.status(e.getErrorCode().getHttpStatus())
-                .body(e.getErrorCode().name() + " " + e.getMessage());
+                .body(response);
     }
 
     @ExceptionHandler(RuntimeException.class)

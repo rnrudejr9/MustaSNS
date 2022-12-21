@@ -37,6 +37,7 @@ public class UserService {
         UserJoinResponse userJoinResponse = UserJoinResponse
                 .builder()
                 .userName(user.getUserName())
+                .createdAt(user.getRegisteredAt())
                 .build();
         //저장
         return new Response<>("가입성공했습니다.",userJoinResponse);

@@ -13,15 +13,9 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class ExceptionManager {
     @ExceptionHandler(AppException.class)
     public ResponseEntity<?> appExceptionHandler(AppException e){
-        Response response = Response.builder()
-                .resultCode(e.getErrorCode().name())
-                .result(ErrorResponse.builder()
-                        .errorCode(e.getErrorCode())
-                        .message(e.getMessage())
-                        .build()
-                ).build();
+        ErrorResponse errorResponse = new ErrorResponse(e.getErrorCode(), e.getMessage());
         return ResponseEntity.status(e.getErrorCode().getHttpStatus())
-                .body(response);
+                .body(Response.error("ERROR", errorResponse));
     }
 
     @ExceptionHandler(RuntimeException.class)

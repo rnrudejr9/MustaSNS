@@ -1,5 +1,6 @@
 package com.example.mutsasnsproject.controller;
 
+import com.example.mutsasnsproject.domain.dto.Response;
 import com.example.mutsasnsproject.domain.dto.user.UserJoinRequest;
 import com.example.mutsasnsproject.domain.dto.user.UserLoginRequest;
 import com.example.mutsasnsproject.exception.AppException;
@@ -42,7 +43,7 @@ class UserControllerTest {
         String userName = "hello";
         String password = "1234";
         when(userService.login(any(),any()))
-                .thenReturn("token");
+                .thenReturn(new Response<>("가입성공했습니다.","hello"));
 
         mockMvc.perform(post("/api/v1/users/login")
                         .with(csrf())

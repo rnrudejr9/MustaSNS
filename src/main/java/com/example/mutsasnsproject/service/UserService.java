@@ -1,5 +1,7 @@
 package com.example.mutsasnsproject.service;
 
+import com.example.mutsasnsproject.domain.dto.Response;
+import com.example.mutsasnsproject.domain.dto.user.UserJoinResponse;
 import com.example.mutsasnsproject.domain.entity.User;
 import com.example.mutsasnsproject.exception.AppException;
 import com.example.mutsasnsproject.exception.ErrorCode;
@@ -17,12 +19,12 @@ public class UserService {
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder encoder;
     //join 결과에 대한 메세지를 리턴
-    public String join(String userName,String password){
+    public Response<UserJoinResponse> join(String userName, String password){
         Optional<User> optionalUser = userRepository.findByUserName(userName);
 
         userRepository.findByUserName(userName)
                 .ifPresent(user -> {
-                    throw new AppException(ErrorCode.USERNAME_DUPLICATED,userName+" 은 이미있음");
+                    throw new AppException(ErrorCode.USERNAME_DUPLICATED,userName+"이름이 중복됩니다.");
                 });
         //userName 중복체크
 
@@ -32,8 +34,11 @@ public class UserService {
                 .registeredAt(LocalDateTime.now())
                 .build();
         userRepository.save(user);
-
+        UserJoinResponse userJoinResponse = UserJoinResponse
+                .builder()
+                .userName(user.getUserName())
+                .build();
         //저장
-        return "회원가입에 성공했습니다.";
+        return new Response<>("가입성공했습니다.",userJoinResponse);
     }
 }

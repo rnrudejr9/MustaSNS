@@ -3,6 +3,7 @@ package com.example.mutsasnsproject.controller;
 import com.example.mutsasnsproject.domain.dto.Response;
 import com.example.mutsasnsproject.domain.dto.user.UserJoinRequest;
 import com.example.mutsasnsproject.domain.dto.user.UserLoginRequest;
+import com.example.mutsasnsproject.domain.dto.user.UserLoginResponse;
 import com.example.mutsasnsproject.exception.AppException;
 import com.example.mutsasnsproject.exception.ErrorCode;
 import com.example.mutsasnsproject.service.UserService;
@@ -42,8 +43,7 @@ class UserControllerTest {
     public void login() throws Exception {
         String userName = "hello";
         String password = "1234";
-        when(userService.login(any(),any()))
-                .thenReturn(new Response<>("가입성공했습니다.","hello"));
+//        when(userService.login(any(),any())).thenReturn(new Response<>("success",password));
 
         mockMvc.perform(post("/api/v1/users/login")
                         .with(csrf())

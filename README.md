@@ -28,7 +28,7 @@
 * 배포 : Docker
 * 데이터베이스 : MySql 8.0
 * 필수 라이브러리 : SpringBoot Web, MySQL, Spring Data JPA, Lombok, Spring Security
-
-- [ ] 회원가입과 로그인
+<hr>
+- [x] 회원가입과 로그인
 - [ ] 게시글 CRUD
 - [ ] 

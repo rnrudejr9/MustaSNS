@@ -2,13 +2,19 @@ package com.example.mutsasnsproject.service;
 
 import com.example.mutsasnsproject.domain.dto.Response;
 import com.example.mutsasnsproject.domain.dto.user.UserJoinResponse;
+import com.example.mutsasnsproject.domain.dto.user.UserLoginRequest;
 import com.example.mutsasnsproject.domain.entity.User;
 import com.example.mutsasnsproject.exception.AppException;
 import com.example.mutsasnsproject.exception.ErrorCode;
 import com.example.mutsasnsproject.repository.UserRepository;
+import com.example.mutsasnsproject.utils.JwtTokenUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -17,17 +23,20 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
-    private final BCryptPasswordEncoder encoder;
     //join 결과에 대한 메세지를 리턴
+    private final BCryptPasswordEncoder encoder;
+    @Value("${jwt.token.secret}")
+    private String key;
     public Response<UserJoinResponse> join(String userName, String password){
         Optional<User> optionalUser = userRepository.findByUserName(userName);
 
+        //userName 중복체크
         userRepository.findByUserName(userName)
                 .ifPresent(user -> {
                     throw new AppException(ErrorCode.USERNAME_DUPLICATED,userName+"이름이 중복됩니다.");
                 });
-        //userName 중복체크
 
+        //저장
         User user = User.builder()
                 .userName(userName)
                 .password(encoder.encode(password))
@@ -39,7 +48,24 @@ public class UserService {
                 .userName(user.getUserName())
                 .createdAt(user.getRegisteredAt())
                 .build();
-        //저장
         return new Response<>("가입성공했습니다.",userJoinResponse);
     }
+
+    public Response<String> login(String userName,String password){
+        //username 없음
+        User loginUser = userRepository.findByUserName(userName)
+                .orElseThrow(()->new AppException(ErrorCode.USERNAME_NOT_FOUND,userName+"없습니다.!"));
+
+
+        //password 틀림
+        if(!encoder.matches(password,loginUser.getPassword())){
+            throw new AppException(ErrorCode.INVALID_PASSWORD,"패스워드 오류");
+        }
+        long expireTimeMs = 10000;
+        String token = JwtTokenUtil.createToken(loginUser.getUserName(),key,expireTimeMs);
+
+        //앞에서 예외처리 안되었으면 토큰 발행
+        return new Response<>("로그인 성공",token);
+    }
+
 }

@@ -19,9 +19,7 @@ public class UserController {
     @PostMapping("/join")
     public ResponseEntity<Response> join(@RequestBody UserJoinRequest userJoinRequest){
         Response response =userService.join(userJoinRequest.getUserName(),userJoinRequest.getPassword());
-        System.out.println("회원가입 성공!");
         return ResponseEntity.ok().body(Response.success(response));
-
     }
 
     @PostMapping("/login")

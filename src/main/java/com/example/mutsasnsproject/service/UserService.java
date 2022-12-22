@@ -62,7 +62,7 @@ public class UserService {
         if(!encoder.matches(password,loginUser.getPassword())){
             throw new AppException(ErrorCode.INVALID_PASSWORD,"패스워드 오류");
         }
-        long expireTimeMs = 10000;
+        long expireTimeMs = 1000 * 60 * 60L;
         String token = JwtTokenUtil.createToken(loginUser.getUserName(),key,expireTimeMs);
         UserLoginResponse userLoginResponse = UserLoginResponse
                 .builder()

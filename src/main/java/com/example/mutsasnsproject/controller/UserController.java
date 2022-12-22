@@ -16,6 +16,7 @@ import java.util.Optional;
 @RequestMapping("/api/v1/users")
 public class UserController {
     private final UserService userService;
+
     @PostMapping("/join")
     public ResponseEntity<Response> join(@RequestBody UserJoinRequest userJoinRequest){
         Response response =userService.join(userJoinRequest.getUserName(),userJoinRequest.getPassword());
@@ -24,14 +25,9 @@ public class UserController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody UserLoginRequest userLoginRequest){
-
         Response response = userService.login(userLoginRequest.getUserName(),userLoginRequest.getPassword());
         return ResponseEntity.ok().body(response);
         //return ResponseEntity.ok().body(Response.success(response));
     }
 
-    @PostMapping("/temp")
-    public void temp(@RequestBody String str1, String str2){
-        System.out.println("응애");
-    }
 }

@@ -17,17 +17,12 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Getter
 @NoArgsConstructor
-@EntityListeners(AuditingEntityListener.class)
-public class Post {
+public class Post extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String body;
     private String title;
-    @CreatedDate
-    private LocalDateTime createdAt;
-    @LastModifiedDate
-    private LocalDateTime lastModifiedAt;
 
     //여러 Post들중 하나씩은 userId 값을 가진다
     @ManyToOne(fetch = FetchType.LAZY)

@@ -1,6 +1,7 @@
 package com.example.mutsasnsproject.service;
 
 import com.example.mutsasnsproject.domain.dto.Response;
+import com.example.mutsasnsproject.domain.dto.post.PostDetailResponse;
 import com.example.mutsasnsproject.domain.dto.post.PostRequest;
 import com.example.mutsasnsproject.domain.dto.post.PostResponse;
 import com.example.mutsasnsproject.domain.entity.Post;
@@ -16,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.imageio.spi.ServiceRegistry;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
 @Service
@@ -73,7 +75,16 @@ public class PostService {
         return Response.success(postResponse);
     }
 
-//    public Response<?> detail(){
-//
-//    }
+    public Response<?> detail(Long postId){
+        Post post = postRepository.findById(postId).orElseThrow(()->new AppException(ErrorCode.POST_NOT_FOUND,"게시글이 존재하지않습니다."));
+        PostDetailResponse postDetailResponse = PostDetailResponse.builder()
+                .id(postId)
+                .title(post.getTitle())
+                .body(post.getBody())
+                .lastModifiedAt(post.getLastModifiedAt().format(DateTimeFormatter.ofPattern("yyyy-mm-dd hh:mm:ss")))
+                .createdAt(post.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-mm-dd hh:mm:ss")))
+                .userName(post.getUser().getUserName())
+                .build();
+        return Response.success(postDetailResponse);
+    }
 }

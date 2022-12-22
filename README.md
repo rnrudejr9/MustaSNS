@@ -14,6 +14,7 @@
 | hello | GET | /api/v1/hello | testAPI return bye |
 | join | POST | /api/v1/users/join | 회원가입기능 |
 | login | POST | /api/v1/users/login | 로그인기능 |
+| post | POST | /api/v1/posts | 글작성기능 |
 
 
 ## ERD
@@ -32,4 +33,5 @@
 
 - [x] 회원가입과 로그인
 - [ ] 게시글 CRUD
-- [ ] 
+- [ ] 화면ui 설정
+- [ ] admin 계정 구현

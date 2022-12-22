@@ -13,7 +13,7 @@ import org.springframework.web.servlet.ModelAndView;
 public class HelloController {
     @GetMapping("/hello")
     public ResponseEntity<String> hello(){
-        return ResponseEntity.ok().body("hello");
+        return ResponseEntity.ok().body("darkchocolate");
     }
     @GetMapping("/bye")
     public ResponseEntity<String> bye(){

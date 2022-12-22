@@ -27,4 +27,4 @@ spring:
       ddl-auto: create
 
 jwt:
-  secretKey: secretKey
+  secretKey: hello.world.ee.ff

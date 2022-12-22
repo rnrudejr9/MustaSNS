@@ -4,11 +4,11 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
 
@@ -17,13 +17,27 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Getter
 @NoArgsConstructor
+@EntityListeners(AuditingEntityListener.class)
 public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String body;
-    private LocalDateTime deletedAt;
-    private LocalDateTime registeredAt;
     private String title;
-    private LocalDateTime updatedAt;
+    @CreatedDate
+    private LocalDateTime createdAt;
+    @LastModifiedDate
+    private LocalDateTime lastModifiedAt;
+
+    //여러 Post들중 하나씩은 userId 값을 가진다
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    //userId 값 매핑
+
+    public void update(Post update){
+        this.body = update.body;
+        this.title = update.title;
+    }
 }

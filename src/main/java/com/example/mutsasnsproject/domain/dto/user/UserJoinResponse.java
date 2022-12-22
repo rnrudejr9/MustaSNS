@@ -12,5 +12,5 @@ import java.time.LocalDateTime;
 @Builder
 public class UserJoinResponse {
     private String userName;
-    private LocalDateTime createdAt;
+    private Long id;
 }

@@ -1,7 +1,7 @@
 package com.example.mutsasnsproject.configuration;
 
 import com.example.mutsasnsproject.service.UserService;
-import com.example.mutsasnsproject.utils.JwtTokenUtil;
+import com.example.mutsasnsproject.configuration.utils.JwtTokenUtil;
 import lombok.RequiredArgsConstructor;
 
 import lombok.extern.slf4j.Slf4j;
@@ -31,25 +31,27 @@ public class JwtFilter extends OncePerRequestFilter{
         final String authorization = request.getHeader(HttpHeaders.AUTHORIZATION);
         log.info("a "+ authorization);
 
+
         //인증이 없으면 바로 리턴
         if(authorization == null || !authorization.startsWith("Bearer ")){
-            log.error("권한이 없습니다.");
             filterChain.doFilter(request,response);
             return;
         }
         //token 꺼내기
         String token = authorization.split(" ")[1];
 
-        //Token expire 체크
-        if(JwtTokenUtil.isExpired(token,secretKey)){
-            log.error("토큰이 만료되었습니다.");
+        if(!JwtTokenUtil.isInvalid(token,secretKey)){
             filterChain.doFilter(request,response);
             return;
         }
+        //Token expire 체크
+//        if(JwtTokenUtil.isExpired(token,secretKey)){
+//            filterChain.doFilter(request,response);
+//            return;
+//        }
 
         //userName 토큰에서 꺼내기
         String userName = JwtTokenUtil.getUserName(token,secretKey);
-        log.info(userName);
 
         //권한 부여
         UsernamePasswordAuthenticationToken authenticationToken =

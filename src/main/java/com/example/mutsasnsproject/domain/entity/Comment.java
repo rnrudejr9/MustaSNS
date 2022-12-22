@@ -5,7 +5,6 @@ import java.time.LocalDateTime;
 public class Comment {
     private Long id;
     private String comment;
-    private LocalDateTime deletedAt;
-    private LocalDateTime registeredAt;
-    private LocalDateTime updatedAt;
+    private LocalDateTime createdAt;
+    private LocalDateTime lastModifiedAt;
 }

@@ -1,7 +1,10 @@
 package com.example.mutsasnsproject.configuration;
 
+import com.example.mutsasnsproject.exception.AppException;
+import com.example.mutsasnsproject.exception.ErrorCode;
 import com.example.mutsasnsproject.service.UserService;
 import com.example.mutsasnsproject.utils.JwtTokenUtil;
+import io.jsonwebtoken.JwtException;
 import lombok.RequiredArgsConstructor;
 
 import lombok.extern.slf4j.Slf4j;
@@ -49,7 +52,6 @@ public class JwtFilter extends OncePerRequestFilter{
 
         //userName 토큰에서 꺼내기
         String userName = JwtTokenUtil.getUserName(token,secretKey);
-        log.info(userName);
 
         //권한 부여
         UsernamePasswordAuthenticationToken authenticationToken =

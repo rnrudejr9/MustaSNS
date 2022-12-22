@@ -47,7 +47,7 @@ public class UserService {
         UserJoinResponse userJoinResponse = UserJoinResponse
                 .builder()
                 .userName(user.getUserName())
-                .createdAt(user.getRegisteredAt())
+                .id(user.getId())
                 .build();
         return new Response<>("UserJoinSuccess",userJoinResponse);
     }
@@ -56,7 +56,6 @@ public class UserService {
         //username 없음
         User loginUser = userRepository.findByUserName(userName)
                 .orElseThrow(()->new AppException(ErrorCode.USERNAME_NOT_FOUND,userName+"없습니다.!"));
-
 
         //password 틀림
         if(!encoder.matches(password,loginUser.getPassword())){
@@ -71,5 +70,7 @@ public class UserService {
         //앞에서 예외처리 안되었으면 토큰 발행
         return new Response<>("UserLoginSuccess",userLoginResponse);
     }
+
+
 
 }

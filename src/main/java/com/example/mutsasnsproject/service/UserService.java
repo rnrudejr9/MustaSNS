@@ -2,20 +2,17 @@ package com.example.mutsasnsproject.service;
 
 import com.example.mutsasnsproject.domain.dto.Response;
 import com.example.mutsasnsproject.domain.dto.user.UserJoinResponse;
-import com.example.mutsasnsproject.domain.dto.user.UserLoginRequest;
 import com.example.mutsasnsproject.domain.dto.user.UserLoginResponse;
 import com.example.mutsasnsproject.domain.entity.User;
+import com.example.mutsasnsproject.domain.role.UserRole;
 import com.example.mutsasnsproject.exception.AppException;
 import com.example.mutsasnsproject.exception.ErrorCode;
 import com.example.mutsasnsproject.repository.UserRepository;
-import com.example.mutsasnsproject.utils.JwtTokenUtil;
+import com.example.mutsasnsproject.configuration.utils.JwtTokenUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -42,6 +39,7 @@ public class UserService {
                 .userName(userName)
                 .password(encoder.encode(password))
                 .registeredAt(LocalDateTime.now())
+                .role(UserRole.USER)
                 .build();
         userRepository.save(user);
         UserJoinResponse userJoinResponse = UserJoinResponse
@@ -52,7 +50,7 @@ public class UserService {
         return new Response<>("UserJoinSuccess",userJoinResponse);
     }
 
-    public Response<?> login(String userName,String password){
+    public Response<?> login(String userName,String password) {
         //username 없음
         User loginUser = userRepository.findByUserName(userName)
                 .orElseThrow(()->new AppException(ErrorCode.USERNAME_NOT_FOUND,userName+"없습니다.!"));

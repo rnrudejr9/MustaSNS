@@ -1,5 +1,6 @@
 package com.example.mutsasnsproject.domain.entity;
 
+import com.example.mutsasnsproject.domain.role.UserRole;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -28,7 +29,7 @@ public class User {
     private String password;
     @CreatedDate
     private LocalDateTime registeredAt;
-    //    private UserRole role;
+    private UserRole role;
     @LastModifiedDate
     private LocalDateTime updatedAt;
     private String userName;

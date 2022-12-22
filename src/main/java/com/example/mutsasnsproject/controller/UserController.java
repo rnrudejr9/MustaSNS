@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.SQLException;
 import java.util.Optional;
 
 @RestController
@@ -24,7 +25,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody UserLoginRequest userLoginRequest){
+    public ResponseEntity<?> login(@RequestBody UserLoginRequest userLoginRequest) {
         Response response = userService.login(userLoginRequest.getUserName(),userLoginRequest.getPassword());
         return ResponseEntity.ok().body(response);
         //return ResponseEntity.ok().body(Response.success(response));

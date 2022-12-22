@@ -1,5 +1,6 @@
 package com.example.mutsasnsproject.configuration;
 
+import com.example.mutsasnsproject.domain.role.UserRole;
 import com.example.mutsasnsproject.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,6 +18,23 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 public class AuthenticationConfig {
     private final UserService userService;
+    private final String[] SWAGGER = {
+            "/v3/api-docs",
+            "/swagger-resources/**",
+            "/swagger-ui/**",
+            "/webjars/**",
+            "/swagger/**"
+    };
+
+    public static final String[] GET_BASIC = {
+            "/api/v1/posts/**"
+    };
+
+    public static final String[] BASIC = {
+            "/api/v1/hello",
+            "/api/v1/users/login",
+            "/api/v1/users/join"
+    };
     @Value("${jwt.secretKey}")
     private String secretKey;
     @Bean
@@ -29,8 +47,9 @@ public class AuthenticationConfig {
                 .cors().and()
                 //도메인달라도 허용해준다
                 .authorizeRequests()
-                .antMatchers("/api/v1/users/join","/api/v1/users/login").permitAll()
-                .antMatchers("/swagger-ui/**").permitAll()
+                .antMatchers(SWAGGER).permitAll()
+                .antMatchers(BASIC).permitAll()
+                .antMatchers(HttpMethod.GET,GET_BASIC).permitAll()
                 //로그인, 회원가입은 허용
                 .antMatchers(HttpMethod.POST,"/api/v1/posts/**").authenticated()
                 //게시글 작성은 로그인 필요!

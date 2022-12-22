@@ -59,9 +59,10 @@ public class PostService {
     }
 
     public Response<?> delete(String userName, Long postId){
+
         User user = userRepository.findByUserName(userName)
                 .orElseThrow(()->new AppException(ErrorCode.USERNAME_NOT_FOUND,userName+"없습니다.!"));
-        Post post = postRepository.findById(postId).orElseThrow(()->new AppException(ErrorCode.POST_NOT_FOUND,"해당포스트가 없습니다."));
+        Post post = postRepository.findById(postId).orElseThrow(()->new AppException(ErrorCode.DATABASE_ERROR,"해당포스트가 없습니다."));
 
         if(!user.getPost().contains(post)) {
             throw new AppException(ErrorCode.INVALID_PERMISSION, "작성자 불일치로 삭제할 수 없는 아이디입니다");

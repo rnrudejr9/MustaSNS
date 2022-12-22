@@ -21,9 +21,9 @@ public class AuthenticationConfig {
                 .cors().and()
                 //도메인달라도 허용해준다
                 .authorizeRequests()
-                .antMatchers("/api/v1/users/join","/api/v1/users/login").permitAll()
+                .antMatchers("/api/v1/users/join","/api/v1/users/login","/api/v1/posts").permitAll()
                 //로그인, 회원가입은 허용
-                .antMatchers(HttpMethod.POST,"/api/v1/posts").authenticated()
+//                .antMatchers(HttpMethod.POST,"/api/v1/posts").authenticated()
                 //게시글 작성은 로그인 필요!
                 //허용해주는 단계
                 .and()

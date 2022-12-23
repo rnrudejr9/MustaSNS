@@ -15,11 +15,4 @@ public class HelloController {
     public ResponseEntity<String> hello(){
         return ResponseEntity.ok().body("popin");
     }
-    @GetMapping("/bye")
-    public ResponseEntity<String> bye(){
-        ModelAndView modelAndView = new ModelAndView();
-
-        return ResponseEntity.ok().body("bye");
-    }
-
 }

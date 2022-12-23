@@ -48,10 +48,12 @@ public class PostRestController {
 //    public ResponseEntity<Response> getPost(){
 //
 //    }
-//    @GetMapping("/{id}")
-//    public ResponseEntity<Response> detailPost(){
-//
-//    }
+    @GetMapping("/{id}")
+    public ResponseEntity<Response> detailPost(Authentication authentication,@PathVariable Long id){
+        loginCheck(authentication);
+        Response response = postService.detail(id);
+        return ResponseEntity.ok().body(response);
+    }
 
     public void loginCheck(Authentication authentication){
         if(authentication == null){

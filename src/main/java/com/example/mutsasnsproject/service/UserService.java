@@ -38,7 +38,6 @@ public class UserService {
         User user = User.builder()
                 .userName(userName)
                 .password(encoder.encode(password))
-                .registeredAt(LocalDateTime.now())
                 .role(UserRole.USER)
                 .build();
         userRepository.save(user);

@@ -11,6 +11,9 @@ import com.example.mutsasnsproject.repository.UserRepository;
 import com.example.mutsasnsproject.configuration.utils.JwtTokenUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -25,7 +28,7 @@ public class UserService {
     private final BCryptPasswordEncoder encoder;
     @Value("${jwt.secretKey}")
     private String key;
-    public Response<?> join(String userName, String password){
+    public UserJoinResponse join(String userName, String password){
         Optional<User> optionalUser = userRepository.findByUserName(userName);
 
         //userName 중복체크
@@ -43,13 +46,13 @@ public class UserService {
         userRepository.save(user);
         UserJoinResponse userJoinResponse = UserJoinResponse
                 .builder()
-                .userName(user.getUserName())
+                .userName(user.getUsername())
                 .id(user.getId())
                 .build();
-        return Response.success(userJoinResponse);
+        return userJoinResponse;
     }
 
-    public Response<?> login(String userName,String password) {
+    public UserLoginResponse login(String userName,String password) {
         //username 없음
         User loginUser = userRepository.findByUserName(userName)
                 .orElseThrow(()->new AppException(ErrorCode.USERNAME_NOT_FOUND,userName+"없습니다.!"));
@@ -59,15 +62,16 @@ public class UserService {
             throw new AppException(ErrorCode.INVALID_PASSWORD,"패스워드 오류");
         }
         long expireTimeMs = 1000 * 60 * 60L;
-        String token = JwtTokenUtil.createToken(loginUser.getUserName(),key,expireTimeMs);
+        String token = JwtTokenUtil.createToken(loginUser.getUsername(),key,expireTimeMs);
         UserLoginResponse userLoginResponse = UserLoginResponse
                 .builder()
                 .jwt(token)
                 .build();
         //앞에서 예외처리 안되었으면 토큰 발행
-        return Response.success(userLoginResponse);
+        return userLoginResponse;
     }
 
-
-
+    public User loadUserByUsername(String username) throws UsernameNotFoundException {
+        return userRepository.findByUserName(username).orElseThrow(()->new AppException(ErrorCode.USERNAME_NOT_FOUND,"유저가 없습니다."));
+    }
 }

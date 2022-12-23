@@ -26,7 +26,7 @@ import java.util.List;
 public class PostService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
-    public Response<?> createPost(String userName,String body, String title){
+    public PostResponse createPost(String userName,String body, String title){
         //인증으로 받은 userName으로 통한 객체반환
         User user = userRepository.findByUserName(userName)
                 .orElseThrow(()->new AppException(ErrorCode.USERNAME_NOT_FOUND,userName+"없습니다.!"));;
@@ -41,11 +41,11 @@ public class PostService {
                 .postId(savedPost.getId())
                 .message("포스트 작성완료")
                 .build();
-        return Response.success(postResponse);
+        return postResponse;
     }
 
     @Transactional
-    public Response<?> modifyPost(String userName, Long postId, PostRequest postRequest){
+    public PostResponse modifyPost(String userName, Long postId, PostRequest postRequest){
         User user = userRepository.findByUserName(userName)
                 .orElseThrow(()->new AppException(ErrorCode.USERNAME_NOT_FOUND,userName+"없습니다.!"));
         Post post = postRepository.findById(postId).orElseThrow(()->new AppException(ErrorCode.POST_NOT_FOUND,"해당포스트가 없습니다."));
@@ -58,10 +58,10 @@ public class PostService {
         //따라서 repository.update 를 쓰지 않아도 됨.
         post.update(postRequest.toEntity());
         PostResponse postResponse = PostResponse.builder().postId(postId).message("게시글 수정완료").build();
-        return Response.success(postResponse);
+        return postResponse;
     }
 
-    public Response<?> delete(String userName, Long postId){
+    public PostResponse delete(String userName, Long postId){
 
         User user = userRepository.findByUserName(userName)
                 .orElseThrow(()->new AppException(ErrorCode.USERNAME_NOT_FOUND,userName+"없습니다.!"));
@@ -73,10 +73,10 @@ public class PostService {
 
         postRepository.delete(post);
         PostResponse postResponse = PostResponse.builder().message("게시글 삭제완료").build();
-        return Response.success(postResponse);
+        return postResponse;
     }
 
-    public Response<?> detail(Long postId){
+    public PostDetailResponse detail(Long postId){
         Post post = postRepository.findById(postId).orElseThrow(()->new AppException(ErrorCode.POST_NOT_FOUND,"게시글이 존재하지않습니다."));
         PostDetailResponse postDetailResponse = PostDetailResponse.builder()
                 .id(postId)
@@ -84,13 +84,13 @@ public class PostService {
                 .body(post.getBody())
                 .lastModifiedAt(post.getLastModifiedAt().format(DateTimeFormatter.ofPattern("yyyy-mm-dd hh:mm:ss")))
                 .createdAt(post.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-mm-dd hh:mm:ss")))
-                .userName(post.getUser().getUserName())
+                .userName(post.getUser().getUsername())
                 .build();
-        return Response.success(postDetailResponse);
+        return postDetailResponse;
     }
 
 
-    public Response<?> list(Pageable pageable){
+    public PostListResponse list(Pageable pageable){
         Page<Post> page = postRepository.findAll(pageable);
         List<PostDetailResponse> list = new ArrayList<>();
         for(Post post : page){
@@ -98,7 +98,7 @@ public class PostService {
                     .id(post.getId())
                     .body(post.getBody())
                     .title(post.getTitle())
-                    .userName(post.getUser().getUserName())
+                    .userName(post.getUser().getUsername())
                     .lastModifiedAt(post.getLastModifiedAt().format(DateTimeFormatter.ofPattern("yyyy-mm-dd hh:mm:ss")))
                     .createdAt(post.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-mm-dd hh:mm:ss")))
                     .build();
@@ -109,6 +109,6 @@ public class PostService {
                 .content(list)
                 .pageable(pageable)
                 .build();
-        return Response.success(postListResponse);
+        return postListResponse;
     }
 }

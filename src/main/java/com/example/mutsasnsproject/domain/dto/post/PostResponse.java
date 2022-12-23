@@ -8,6 +8,6 @@ import lombok.Getter;
 @Builder
 @Getter
 public class PostResponse {
-    private Long id;
     private String message;
+    private Long postId;
 }

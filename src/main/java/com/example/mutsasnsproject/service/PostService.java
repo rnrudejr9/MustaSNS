@@ -2,6 +2,7 @@ package com.example.mutsasnsproject.service;
 
 import com.example.mutsasnsproject.domain.dto.Response;
 import com.example.mutsasnsproject.domain.dto.post.PostDetailResponse;
+import com.example.mutsasnsproject.domain.dto.post.PostListResponse;
 import com.example.mutsasnsproject.domain.dto.post.PostRequest;
 import com.example.mutsasnsproject.domain.dto.post.PostResponse;
 import com.example.mutsasnsproject.domain.entity.Post;
@@ -11,14 +12,14 @@ import com.example.mutsasnsproject.exception.ErrorCode;
 import com.example.mutsasnsproject.repository.PostRepository;
 import com.example.mutsasnsproject.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.imageio.spi.ServiceRegistry;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Optional;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -86,5 +87,28 @@ public class PostService {
                 .userName(post.getUser().getUserName())
                 .build();
         return Response.success(postDetailResponse);
+    }
+
+
+    public Response<?> list(Pageable pageable){
+        Page<Post> page = postRepository.findAll(pageable);
+        List<PostDetailResponse> list = new ArrayList<>();
+        for(Post post : page){
+            PostDetailResponse postDetailResponse = PostDetailResponse.builder()
+                    .id(post.getId())
+                    .body(post.getBody())
+                    .title(post.getTitle())
+                    .userName(post.getUser().getUserName())
+                    .lastModifiedAt(post.getLastModifiedAt().format(DateTimeFormatter.ofPattern("yyyy-mm-dd hh:mm:ss")))
+                    .createdAt(post.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-mm-dd hh:mm:ss")))
+                    .build();
+            list.add(postDetailResponse);
+        }
+
+        PostListResponse postListResponse = PostListResponse.builder()
+                .content(list)
+                .pageable(pageable)
+                .build();
+        return Response.success(postListResponse);
     }
 }

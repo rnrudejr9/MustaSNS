@@ -37,7 +37,7 @@ public class PostService {
                 .build();
         postRepository.save(savedPost);
         PostResponse postResponse = PostResponse.builder()
-                .id(savedPost.getId())
+                .postId(savedPost.getId())
                 .message("포스트 작성완료")
                 .build();
         return Response.success(postResponse);
@@ -56,7 +56,7 @@ public class PostService {
         //JPA 의 영속성 컨텍스트 덕분에 entity 객체의 값만 변경하면 자동으로 변경사항 반영함!
         //따라서 repository.update 를 쓰지 않아도 됨.
         post.update(postRequest.toEntity());
-        PostResponse postResponse = PostResponse.builder().id(postId).message("게시글 수정완료").build();
+        PostResponse postResponse = PostResponse.builder().postId(postId).message("게시글 수정완료").build();
         return Response.success(postResponse);
     }
 

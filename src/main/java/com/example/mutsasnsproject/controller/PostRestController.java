@@ -7,6 +7,9 @@ import com.example.mutsasnsproject.exception.ErrorCode;
 import com.example.mutsasnsproject.service.PostService;
 import com.example.mutsasnsproject.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -44,10 +47,12 @@ public class PostRestController {
     }
 
 
-//    @GetMapping
-//    public ResponseEntity<Response> getPost(){
-//
-//    }
+    @GetMapping
+    public ResponseEntity<Response> getPost(Authentication authentication, @PageableDefault(size = 20, sort = "createdAt",direction = Sort.Direction.DESC) Pageable pageable){
+        loginCheck(authentication);
+        Response response = postService.list(pageable);
+        return ResponseEntity.ok().body(response);
+    }
     @GetMapping("/{id}")
     public ResponseEntity<Response> detailPost(Authentication authentication,@PathVariable Long id){
         loginCheck(authentication);

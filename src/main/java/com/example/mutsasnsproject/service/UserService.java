@@ -46,7 +46,7 @@ public class UserService {
                 .userName(user.getUserName())
                 .id(user.getId())
                 .build();
-        return new Response<>("UserJoinSuccess",userJoinResponse);
+        return Response.success(userJoinResponse);
     }
 
     public Response<?> login(String userName,String password) {
@@ -65,7 +65,7 @@ public class UserService {
                 .jwt(token)
                 .build();
         //앞에서 예외처리 안되었으면 토큰 발행
-        return new Response<>("UserLoginSuccess",userLoginResponse);
+        return Response.success(userLoginResponse);
     }
 
 

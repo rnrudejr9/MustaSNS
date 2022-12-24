@@ -3,7 +3,7 @@
 * **멋쟁이사자처럼 백엔드스쿨 2기 개인프로젝트**
 
     * swagger주소 <br>
-😊 t3(sub) : http://ec2-54-180-91-171.ap-northeast-2.compute.amazonaws.com:8080/swagger-ui/#/user-controller/loginUsingPOST <br>
+😊 t3(sub) : http://ec2-54-180-91-171.ap-northeast-2.compute.amazonaws.com:8080/swagger-ui/ <br>
 😊 t3(main) :
     * ec2 주소
     
@@ -26,6 +26,14 @@
 
 
 ## 개요 설명
+<div align="center">
+ <img src="https://img.shields.io/badge/SpringBoot-6DB33F.svg?logo=Spring-Boot&logoColor=white" />
+ <img src="https://img.shields.io/badge/SpringSecurity-6DB33F.svg?logo=Spring-Security&logoColor=white" />
+ <img src="https://img.shields.io/badge/MySQL-3776AB.svg?logo=MySql&logoColor=white" />
+ <img src="https://img.shields.io/badge/Docker-2496ED.svg?logo=Docker&logoColor=white" />
+ <img src="https://img.shields.io/badge/AmazonEC2-FF9900.svg?logo=Amazon-EC2&logoColor=white" />
+</div>
+
 * 에디터 : Intellij Ultimate
 * 개발 툴 : SpringBoot 2.7.5
 * 자바 : JAVA 11

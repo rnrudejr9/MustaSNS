@@ -36,6 +36,7 @@ public class JwtFilter extends OncePerRequestFilter {
                 log.error("비엇거나 유효하지않은 암호");
                 filterChain.doFilter(request, response);
                 return;
+                //여기서 리턴하면 어디로가 ??..?
             } else {
                 token = authorization.split(" ")[1].trim();
                 System.out.println("token : " + token);

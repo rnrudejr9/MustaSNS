@@ -49,7 +49,7 @@ public class PostServiceTest {
         when(postRepository.save(any()))
                 .thenReturn(mockPostEntity);
 
-        Assertions.assertDoesNotThrow(() -> postService.createPost(fixture.getUserName(), fixture.getBody(), fixture.getTitle()));
+        Assertions.assertDoesNotThrow(() -> postService.add(fixture.getUserName(), fixture.getBody(), fixture.getTitle()));
     }
 
     @Test
@@ -63,7 +63,7 @@ public class PostServiceTest {
 
         when(postRepository.findById(fixture.getPostId())).thenReturn(Optional.of(post));
 
-        PostDetailResponse postDetailResponse = postService.detail(fixture.getPostId());
+        PostDetailResponse postDetailResponse = postService.get(fixture.getUserName(), fixture.getPostId());
         assertEquals(fixture.getUserName(), postDetailResponse.getUserName());
     }
 

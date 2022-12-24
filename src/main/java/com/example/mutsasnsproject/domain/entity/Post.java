@@ -23,8 +23,7 @@ public class Post extends BaseEntity{
     private Long id;
     private String body;
     private String title;
-    private LocalDateTime createdAt;
-    private LocalDateTime lastModifiedAt;
+
 
     //여러 Post들중 하나씩은 userId 값을 가진다
     @ManyToOne(fetch = FetchType.LAZY)

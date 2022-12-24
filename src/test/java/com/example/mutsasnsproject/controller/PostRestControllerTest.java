@@ -45,7 +45,8 @@ class PostRestControllerTest {
     @WithMockUser
     public void Test() throws Exception {
 
-        when(postService.detail(any())).thenReturn(new PostDetailResponse(1L,"","","","",""));
+
+        when(postService.get(any(),any())).thenReturn(new PostDetailResponse(1L,"","","","",""));
 
         mockMvc.perform(get("/api/v1/posts/"+"1")
                             .with(csrf())

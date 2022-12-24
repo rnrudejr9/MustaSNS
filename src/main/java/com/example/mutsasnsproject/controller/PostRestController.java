@@ -41,7 +41,6 @@ public class PostRestController {
         loginCheck(authentication);
         String userName = authentication.getName();
         PostResponse postResponse =postService.modifyPost(userName,id, postRequest);
-
         return ResponseEntity.ok().body(Response.success(postResponse));
     }
 
@@ -65,6 +64,12 @@ public class PostRestController {
         loginCheck(authentication);
         PostDetailResponse postDetailResponse = postService.detail(id);
         return ResponseEntity.ok().body(Response.success(postDetailResponse));
+    }
+
+    @PostMapping("/{id}/comment")
+    public ResponseEntity<Response> likePost(Authentication authentication,@PathVariable Long id){
+        loginCheck(authentication);
+        return null;
     }
 
     public void loginCheck(Authentication authentication){

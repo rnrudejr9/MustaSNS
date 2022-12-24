@@ -2,9 +2,6 @@ package com.example.mutsasnsproject.domain.entity;
 
 import com.example.mutsasnsproject.domain.role.UserRole;
 import lombok.*;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -34,6 +31,9 @@ public class User extends BaseEntity implements UserDetails {
     //한명의 User는 여러개의 Post 를 가질 수 있다.
     @OneToMany(mappedBy = "user")
     private List<Post> post = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user")
+    private List<Comment> comments = new ArrayList<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

@@ -7,6 +7,8 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Entity
@@ -21,11 +23,18 @@ public class Post extends BaseEntity{
     private Long id;
     private String body;
     private String title;
+    private LocalDateTime createdAt;
+    private LocalDateTime lastModifiedAt;
 
     //여러 Post들중 하나씩은 userId 값을 가진다
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
+
+//
+    //하나의 post는 여러개의 coments를 가진다
+    @OneToMany(mappedBy = "post")
+    private List<Comment> likes = new ArrayList<>();
 
     //userId 값 매핑
 

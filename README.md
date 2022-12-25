@@ -12,7 +12,7 @@
 
 |API 종류|HTTP|URI|API 설명|
 |:-----:|:------------------:|:-----------------------------:|:-----------------------------:|
-| hello | GET | /api/v1/hello | testAPI return bye |
+| hello | GET | /api/v1/hello | testAPI return String |
 | users | POST | /api/v1/users/join | 회원가입기능 |
 | users | POST | /api/v1/users/login | 로그인기능 |
 | posts | POST | /api/v1/posts | 글작성기능 |
@@ -46,6 +46,7 @@
 
 - [x] 회원가입과 로그인
 - [x] 게시글 CRUD
+- [ ] 댓글 기능 구현
 - [ ] 좋아요 기능 구현
 - [ ] 테스트 코드 작성하기
 - [ ] 화면ui 설정

@@ -29,10 +29,13 @@ public class User extends BaseEntity {
     private String userName;
 
     //한명의 User는 여러개의 Post 를 가질 수 있다.
+    @Builder.Default
     @OneToMany(mappedBy = "user")
     private List<Post> post = new ArrayList<>();
 
-//    @Override
+//    @OneToMany(mappedBy = "user")
+//    private List<Comment> comments = new ArrayList<>();
+
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role.toString()));
     }

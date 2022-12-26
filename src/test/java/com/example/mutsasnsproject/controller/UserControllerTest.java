@@ -48,7 +48,7 @@ class UserControllerTest {
     public void login() throws Exception {
         String userName = "hello";
         String password = "1234";
-//        when(userService.login(any(),any())).thenReturn(new Response<>("success",password));
+        when(userService.login(any(),any())).thenReturn(new UserLoginResponse("jwt"));
 
         mockMvc.perform(post("/api/v1/users/login")
                         .with(csrf())
@@ -96,6 +96,8 @@ class UserControllerTest {
     void join() throws Exception {
         String userName = "hello";
         String password = "1234";
+//        when(userService.join(any(),any()));
+
         mockMvc.perform(post("/api/v1/users/join")
                         .with(csrf())
                 //스프링시큐리티 사용할떄 꼭 넣어줘야됨

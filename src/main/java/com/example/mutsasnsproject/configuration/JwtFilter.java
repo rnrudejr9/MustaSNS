@@ -45,7 +45,7 @@ public class JwtFilter extends OncePerRequestFilter {
             User userDetails = userService.loadUserByUsername(userName);
 
             //Token expire 체크
-            if (!JwtTokenUtil.validate(token, userDetails.getUsername(), secretKey)) {
+            if (!JwtTokenUtil.validate(token, userDetails.getUserName(), secretKey)) {
                 log.error("만료되었거나 이상한 암호");
                 filterChain.doFilter(request, response);
                 return;

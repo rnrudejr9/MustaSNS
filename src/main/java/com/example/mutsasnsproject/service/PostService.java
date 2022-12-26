@@ -92,7 +92,7 @@ public class PostService {
                 .body(post.getBody())
                 .lastModifiedAt(post.getLastModifiedAt().format(DateTimeFormatter.ofPattern("yyyy-mm-dd hh:mm:ss")))
                 .createdAt(post.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-mm-dd hh:mm:ss")))
-                .userName(post.getUser().getUsername())
+                .userName(post.getUser().getUserName())
                 .build();
         return postDetailResponse;
     }
@@ -106,7 +106,7 @@ public class PostService {
                     .id(post.getId())
                     .body(post.getBody())
                     .title(post.getTitle())
-                    .userName(post.getUser().getUsername())
+                    .userName(post.getUser().getUserName())
                     .lastModifiedAt(post.getLastModifiedAt().format(DateTimeFormatter.ofPattern("yyyy-mm-dd hh:mm:ss")))
                     .createdAt(post.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-mm-dd hh:mm:ss")))
                     .build();

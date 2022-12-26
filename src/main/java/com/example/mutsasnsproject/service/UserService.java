@@ -46,7 +46,7 @@ public class UserService {
         userRepository.save(user);
         UserJoinResponse userJoinResponse = UserJoinResponse
                 .builder()
-                .userName(user.getUsername())
+                .userName(user.getUserName())
                 .id(user.getId())
                 .build();
         return userJoinResponse;
@@ -62,7 +62,7 @@ public class UserService {
             throw new AppException(ErrorCode.INVALID_PASSWORD,"패스워드 오류");
         }
         long expireTimeMs = 1000 * 60 * 60L;
-        String token = JwtTokenUtil.createToken(loginUser.getUsername(),key,expireTimeMs);
+        String token = JwtTokenUtil.createToken(loginUser.getUserName(),key,expireTimeMs);
         UserLoginResponse userLoginResponse = UserLoginResponse
                 .builder()
                 .jwt(token)

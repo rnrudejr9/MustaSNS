@@ -1,6 +1,9 @@
 package com.example.mutsasnsproject.controller;
 
 import com.example.mutsasnsproject.domain.dto.Response;
+import com.example.mutsasnsproject.domain.dto.comment.CommentListResponse;
+import com.example.mutsasnsproject.domain.dto.comment.CommentRequest;
+import com.example.mutsasnsproject.domain.dto.comment.CommentResponse;
 import com.example.mutsasnsproject.domain.dto.post.PostDetailResponse;
 import com.example.mutsasnsproject.domain.dto.post.PostListResponse;
 import com.example.mutsasnsproject.domain.dto.post.PostRequest;
@@ -67,9 +70,25 @@ public class PostRestController {
 
 
     @PostMapping("/{id}/comment")
-    public ResponseEntity<Response> likePost(Authentication authentication,@PathVariable Long id){
-        return null;
+    public ResponseEntity<Response> addComment(Authentication authentication, @PathVariable Long id, @RequestBody CommentRequest commentRequest){
+        String userName = authentication.getName();
+        CommentResponse commentResponse = postService.commentAdd(userName,id, commentRequest.getComment());
+        return ResponseEntity.ok().body(Response.success(commentResponse));
     }
+
+    @GetMapping("/{id}/comment")
+    public ResponseEntity<Response> listComment(@PathVariable Long id,@PageableDefault(size = 20, sort = "createdAt",direction = Sort.Direction.DESC) Pageable pageable){
+        CommentListResponse commentListResponse = postService.commentList(id,pageable);
+        return ResponseEntity.ok().body(Response.success(commentListResponse));
+    }
+
+    @PutMapping("/{postId}/comment/{id}")
+    public ResponseEntity<Response> modifyComment(Authentication authentication,@PathVariable Long postId, @PathVariable Long id,@RequestBody CommentRequest commentRequest){
+        String userName = authentication.getName();
+        CommentResponse commentResponse =postService.commentModify(userName,postId,commentRequest,id);
+        return ResponseEntity.ok().body(Response.success(commentResponse));
+    }
+
 
 
 

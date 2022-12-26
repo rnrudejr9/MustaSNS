@@ -7,8 +7,8 @@ import lombok.Setter;
 public class TestInfoFixture {
     public static TestInfo get() {
         TestInfo info = new TestInfo();
-        info.setPostId(1);
-        info.setUserId(1);
+        info.setPostId(1L);
+        info.setUserId(1L);
         info.setUserName("user");
         info.setPassword("password");
         info.setTitle("title");
@@ -19,8 +19,8 @@ public class TestInfoFixture {
     @Getter
     @Setter
     public static class TestInfo {
-        private long postId;
-        private long userId;
+        private Long postId;
+        private Long userId;
         private String userName;
         private String password;
         private String title;
@@ -28,4 +28,3 @@ public class TestInfoFixture {
     }
 
 }
-

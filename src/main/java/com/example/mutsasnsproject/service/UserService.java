@@ -1,6 +1,5 @@
 package com.example.mutsasnsproject.service;
 
-import com.example.mutsasnsproject.domain.dto.Response;
 import com.example.mutsasnsproject.domain.dto.user.UserJoinResponse;
 import com.example.mutsasnsproject.domain.dto.user.UserLoginResponse;
 import com.example.mutsasnsproject.domain.entity.User;
@@ -8,16 +7,13 @@ import com.example.mutsasnsproject.domain.role.UserRole;
 import com.example.mutsasnsproject.exception.AppException;
 import com.example.mutsasnsproject.exception.ErrorCode;
 import com.example.mutsasnsproject.repository.UserRepository;
-import com.example.mutsasnsproject.configuration.utils.JwtTokenUtil;
+import com.example.mutsasnsproject.configuration.utils.JwtTokenUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
@@ -62,7 +58,7 @@ public class UserService {
             throw new AppException(ErrorCode.INVALID_PASSWORD,"패스워드 오류");
         }
         long expireTimeMs = 1000 * 60 * 60L;
-        String token = JwtTokenUtil.createToken(loginUser.getUserName(),key,expireTimeMs);
+        String token = JwtTokenUtils.generateAccessToken(loginUser.getUserName(),key,expireTimeMs);
         UserLoginResponse userLoginResponse = UserLoginResponse
                 .builder()
                 .jwt(token)

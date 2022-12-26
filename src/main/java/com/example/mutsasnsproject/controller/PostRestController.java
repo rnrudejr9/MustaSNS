@@ -30,6 +30,7 @@ public class PostRestController {
     public ResponseEntity<Response> addPost(Authentication authentication,@RequestBody PostRequest postRequest){
         log.info("게시글 작성 컨트롤러");
         String userName = authentication.getName();
+        log.info("userName = " + userName);
         PostResponse postResponse = postService.add(userName,postRequest.getBody(),postRequest.getTitle());
         return ResponseEntity.ok().body(Response.success(postResponse));
     }

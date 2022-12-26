@@ -20,6 +20,11 @@
 | posts | DELETE | /api/v1/posts/{id} | 글삭제기능 |
 | posts | GET | /api/v1/posts/{id} | 글조회기능 |
 | posts | GET | /api/v1/posts | 글전체조회 |
+| comment | POST | /api/v1/posts/{id}/comment | 댓글작성기능 |
+| comment | PUT | /api/v1/posts/{postid}/comment/{id} | 댓글수정기능 |
+| comment | DELETE |  | 댓글삭제기능 |
+| comment | GET | /api/v1/posts/{id}/comment | 댓글조회기능 |
+
 
 
 ## ERD
@@ -46,7 +51,7 @@
 
 - [x] 회원가입과 로그인
 - [x] 게시글 CRUD
-- [ ] 댓글 기능 구현
+- [x] 댓글 기능 구현
 - [ ] 좋아요 기능 구현
 - [x] 테스트 코드 작성하기
 - [ ] 화면ui 설정

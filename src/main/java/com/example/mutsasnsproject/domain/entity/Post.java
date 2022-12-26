@@ -25,6 +25,7 @@ public class Post extends BaseEntity{
     private String title;
 
 
+
     //여러 Post들중 하나씩은 userId 값을 가진다
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")

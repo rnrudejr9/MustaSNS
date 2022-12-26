@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -33,7 +34,6 @@ public class PostService {
         // 토큰으로 로그인한 아이디 비교
         User user = userRepository.findByUserName(userName)
                 .orElseThrow(()->new AppException(ErrorCode.USERNAME_NOT_FOUND,userName+"없습니다.!"));;
-
         Post savedPost = Post.builder()
                 .body(body)
                 .title(title)
@@ -55,7 +55,7 @@ public class PostService {
         // #2 수정할 포스트가 없을 경우
         Post post = postRepository.findById(postId).orElseThrow(()->new AppException(ErrorCode.POST_NOT_FOUND,"해당포스트가 없습니다."));
         // #3 사용자와 수정할 포스트의 작성자가 다를 경우
-        if(!user.getPost().contains(post)) {
+        if(!Objects.equals(post.getUser().getUserName(),user.getUserName())) {
             throw new AppException(ErrorCode.INVALID_PERMISSION, "작성자 불일치로 수정할 수 없는 아이디입니다");
         }
 
@@ -71,9 +71,9 @@ public class PostService {
         User user = userRepository.findByUserName(userName)
                 .orElseThrow(()->new AppException(ErrorCode.USERNAME_NOT_FOUND,userName+"없습니다.!"));
         // #2 삭제할 포스트가 없을 경우
-        Post post = postRepository.findById(postId).orElseThrow(()->new AppException(ErrorCode.DATABASE_ERROR,"해당포스트가 없습니다."));
+        Post post = postRepository.findById(postId).orElseThrow(()->new AppException(ErrorCode.POST_NOT_FOUND,"해당포스트가 없습니다."));
         // #3 사용자와 삭제할 포스트의 작성자가 다를 경우
-        if(!user.getPost().contains(post)) {
+        if(!Objects.equals(post.getUser().getUserName(),user.getUserName())) {
             throw new AppException(ErrorCode.INVALID_PERMISSION, "작성자 불일치로 삭제할 수 없는 아이디입니다");
         }
 

@@ -1,14 +1,19 @@
 package com.example.mutsasnsproject.service;
 
 import com.example.mutsasnsproject.domain.dto.Response;
+import com.example.mutsasnsproject.domain.dto.comment.CommentListResponse;
+import com.example.mutsasnsproject.domain.dto.comment.CommentRequest;
+import com.example.mutsasnsproject.domain.dto.comment.CommentResponse;
 import com.example.mutsasnsproject.domain.dto.post.PostDetailResponse;
 import com.example.mutsasnsproject.domain.dto.post.PostListResponse;
 import com.example.mutsasnsproject.domain.dto.post.PostRequest;
 import com.example.mutsasnsproject.domain.dto.post.PostResponse;
+import com.example.mutsasnsproject.domain.entity.Comment;
 import com.example.mutsasnsproject.domain.entity.Post;
 import com.example.mutsasnsproject.domain.entity.User;
 import com.example.mutsasnsproject.exception.AppException;
 import com.example.mutsasnsproject.exception.ErrorCode;
+import com.example.mutsasnsproject.repository.CommentRepository;
 import com.example.mutsasnsproject.repository.PostRepository;
 import com.example.mutsasnsproject.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +34,7 @@ import java.util.Objects;
 public class PostService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
+    private final CommentRepository commentRepository;
     public PostResponse add(String userName,String body, String title){
         log.info("포스트 작성 서비스");
         // 토큰으로 로그인한 아이디 비교
@@ -121,5 +127,74 @@ public class PostService {
                 .pageable(pageable)
                 .build();
         return postListResponse;
+    }
+
+    public CommentResponse commentAdd(String userName, Long postId, String comment) {
+        // #1 토큰으로 로그인한 아이디가 없을 경우
+        User user = userRepository.findByUserName(userName)
+                .orElseThrow(()->new AppException(ErrorCode.USERNAME_NOT_FOUND,userName+"없습니다.!"));
+        // #2 해당 게시글이 존재하지 않을 경우
+        Post post = postRepository.findById(postId).orElseThrow(()->new AppException(ErrorCode.POST_NOT_FOUND,"게시글이 존재하지않습니다."));
+
+        Comment savedcomment = Comment
+                .builder()
+                .comment(comment)
+                .post(post)
+                .user(user)
+                .build();
+        commentRepository.save(savedcomment);
+
+        CommentResponse commentResponse = CommentResponse.builder()
+                .id(savedcomment.getId())
+                .comment(comment)
+                .postId(postId)
+                .userName(userName)
+                .createdAt(savedcomment.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-mm-dd hh:mm:ss")))
+                .build();
+        return commentResponse;
+    }
+
+    public CommentListResponse commentList(Long postId,Pageable pageable){
+        Page<Comment> page = commentRepository.findByPostId(postId,pageable);
+        List<CommentResponse> list = new ArrayList<>();
+        for(Comment comment : page){
+            CommentResponse commentResponse = CommentResponse.builder()
+                    .id(comment.getId())
+                    .comment(comment.getComment())
+                    .postId(postId)
+                    .createdAt(comment.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-mm-dd hh:mm:ss")))
+                    .userName(comment.getUser().getUserName())
+                    .build();
+            list.add(commentResponse);
+        }
+
+        CommentListResponse commentListResponse = CommentListResponse.builder()
+                .content(list)
+                .pageable(pageable)
+                .build();
+        return commentListResponse;
+    }
+
+    @Transactional
+    public CommentResponse commentModify(String userName, Long postId,CommentRequest commentRequest,Long commentId){
+        // #1 토큰으로 로그인한 아이디가 없을 경우
+        User user = userRepository.findByUserName(userName)
+                .orElseThrow(()->new AppException(ErrorCode.USERNAME_NOT_FOUND,userName+"없습니다.!"));
+        // #2 해당 게시글이 존재하지 않을 경우
+        Post post = postRepository.findById(postId).orElseThrow(()->new AppException(ErrorCode.POST_NOT_FOUND,"게시글이 존재하지않습니다."));
+
+        // #3 수정할 댓글의 작성자가 본인인지?
+        Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new AppException(ErrorCode.DATABASE_ERROR,"댓글이 없습니다"));
+        comment.getUser().getUserName();
+
+        if(!Objects.equals(comment.getUser().getUserName(),userName)) {
+            throw new AppException(ErrorCode.INVALID_PERMISSION, "작성자 불일치로 수정할 수 없는 아이디입니다");
+        }
+
+        //JPA 의 영속성 컨텍스트 덕분에 entity 객체의 값만 변경하면 자동으로 변경사항 반영함!
+        //따라서 repository.update 를 쓰지 않아도 됨.
+        comment.update(commentRequest.toEntity());
+        CommentResponse commentResponse = CommentResponse.builder().comment(comment.getComment()).build();
+        return commentResponse;
     }
 }

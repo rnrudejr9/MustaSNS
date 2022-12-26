@@ -29,48 +29,47 @@ public class PostRestController {
     @PostMapping
     public ResponseEntity<Response> addPost(Authentication authentication,@RequestBody PostRequest postRequest){
         log.info("게시글 작성 컨트롤러");
-        loginCheck(authentication);
         String userName = authentication.getName();
-        PostResponse postResponse = postService.createPost(userName,postRequest.getBody(),postRequest.getTitle());
+        PostResponse postResponse = postService.add(userName,postRequest.getBody(),postRequest.getTitle());
         return ResponseEntity.ok().body(Response.success(postResponse));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Response> modifyPost(Authentication authentication, @RequestBody PostRequest postRequest,@PathVariable Long id){
         log.info("게시글 수정 컨트롤러");
-        loginCheck(authentication);
         String userName = authentication.getName();
-        PostResponse postResponse =postService.modifyPost(userName,id, postRequest);
-
+        PostResponse postResponse =postService.modify(userName,id, postRequest);
         return ResponseEntity.ok().body(Response.success(postResponse));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Response> deletePost(Authentication authentication,@PathVariable Long id){
         log.info("게시글 삭제 컨틀로러");
-        loginCheck(authentication);
         String userName = authentication.getName();
         PostResponse postResponse = postService.delete(userName,id);
         return ResponseEntity.ok().body(Response.success(postResponse));
     }
 
-
+    @GetMapping("/{id}")
+    public ResponseEntity<Response> getPost(Authentication authentication,@PathVariable Long id){
+        String userName = authentication.getName();
+        log.info("1");
+        PostDetailResponse postDetailResponse = postService.get(userName,id);
+        log.info("2");
+        return ResponseEntity.ok().body(Response.success(postDetailResponse));
+    }
     @GetMapping
-    public ResponseEntity<Response> getPost(@PageableDefault(size = 20, sort = "createdAt",direction = Sort.Direction.DESC) Pageable pageable){
+    public ResponseEntity<Response> listPost(@PageableDefault(size = 20, sort = "createdAt",direction = Sort.Direction.DESC) Pageable pageable){
         PostListResponse postListResponse = postService.list(pageable);
         return ResponseEntity.ok().body(Response.success(postListResponse));
     }
-    @GetMapping("/{id}")
-    public ResponseEntity<Response> detailPost(Authentication authentication,@PathVariable Long id){
-        loginCheck(authentication);
-        PostDetailResponse postDetailResponse = postService.detail(id);
-        return ResponseEntity.ok().body(Response.success(postDetailResponse));
+
+
+    @PostMapping("/{id}/comment")
+    public ResponseEntity<Response> likePost(Authentication authentication,@PathVariable Long id){
+        return null;
     }
 
-    public void loginCheck(Authentication authentication){
-        if(authentication == null){
-            throw new AppException(ErrorCode.INVALID_PERMISSION, "로그인을 해주세요!");
-        }
-    }
+
 
 }

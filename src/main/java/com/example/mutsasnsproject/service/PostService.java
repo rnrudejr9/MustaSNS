@@ -26,8 +26,8 @@ import java.util.List;
 public class PostService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
-    public PostResponse createPost(String userName,String body, String title){
-        //인증으로 받은 userName으로 통한 객체반환
+    public PostResponse add(String userName,String body, String title){
+        // 토큰으로 로그인한 아이디 비교
         User user = userRepository.findByUserName(userName)
                 .orElseThrow(()->new AppException(ErrorCode.USERNAME_NOT_FOUND,userName+"없습니다.!"));;
 
@@ -45,15 +45,17 @@ public class PostService {
     }
 
     @Transactional
-    public PostResponse modifyPost(String userName, Long postId, PostRequest postRequest){
+    public PostResponse modify(String userName, Long postId, PostRequest postRequest){
+        // #1 토큰으로 로그인한 아이디 없을 경우
         User user = userRepository.findByUserName(userName)
                 .orElseThrow(()->new AppException(ErrorCode.USERNAME_NOT_FOUND,userName+"없습니다.!"));
+        // #2 수정할 포스트가 없을 경우
         Post post = postRepository.findById(postId).orElseThrow(()->new AppException(ErrorCode.POST_NOT_FOUND,"해당포스트가 없습니다."));
-        //접속한 아이디에 해당 포스트의 아이디가 포함되어있지않는다면
-
+        // #3 사용자와 수정할 포스트의 작성자가 다를 경우
         if(!user.getPost().contains(post)) {
             throw new AppException(ErrorCode.INVALID_PERMISSION, "작성자 불일치로 수정할 수 없는 아이디입니다");
         }
+
         //JPA 의 영속성 컨텍스트 덕분에 entity 객체의 값만 변경하면 자동으로 변경사항 반영함!
         //따라서 repository.update 를 쓰지 않아도 됨.
         post.update(postRequest.toEntity());
@@ -62,11 +64,12 @@ public class PostService {
     }
 
     public PostResponse delete(String userName, Long postId){
-
+        // #1 토큰으로 로그인한 아이디가 없을 경우
         User user = userRepository.findByUserName(userName)
                 .orElseThrow(()->new AppException(ErrorCode.USERNAME_NOT_FOUND,userName+"없습니다.!"));
+        // #2 삭제할 포스트가 없을 경우
         Post post = postRepository.findById(postId).orElseThrow(()->new AppException(ErrorCode.DATABASE_ERROR,"해당포스트가 없습니다."));
-
+        // #3 사용자와 삭제할 포스트의 작성자가 다를 경우
         if(!user.getPost().contains(post)) {
             throw new AppException(ErrorCode.INVALID_PERMISSION, "작성자 불일치로 삭제할 수 없는 아이디입니다");
         }
@@ -76,8 +79,13 @@ public class PostService {
         return postResponse;
     }
 
-    public PostDetailResponse detail(Long postId){
+    public PostDetailResponse get(String userName, Long postId){
+        // #1 토큰으로 로그인한 아이디가 없을 경우
+        User user = userRepository.findByUserName(userName)
+                .orElseThrow(()->new AppException(ErrorCode.USERNAME_NOT_FOUND,userName+"없습니다.!"));
+        // #2 해당 게시글이 존재하지 않을 경우
         Post post = postRepository.findById(postId).orElseThrow(()->new AppException(ErrorCode.POST_NOT_FOUND,"게시글이 존재하지않습니다."));
+
         PostDetailResponse postDetailResponse = PostDetailResponse.builder()
                 .id(postId)
                 .title(post.getTitle())

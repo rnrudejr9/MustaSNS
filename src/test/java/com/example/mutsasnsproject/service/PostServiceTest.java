@@ -7,46 +7,84 @@ import com.example.mutsasnsproject.domain.entity.Post;
 import com.example.mutsasnsproject.domain.entity.User;
 import com.example.mutsasnsproject.fixture.PostEntityFixture;
 import com.example.mutsasnsproject.fixture.TestInfoFixture;
+import com.example.mutsasnsproject.fixture.UserEntityFixture;
 import com.example.mutsasnsproject.repository.PostRepository;
 import com.example.mutsasnsproject.repository.UserRepository;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.springframework.security.test.context.support.WithMockUser;
 
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-class PostServiceTest {
+public class PostServiceTest {
+
     PostService postService;
-    PostRepository postRepository= Mockito.mock(PostRepository.class);
-    UserRepository userRepository= Mockito.mock(UserRepository.class);
+
+    PostRepository postRepository = mock(PostRepository.class);
+    UserRepository userRepository = mock(UserRepository.class);
+
     @BeforeEach
-    void setUp(){
-        postService=new PostService(postRepository,userRepository);
+    void setUp() {
+        postService = new PostService(postRepository, userRepository);
+    }
+
+    @Test
+    @DisplayName("등록 성공")
+    void post_success() {
+        TestInfoFixture.TestInfo fixture = TestInfoFixture.get();
+
+        Post mockPostEntity = mock(Post.class);
+        User mockUserEntity = mock(User.class);
+
+        when(userRepository.findByUserName(fixture.getUserName()))
+                .thenReturn(Optional.of(mockUserEntity));
+        when(postRepository.save(any()))
+                .thenReturn(mockPostEntity);
+
+        Assertions.assertDoesNotThrow(() -> postService.add(fixture.getUserName(), fixture.getBody(), fixture.getTitle()));
     }
 
     @Test
     @DisplayName("조회 성공")
     void success_post_get() {
         TestInfoFixture.TestInfo fixture = TestInfoFixture.get();
-        User userEntity = new User();
-        userEntity.setUserName(fixture.getUserName());
+        User user = new User();
+        user.setUserName(fixture.getUserName());
 
-        Post postEntity = PostEntityFixture.get(fixture.getUserName(), "1q2w3e4r");
+        Post post = PostEntityFixture.get(fixture.getUserName(), fixture.getPassword());
 
-        when(postRepository.findById(fixture.getPostId())).thenReturn(Optional.of(postEntity));
+        when(postRepository.findById(fixture.getPostId())).thenReturn(Optional.of(post));
 
-        when(postRepository.save(any()))
-                .thenReturn(postEntity);
+        PostDetailResponse postDetailResponse = postService.get(fixture.getUserName(), fixture.getPostId());
+        assertEquals(fixture.getUserName(), postDetailResponse.getUserName());
+    }
 
-        PostDetailResponse response = postService.detail(fixture.getPostId());
-        assertEquals(fixture.getUserName(), response.getUserName());
+    @Test
+    @DisplayName("삭제 성공")
+    @WithMockUser
+    void post_delete_success() {
+        TestInfoFixture.TestInfo fixture = TestInfoFixture.get();
+
+        Post mockPostEntity = mock(Post.class);
+        User mockUserEntity = mock(User.class);
+
+        when(postRepository.findById(fixture.getPostId()))
+                .thenReturn(Optional.of(mockPostEntity));
+        when(userRepository.findByUserName(fixture.getUserName()))
+                .thenReturn(Optional.of(mockUserEntity));
+
+        when(mockPostEntity.getUser()).thenReturn(UserEntityFixture.get(fixture.getUserName(), fixture.getPassword()));
+        PostResponse postResponse = postService.delete(fixture.getUserName(), fixture.getPostId());
+        System.out.println(postResponse);
     }
 
 
-    //레포지토리는 모키토를 이용해 만들어줌 -> db 의존성을 빼기 위함!
 }

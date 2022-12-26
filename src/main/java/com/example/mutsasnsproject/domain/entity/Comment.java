@@ -1,10 +1,21 @@
 package com.example.mutsasnsproject.domain.entity;
 
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
-public class Comment {
+@Entity
+public class Comment extends BaseEntity{
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String comment;
-    private LocalDateTime createdAt;
-    private LocalDateTime lastModifiedAt;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "post_id")
+    private Post post;
+
 }

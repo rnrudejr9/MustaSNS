@@ -12,6 +12,7 @@ import com.example.mutsasnsproject.exception.ErrorCode;
 import com.example.mutsasnsproject.repository.PostRepository;
 import com.example.mutsasnsproject.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -23,10 +24,12 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class PostService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
     public PostResponse add(String userName,String body, String title){
+        log.info("포스트 작성 서비스");
         // 토큰으로 로그인한 아이디 비교
         User user = userRepository.findByUserName(userName)
                 .orElseThrow(()->new AppException(ErrorCode.USERNAME_NOT_FOUND,userName+"없습니다.!"));;

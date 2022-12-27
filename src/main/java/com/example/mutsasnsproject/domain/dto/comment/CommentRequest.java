@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonAutoDetect
+@Builder
 public class CommentRequest {
     private String comment;
     public Comment toEntity() {

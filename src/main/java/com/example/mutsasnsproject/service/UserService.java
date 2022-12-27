@@ -92,19 +92,17 @@ public class UserService {
             System.out.println("이 값은 유저입니다");
             throw new AppException(ErrorCode.INVALID_PERMISSION,"유저가 접근하지 못합니다");
         }
-
-        // #3 body 값 오류
-        if(!userRole.equals("admin")){
-            throw new AppException(ErrorCode.INVALID_PERMISSION,"BODY값에 잘못된 등급을 입력했습니다.");
-        }
-
         User changeableUser = userRepository.findById(userId).orElseThrow(()->new AppException(ErrorCode.USERNAME_NOT_FOUND,"해당유저가 없습니다"));
 
-        // #3 설정할 user가 이미 admin 일 경우
-        if(changeableUser.getRole().equals(UserRole.ADMIN)){
-            throw new AppException(ErrorCode.INVALID_PERMISSION,"이미 admin 계정으로 설정되어있습니다.");
+        // #3 body 값 오류
+        if(userRole.equals("admin")) {
+            changeableUser.setRole(UserRole.ADMIN);
+        }else if(userRole.equals("user")){
+            changeableUser.setRole(UserRole.USER);
+        }else{
+            throw new AppException(ErrorCode.INVALID_PERMISSION,"올바르지않은 권한값을 입력하셨습니다.");
         }
-        changeableUser.setRole(UserRole.ADMIN);
-        return changeableUser.getUserName() + " 의 USER를 ADMIN으로 등급을 올렸습니다.";
+
+        return changeableUser.getUserName() + " 의 USER를 " + changeableUser.getRole().name() + " 으로 등급을 올렸습니다.";
     }
 }

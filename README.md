@@ -1,12 +1,43 @@
-# MustaSNS
-* 🦁**멋사 아니라 mustache SNS**
+# 📑 MustaSNS
+* 🦁**멋사 아니라 'musta'che 'SNS'**
 * **멋쟁이사자처럼 백엔드스쿨 2기 개인프로젝트**
 
     * swagger주소 <br>
-😊 t3(sub) : http://ec2-54-180-91-171.ap-northeast-2.compute.amazonaws.com:8080/swagger-ui/ <br>
-😊 t3(main) :
-    * ec2 주소
-    
+😊 t3(swagger) : http://ec2-54-180-91-171.ap-northeast-2.compute.amazonaws.com:8080/swagger-ui/ <br>
+
+<br>
+
+
+## ✏ 개요 설명
+<div align="center">
+ <img src="https://img.shields.io/badge/SpringBoot-6DB33F.svg?logo=Spring-Boot&logoColor=white" />
+ <img src="https://img.shields.io/badge/SpringSecurity-6DB33F.svg?logo=Spring-Security&logoColor=white" />
+ <img src="https://img.shields.io/badge/MySQL-3776AB.svg?logo=MySql&logoColor=white" />
+ <img src="https://img.shields.io/badge/Docker-2496ED.svg?logo=Docker&logoColor=white" />
+ <img src="https://img.shields.io/badge/AmazonEC2-FF9900.svg?logo=Amazon-EC2&logoColor=white" />
+</div>
+
+* 에디터 : Intellij Ultimate
+* 개발 툴 : SpringBoot 2.7.5
+* 자바 : JAVA 11
+* 빌드 : Gradle 6.8
+* 서버 : AWS EC2
+* 배포 : Docker, gitlab
+* 데이터베이스 : MySql 8.0
+* 필수 라이브러리 : SpringBoot Web, MySQL, Spring Data JPA, Lombok, Spring Security
+<hr>
+
+- [x] gitlab 배포파일 및 ec2 크론탭 설정
+- [x] swagger 문서화 파일 설정
+- [x] 회원가입과 로그인
+- [x] 게시글 CRUD
+- [x] 댓글 기능 구현
+- [ ] 좋아요 기능 구현
+- [x] 테스트 코드 작성하기
+- [ ] 화면ui 설정
+- [ ] admin 권한 (Role 역할) 구현
+
+<br>
 
 ## ✏ ENDPOINT
 
@@ -30,31 +61,3 @@
 
 
 ## ERD
-
-
-## 개요 설명
-<div align="center">
- <img src="https://img.shields.io/badge/SpringBoot-6DB33F.svg?logo=Spring-Boot&logoColor=white" />
- <img src="https://img.shields.io/badge/SpringSecurity-6DB33F.svg?logo=Spring-Security&logoColor=white" />
- <img src="https://img.shields.io/badge/MySQL-3776AB.svg?logo=MySql&logoColor=white" />
- <img src="https://img.shields.io/badge/Docker-2496ED.svg?logo=Docker&logoColor=white" />
- <img src="https://img.shields.io/badge/AmazonEC2-FF9900.svg?logo=Amazon-EC2&logoColor=white" />
-</div>
-
-* 에디터 : Intellij Ultimate
-* 개발 툴 : SpringBoot 2.7.5
-* 자바 : JAVA 11
-* 빌드 : Gradle 6.8
-* 서버 : AWS EC2
-* 배포 : Docker, gitlab
-* 데이터베이스 : MySql 8.0
-* 필수 라이브러리 : SpringBoot Web, MySQL, Spring Data JPA, Lombok, Spring Security
-<hr>
-
-- [x] 회원가입과 로그인
-- [x] 게시글 CRUD
-- [x] 댓글 기능 구현
-- [ ] 좋아요 기능 구현
-- [x] 테스트 코드 작성하기
-- [ ] 화면ui 설정
-- [ ] admin 권한 (Role 역할) 구현

@@ -46,9 +46,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             }
 
             String userName = JwtTokenUtils.getUsername(token, secretKey);
-            log.info("1. userName : " + userName);
             User userDetails = userService.loadUserByUsername(userName);
-            log.info("2. userName : " + userDetails.getUserName());
             if (!JwtTokenUtils.validate(token, userDetails.getUserName(), secretKey)) {
                 chain.doFilter(request, response);
                 return;

@@ -9,7 +9,6 @@
     
 <br>
 
-
 ## ✏ 개요 설명
 <div align="center">
  <img src="https://img.shields.io/badge/SpringBoot-6DB33F.svg?logo=Spring-Boot&logoColor=white" />
@@ -34,17 +33,16 @@
 
 - [x] gitlab 배포파일 및 ec2 크론탭 설정
 - [x] swagger 문서화 설정
-- [x] 회원가입과 로그인
-- [x] 게시글 CRUD
+- [x] 회원가입과 로그인  
+- [x] 게시글 CRUD 구현
 - [x] 댓글 기능 구현
 - [x] 좋아요 기능 구현
-- [x] 테스트 코드 작성하기 
+- [x] 게시글 CRUD 및 부가기능(댓글, 좋아요) 테스트 코드 작성하기 
 - [ ] 알람 기능 구현
-- [x] admin 권한 (Role 역할) 구현
-- [ ] 화면ui 설정
+- [x] admin 권한 (Role 역할) 구현 및 ADMIN 권한 부여
+- [ ] 화면ui 설정 
 - [ ] 마이페이지 기능 구현
 
-<br>
 
 > * 진행 간 발생했던 이슈 : https://gitlab.com/rnrudejr9/mustasns/-/issues/?sort=created_date&state=all&first_page_size=20
 
@@ -73,6 +71,18 @@
 
 <br>
 
-## ERD
+## 📢 특이사항
+
+##### 이후 리펙토링 간 해야될 내용들
+
+* `DTO`를 조금더 활용하고 `ENTITY`에서 `DTO`를 추출하는 방식을 사용해야되겠다. (`entity class` 안 `static` 메소드 활용)
+* `UI`를 정말 개발해보고 싶었는데, 야속한 시간 덕분에 추후 `thymeleaf` 템플릿을 활용해서 마무리 할 예정이다.
+* `Alarm` 기능에 관련해서 `UI` 부분과 병행해서 진행하려고 하여 `js`의 비동기 방식에 대해 준비할 예정이다.
+* `Service` 단 비즈니스 로직 자체가 중복되는 코드들이 많다. 중복되는 부분들을 **간소화**하고 효율적으로 정리해야되겠다 생각이 들었다.
+* 마지막으로, 구글링을 통한 다양한 **이슈해결**과 짧은 시간에 계획대로 토이 프로젝트를 진행 할 수 있어서 개발에 좋은 경험이 되었다.
+
+<br>
+
+## 🚀 ERD
 
 ![image](https://user-images.githubusercontent.com/49141751/209630586-be6fa917-368e-45c0-9a3b-d0713e9ace80.png)

@@ -9,11 +9,13 @@ import com.example.mutsasnsproject.domain.dto.post.PostListResponse;
 import com.example.mutsasnsproject.domain.dto.post.PostRequest;
 import com.example.mutsasnsproject.domain.dto.post.PostResponse;
 import com.example.mutsasnsproject.domain.entity.Comment;
+import com.example.mutsasnsproject.domain.entity.Good;
 import com.example.mutsasnsproject.domain.entity.Post;
 import com.example.mutsasnsproject.domain.entity.User;
 import com.example.mutsasnsproject.exception.AppException;
 import com.example.mutsasnsproject.exception.ErrorCode;
 import com.example.mutsasnsproject.repository.CommentRepository;
+import com.example.mutsasnsproject.repository.GoodRepository;
 import com.example.mutsasnsproject.repository.PostRepository;
 import com.example.mutsasnsproject.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +29,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -35,6 +38,7 @@ public class PostService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
     private final CommentRepository commentRepository;
+    private final GoodRepository goodRepository;
     public PostResponse add(String userName,String body, String title){
         log.info("포스트 작성 서비스");
         // 토큰으로 로그인한 아이디 비교
@@ -169,7 +173,6 @@ public class PostService {
 
         // #3 수정할 댓글의 작성자가 본인인지?
         Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new AppException(ErrorCode.DATABASE_ERROR,"댓글이 없습니다"));
-        comment.getUser().getUserName();
 
         if(!Objects.equals(comment.getUser().getUserName(),userName)) {
             throw new AppException(ErrorCode.INVALID_PERMISSION, "작성자 불일치로 수정할 수 없는 아이디입니다");
@@ -180,5 +183,46 @@ public class PostService {
         comment.update(commentRequest.toEntity());
         CommentResponse commentResponse = CommentResponse.builder().comment(comment.getComment()).build();
         return commentResponse;
+    }
+
+    public CommentResponse commentDelete(String userName, Long postId, Long commentId){
+        // #1 토큰으로 로그인한 아이디가 없을 경우
+        User user = userRepository.findByUserName(userName)
+                .orElseThrow(()->new AppException(ErrorCode.USERNAME_NOT_FOUND,userName+"없습니다.!"));
+        // #2 해당 게시글이 존재하지 않을 경우
+        Post post = postRepository.findById(postId).orElseThrow(()->new AppException(ErrorCode.POST_NOT_FOUND,"게시글이 존재하지않습니다."));
+
+        // #3 삭제할 댓글의 작성자가 본인인지?
+        Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new AppException(ErrorCode.DATABASE_ERROR,"댓글이 없습니다"));
+
+        if(!Objects.equals(comment.getUser().getUserName(),userName)){
+            throw new AppException(ErrorCode.INVALID_PERMISSION, "작성자 불일치로 수정할 수 없는 아이디입니다");
+        }
+        commentRepository.delete(comment);
+        return CommentResponse.builder().comment(postId + " 의 댓글인 " + commentId + " 의 내용이 삭제됨").build();
+    }
+
+    public String postGood(Long postId,String userName) {
+        // #1 토큰으로 로그인한 아이디가 없을 경우
+        User user = userRepository.findByUserName(userName)
+                .orElseThrow(()->new AppException(ErrorCode.USERNAME_NOT_FOUND,userName+"없습니다.!"));
+
+        // #2 해당 게시글이 존재하지 않을 경우
+        Post post = postRepository.findById(postId).orElseThrow(()->new AppException(ErrorCode.POST_NOT_FOUND,"게시글이 존재하지않습니다."));
+
+        Optional<Good> good = goodRepository.findByUserAndPost(user,post);
+        // #3 이미 좋아요를 누른 상황
+        if(good.isPresent()){
+            goodRepository.delete(good.get());
+            return "게시글 좋아요 취소했습니다";
+        }
+        Good savedGood = Good.builder().post(post).user(user).build();
+        goodRepository.save(savedGood);
+        return "게시글 좋아요 했습니다";
+    }
+    public Integer countGood(Long postId){
+        // #2 해당 게시글이 존재하지 않을 경우
+        Post post = postRepository.findById(postId).orElseThrow(()->new AppException(ErrorCode.POST_NOT_FOUND,"게시글이 존재하지않습니다."));
+        return post.getGoods().size();
     }
 }

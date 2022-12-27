@@ -29,39 +29,36 @@ import org.springframework.web.bind.annotation.*;
 public class PostRestController {
     private final PostService postService;
 
-
+   //게시글 crud ----------------------------------------------------
     @PostMapping
-    public ResponseEntity<Response> addPost(Authentication authentication,@RequestBody PostRequest postRequest){
+    public Response<PostResponse> addPost(Authentication authentication,@RequestBody PostRequest postRequest){
         log.info("게시글 작성 컨트롤러");
         String userName = authentication.getName();
-        log.info("userName = " + userName);
         PostResponse postResponse = postService.add(userName,postRequest.getBody(),postRequest.getTitle());
-        return ResponseEntity.ok().body(Response.success(postResponse));
+        return Response.success(postResponse);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Response> modifyPost(Authentication authentication, @RequestBody PostRequest postRequest,@PathVariable Long id){
+    public Response<PostResponse> modifyPost(Authentication authentication, @RequestBody PostRequest postRequest,@PathVariable Long id){
         log.info("게시글 수정 컨트롤러");
         String userName = authentication.getName();
         PostResponse postResponse =postService.modify(userName,id, postRequest);
-        return ResponseEntity.ok().body(Response.success(postResponse));
+        return Response.success(postResponse);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Response> deletePost(Authentication authentication,@PathVariable Long id){
-        log.info("게시글 삭제 컨틀로러");
+    public Response<PostResponse> deletePost(Authentication authentication,@PathVariable Long id){
+        log.info("게시글 삭제 컨트롤러");
         String userName = authentication.getName();
         PostResponse postResponse = postService.delete(userName,id);
-        return ResponseEntity.ok().body(Response.success(postResponse));
+        return Response.success(postResponse);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Response> getPost(Authentication authentication,@PathVariable Long id){
+    public Response<PostDetailResponse> getPost(Authentication authentication,@PathVariable Long id){
         String userName = authentication.getName();
-        log.info("1");
         PostDetailResponse postDetailResponse = postService.get(userName,id);
-        log.info("2");
-        return ResponseEntity.ok().body(Response.success(postDetailResponse));
+        return Response.success(postDetailResponse);
     }
     @GetMapping
     public Response<Page<PostDetailResponse>> listPost(@PageableDefault(size = 20, sort = "createdAt",direction = Sort.Direction.DESC) Pageable pageable){
@@ -69,27 +66,50 @@ public class PostRestController {
         return Response.success(postListResponses);
     }
 
+//댓글 crud ----------------------------------------------------
 
     @PostMapping("/{id}/comment")
-    public ResponseEntity<Response> addComment(Authentication authentication, @PathVariable Long id, @RequestBody CommentRequest commentRequest){
+    public Response<CommentResponse> addComment(Authentication authentication, @PathVariable Long id, @RequestBody CommentRequest commentRequest){
         String userName = authentication.getName();
         CommentResponse commentResponse = postService.commentAdd(userName,id, commentRequest.getComment());
-        return ResponseEntity.ok().body(Response.success(commentResponse));
+        return Response.success(commentResponse);
     }
 
     @GetMapping("/{id}/comment")
-    public ResponseEntity<Response> listComment(@PathVariable Long id,@PageableDefault(size = 20, sort = "createdAt",direction = Sort.Direction.DESC) Pageable pageable){
+    public Response<CommentListResponse> listComment(@PathVariable Long id,@PageableDefault(size = 20, sort = "createdAt",direction = Sort.Direction.DESC) Pageable pageable){
         CommentListResponse commentListResponse = postService.commentList(id,pageable);
-        return ResponseEntity.ok().body(Response.success(commentListResponse));
+        return Response.success(commentListResponse);
     }
 
     @PutMapping("/{postId}/comment/{id}")
-    public ResponseEntity<Response> modifyComment(Authentication authentication,@PathVariable Long postId, @PathVariable Long id,@RequestBody CommentRequest commentRequest){
+    public Response<CommentResponse> modifyComment(Authentication authentication,@PathVariable Long postId, @PathVariable Long id,@RequestBody CommentRequest commentRequest){
         String userName = authentication.getName();
         CommentResponse commentResponse =postService.commentModify(userName,postId,commentRequest,id);
-        return ResponseEntity.ok().body(Response.success(commentResponse));
+        return Response.success(commentResponse);
     }
 
+    @DeleteMapping("/{postId}/comment/{id}")
+    public Response<CommentResponse> modifyComment2(Authentication authentication,@PathVariable Long postId, @PathVariable Long id){
+        String userName = authentication.getName();
+        CommentResponse commentResponse =postService.commentDelete(userName,postId,id);
+        return Response.success(commentResponse);
+    }
+
+
+    //좋아요기능 ----------------------------------------------------
+    @PostMapping("/{id}/likes")
+    public Response<String> goodPost(@PathVariable Long id,Authentication authentication){
+        log.info("게시글 좋아요 컨트롤러");
+        String userName = authentication.getName();
+        String message = postService.postGood(id,userName);
+        return Response.success(message);
+    }
+
+    @GetMapping("/{id}/likes")
+    public Response<Integer> goodCount(@PathVariable long id){
+        int count = postService.countGood(id);
+        return Response.success(count);
+    }
 
 
 

@@ -34,9 +34,11 @@ public class Post extends BaseEntity{
 //
     //하나의 post는 여러개의 coments를 가진다
     @OneToMany(mappedBy = "post")
+    @Builder.Default
     private List<Comment> comments = new ArrayList<>();
 
     @OneToMany(mappedBy = "post")
+    @Builder.Default
     private List<Good> goods = new ArrayList<>();
 
     //userId 값 매핑

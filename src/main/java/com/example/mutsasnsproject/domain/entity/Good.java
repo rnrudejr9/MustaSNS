@@ -1,12 +1,30 @@
 package com.example.mutsasnsproject.domain.entity;
 
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+import javax.annotation.Generated;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
-public class Good {
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Entity
+@Builder
+public class Good extends BaseEntity{
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private LocalDateTime createdAt;
-    private LocalDateTime lastModifiedAt;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "post_id")
+    private Post post;
+
 }

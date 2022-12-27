@@ -14,6 +14,7 @@ import com.example.mutsasnsproject.service.PostService;
 import com.example.mutsasnsproject.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -63,9 +64,9 @@ public class PostRestController {
         return ResponseEntity.ok().body(Response.success(postDetailResponse));
     }
     @GetMapping
-    public ResponseEntity<Response> listPost(@PageableDefault(size = 20, sort = "createdAt",direction = Sort.Direction.DESC) Pageable pageable){
-        PostListResponse postListResponse = postService.list(pageable);
-        return ResponseEntity.ok().body(Response.success(postListResponse));
+    public Response<Page<PostDetailResponse>> listPost(@PageableDefault(size = 20, sort = "createdAt",direction = Sort.Direction.DESC) Pageable pageable){
+        Page<PostDetailResponse> postListResponses = postService.list(pageable);
+        return Response.success(postListResponses);
     }
 
 

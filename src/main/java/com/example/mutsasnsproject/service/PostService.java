@@ -107,26 +107,10 @@ public class PostService {
     }
 
 
-    public PostListResponse list(Pageable pageable){
+    public Page<PostDetailResponse> list(Pageable pageable){
         Page<Post> page = postRepository.findAll(pageable);
-        List<PostDetailResponse> list = new ArrayList<>();
-        for(Post post : page){
-            PostDetailResponse postDetailResponse = PostDetailResponse.builder()
-                    .id(post.getId())
-                    .body(post.getBody())
-                    .title(post.getTitle())
-                    .userName(post.getUser().getUserName())
-                    .lastModifiedAt(post.getLastModifiedAt().format(DateTimeFormatter.ofPattern("yyyy-mm-dd hh:mm:ss")))
-                    .createdAt(post.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-mm-dd hh:mm:ss")))
-                    .build();
-            list.add(postDetailResponse);
-        }
-
-        PostListResponse postListResponse = PostListResponse.builder()
-                .content(list)
-                .pageable(pageable)
-                .build();
-        return postListResponse;
+        Page<PostDetailResponse> postDetailResponsePage = PostDetailResponse.toDtoList(page);
+        return postDetailResponsePage;
     }
 
     public CommentResponse commentAdd(String userName, Long postId, String comment) {

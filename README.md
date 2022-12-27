@@ -13,19 +13,19 @@
 
 |API 종류|HTTP|URI|API 설명|
 |:-----:|:------------------:|:-----------------------------:|:-----------------------------:|
-| <b>hello | GET | /api/v1/hello | testAPI return String |
-| <span style="color:red"> users </span> | POST | /api/v1/users/join | 회원가입기능 |
-| users | POST | /api/v1/users/login | 로그인기능 |
-| posts | POST | /api/v1/posts | 글작성기능 |
-| posts | PUT | /api/v1/posts/{id} | 글수정기능 |
-| posts | DELETE | /api/v1/posts/{id} | 글삭제기능 |
-| posts | GET | /api/v1/posts/{id} | 글조회기능 |
-| posts | GET | /api/v1/posts | 글전체조회 |
-| comment | POST | /api/v1/posts/{id}/comment | 댓글작성기능 |
-| comment | PUT | /api/v1/posts/{postid}/comment/{id} | 댓글수정기능 |
-| comment | DELETE | /api/v1/posts/{postid}/comment/{id} | 댓글삭제기능 |
-| comment | GET | /api/v1/posts/{id}/comment | 댓글조회기능 |
-| good |  |  | 좋아요기능 |
+| `hello` | GET | /api/v1/hello | testAPI return String |
+| `users` | POST | /api/v1/users/join | 회원가입기능 |
+| `users` | POST | /api/v1/users/login | 로그인기능 |
+| `posts` | POST | /api/v1/posts | 글작성기능 |
+| `posts` | PUT | /api/v1/posts/{id} | 글수정기능 |
+| `posts` | DELETE | /api/v1/posts/{id} | 글삭제기능 |
+| `posts` | GET | /api/v1/posts/{id} | 글조회기능 |
+| `posts` | GET | /api/v1/posts | 글전체조회 |
+| `comment` | POST | /api/v1/posts/{id}/comment | 댓글작성기능 |
+| `comment` | PUT | /api/v1/posts/{postid}/comment/{id} | 댓글수정기능 |
+| `comment` | DELETE | /api/v1/posts/{postid}/comment/{id} | 댓글삭제기능 |
+| `comment` | GET | /api/v1/posts/{id}/comment | 댓글조회기능 |
+| `good` |  |  | 좋아요기능 |
 
 
 

@@ -1,13 +1,20 @@
 package com.example.mutsasnsproject.controller;
 
 import com.example.mutsasnsproject.domain.dto.Response;
+import com.example.mutsasnsproject.domain.dto.comment.CommentRequest;
+import com.example.mutsasnsproject.domain.dto.comment.CommentResponse;
 import com.example.mutsasnsproject.domain.dto.post.PostDetailResponse;
 import com.example.mutsasnsproject.domain.dto.post.PostListResponse;
 import com.example.mutsasnsproject.domain.dto.post.PostRequest;
 import com.example.mutsasnsproject.domain.dto.post.PostResponse;
 import com.example.mutsasnsproject.domain.dto.user.UserLoginRequest;
+import com.example.mutsasnsproject.domain.entity.Comment;
+import com.example.mutsasnsproject.domain.entity.Post;
+import com.example.mutsasnsproject.domain.entity.User;
 import com.example.mutsasnsproject.exception.AppException;
 import com.example.mutsasnsproject.exception.ErrorCode;
+import com.example.mutsasnsproject.fixture.PostEntityFixture;
+import com.example.mutsasnsproject.fixture.UserEntityFixture;
 import com.example.mutsasnsproject.service.PostService;
 import com.example.mutsasnsproject.service.UserService;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -25,11 +32,13 @@ import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -256,9 +265,77 @@ class PostRestControllerTest {
                 .andExpect(status().is(ErrorCode.DATABASE_ERROR.getHttpStatus().value()));
     }
 
+    @Test
+    @WithMockUser
+    @DisplayName("댓글 1개 작성 성공")
+    void comment_test() throws Exception {
+        String userName = "userName";
 
+        when(postService.commentAdd(userName,1L,"hello")).thenReturn(CommentResponse.builder().comment("hello").build());
 
+        CommentRequest commentRequest = CommentRequest.builder().comment("hello").build();
+        mockMvc.perform(post("/api/v1/posts/1/comment")
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsBytes(commentRequest))
+                )
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
 
+    @Test
+    @WithMockUser
+    @DisplayName("댓글 1개 작성 실패 : 권한 없음")
+    void comment_test1() throws Exception {
+        String userName = "userName";
+        when(postService.commentAdd(any(),any(),any()))
+                .thenThrow(new AppException(ErrorCode.INVALID_PERMISSION,""));
+        CommentRequest commentRequest = CommentRequest.builder().comment("hello").build();
+        mockMvc.perform(post("/api/v1/posts/1/comment")
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsBytes(commentRequest))
+                )
+                .andDo(print())
+                .andExpect(status().is(ErrorCode.INVALID_PERMISSION.getHttpStatus().value()));
+    }
 
+    @Test
+    @DisplayName("좋아요 실패 : Login하지 않은 경우")
+    @WithAnonymousUser // Login하지 않은 경우를 표현
+    void good_fail1() throws Exception {
+        mockMvc.perform(post("/api/v1/posts/1/likes")
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @DisplayName("좋아요 실패 : 게시물이 존재하지 않는 경우")
+    @WithMockUser
+    void like_fail2() throws Exception {
+        doThrow(new AppException(ErrorCode.POST_NOT_FOUND,""))
+                .when(postService).postGood(any(), any());
+
+        mockMvc.perform(post("/api/v1/posts/1/likes")
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @DisplayName("좋아요 성공 ")
+    @WithMockUser
+    void like_success() throws Exception {
+        mockMvc.perform(post("/api/v1/posts/1/likes")
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.resultCode").value("SUCCESS"))
+        ;
+    }
 
 }

@@ -22,8 +22,9 @@
 | posts | GET | /api/v1/posts | 글전체조회 |
 | comment | POST | /api/v1/posts/{id}/comment | 댓글작성기능 |
 | comment | PUT | /api/v1/posts/{postid}/comment/{id} | 댓글수정기능 |
-| comment | DELETE |  | 댓글삭제기능 |
+| comment | DELETE | /api/v1/posts/{postid}/comment/{id} | 댓글삭제기능 |
 | comment | GET | /api/v1/posts/{id}/comment | 댓글조회기능 |
+| good |  |  | 좋아요기능 |
 
 
 
@@ -44,7 +45,7 @@
 * 자바 : JAVA 11
 * 빌드 : Gradle 6.8
 * 서버 : AWS EC2
-* 배포 : Docker
+* 배포 : Docker, gitlab
 * 데이터베이스 : MySql 8.0
 * 필수 라이브러리 : SpringBoot Web, MySQL, Spring Data JPA, Lombok, Spring Security
 <hr>

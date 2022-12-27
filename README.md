@@ -2,7 +2,7 @@
 * 🦁**멋사 아니라 'musta'che 'SNS'** ..  ^_^
 * **멋쟁이사자처럼 백엔드스쿨 2기 개인프로젝트**
 
-##### "로그인/회원가입, 게시글 CRUD, 댓글, 좋아요, 알림 기능이 있는 토이 프로젝트" 
+##### <div align = "center" logoColor="green"> "로그인/회원가입, 게시글 CRUD, 댓글, 좋아요, 알림, 권한 기능이 있는 토이 프로젝트" </div>
 
 
 > * swagger주소 😊 t3(swagger) : http://ec2-54-180-91-171.ap-northeast-2.compute.amazonaws.com:8080/swagger-ui/ 

@@ -12,6 +12,7 @@ import com.example.mutsasnsproject.domain.entity.Comment;
 import com.example.mutsasnsproject.domain.entity.Good;
 import com.example.mutsasnsproject.domain.entity.Post;
 import com.example.mutsasnsproject.domain.entity.User;
+import com.example.mutsasnsproject.domain.role.UserRole;
 import com.example.mutsasnsproject.exception.AppException;
 import com.example.mutsasnsproject.exception.ErrorCode;
 import com.example.mutsasnsproject.repository.CommentRepository;
@@ -64,8 +65,8 @@ public class PostService {
                 .orElseThrow(()->new AppException(ErrorCode.USERNAME_NOT_FOUND,userName+"없습니다.!"));
         // #2 수정할 포스트가 없을 경우
         Post post = postRepository.findById(postId).orElseThrow(()->new AppException(ErrorCode.POST_NOT_FOUND,"해당포스트가 없습니다."));
-        // #3 사용자와 수정할 포스트의 작성자가 다를 경우
-        if(!Objects.equals(post.getUser().getUserName(),user.getUserName())) {
+        // #3 사용자와 수정할 포스트의 작성자가 다를 경우 + 계정이 ADMIN 이 아닐 경우
+        if(!Objects.equals(post.getUser().getUserName(),user.getUserName()) && !user.getRole().equals(UserRole.ADMIN)) {
             throw new AppException(ErrorCode.INVALID_PERMISSION, "작성자 불일치로 수정할 수 없는 아이디입니다");
         }
 
@@ -83,7 +84,7 @@ public class PostService {
         // #2 삭제할 포스트가 없을 경우
         Post post = postRepository.findById(postId).orElseThrow(()->new AppException(ErrorCode.POST_NOT_FOUND,"해당포스트가 없습니다."));
         // #3 사용자와 삭제할 포스트의 작성자가 다를 경우
-        if(!Objects.equals(post.getUser().getUserName(),user.getUserName())) {
+        if(!Objects.equals(post.getUser().getUserName(),user.getUserName()) && !user.getRole().equals(UserRole.ADMIN)) {
             throw new AppException(ErrorCode.INVALID_PERMISSION, "작성자 불일치로 삭제할 수 없는 아이디입니다");
         }
 
@@ -174,7 +175,7 @@ public class PostService {
         // #3 수정할 댓글의 작성자가 본인인지?
         Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new AppException(ErrorCode.DATABASE_ERROR,"댓글이 없습니다"));
 
-        if(!Objects.equals(comment.getUser().getUserName(),userName)) {
+        if(!Objects.equals(comment.getUser().getUserName(),userName) && !user.getRole().equals(UserRole.ADMIN)) {
             throw new AppException(ErrorCode.INVALID_PERMISSION, "작성자 불일치로 수정할 수 없는 아이디입니다");
         }
 
@@ -195,7 +196,7 @@ public class PostService {
         // #3 삭제할 댓글의 작성자가 본인인지?
         Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new AppException(ErrorCode.DATABASE_ERROR,"댓글이 없습니다"));
 
-        if(!Objects.equals(comment.getUser().getUserName(),userName)){
+        if(!Objects.equals(comment.getUser().getUserName(),userName) && !user.getRole().equals(UserRole.ADMIN)){
             throw new AppException(ErrorCode.INVALID_PERMISSION, "작성자 불일치로 수정할 수 없는 아이디입니다");
         }
         commentRepository.delete(comment);

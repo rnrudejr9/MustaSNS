@@ -44,6 +44,9 @@
 - [ ] 화면ui 설정
 - [ ] 마이페이지 기능 구현
 
+<br>
+
+> * 진행 간 발생했던 이슈 : https://gitlab.com/rnrudejr9/mustasns/-/issues/?sort=created_date&state=all&first_page_size=20
 
 <br>
 

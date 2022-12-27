@@ -36,6 +36,9 @@ public class Post extends BaseEntity{
     @OneToMany(mappedBy = "post")
     private List<Comment> comments = new ArrayList<>();
 
+    @OneToMany(mappedBy = "post")
+    private List<Good> goods = new ArrayList<>();
+
     //userId 값 매핑
 
     public void update(Post update){

@@ -36,6 +36,10 @@ public class User extends BaseEntity {
     @OneToMany(mappedBy = "user")
     private List<Comment> comments = new ArrayList<>();
 
+    @OneToMany(mappedBy = "user")
+    private List<Good> goods = new ArrayList<>();
+
+
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role.toString()));
     }

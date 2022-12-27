@@ -39,9 +39,10 @@
 - [x] 좋아요 기능 구현
 - [x] 테스트 코드 작성하기 
 - [ ] 알람 기능 구현
+- [x] admin 권한 (Role 역할) 구현
 - [ ] 화면ui 설정
 - [ ] 마이페이지 기능 구현
-- [ ] admin 권한 (Role 역할) 구현
+
 
 <br>
 
@@ -64,6 +65,7 @@
 | `comment` | GET | /api/v1/posts/{id}/comment | 댓글조회기능 |
 | `good` | POST | /api/v1/posts/{id}/likes | 좋아요+취소기능 |
 | `good` | GET | /api/v1/posts/{id}/likes | 좋아요조회기능 |
+| `users` | POST | /api/v1/users/{id}/role/change | 사용자권한변경기능 |
 
 
 

@@ -10,10 +10,11 @@
 
 ## ✏ ENDPOINT
 
+
 |API 종류|HTTP|URI|API 설명|
 |:-----:|:------------------:|:-----------------------------:|:-----------------------------:|
-| hello | GET | /api/v1/hello | testAPI return String |
-| users | POST | /api/v1/users/join | 회원가입기능 |
+| <b>hello | GET | /api/v1/hello | testAPI return String |
+| <span style="color:red"> users </span> | POST | /api/v1/users/join | 회원가입기능 |
 | users | POST | /api/v1/users/login | 로그인기능 |
 | posts | POST | /api/v1/posts | 글작성기능 |
 | posts | PUT | /api/v1/posts/{id} | 글수정기능 |

@@ -1,10 +1,12 @@
 # 📑 MustaSNS
-* 🦁**멋사 아니라 'musta'che 'SNS'**
+* 🦁**멋사 아니라 'musta'che 'SNS'** ..  ^_^
 * **멋쟁이사자처럼 백엔드스쿨 2기 개인프로젝트**
 
-    * swagger주소 <br>
-😊 t3(swagger) : http://ec2-54-180-91-171.ap-northeast-2.compute.amazonaws.com:8080/swagger-ui/ <br>
+##### "로그인/회원가입, 게시글 CRUD, 댓글, 좋아요, 알림 기능이 있는 토이 프로젝트" 
 
+
+> * swagger주소 😊 t3(swagger) : http://ec2-54-180-91-171.ap-northeast-2.compute.amazonaws.com:8080/swagger-ui/ 
+    
 <br>
 
 
@@ -17,15 +19,17 @@
  <img src="https://img.shields.io/badge/AmazonEC2-FF9900.svg?logo=Amazon-EC2&logoColor=white" />
 </div>
 
-* 에디터 : Intellij Ultimate
-* 개발 툴 : SpringBoot 2.7.5
-* 자바 : JAVA 11
-* 빌드 : Gradle 6.8
-* 서버 : AWS EC2
-* 배포 : Docker, gitlab
-* 데이터베이스 : MySql 8.0
-* 필수 라이브러리 : SpringBoot Web, MySQL, Spring Data JPA, Lombok, Spring Security
-<hr>
+* **에디터** : Intellij Ultimate
+* **개발 툴** : SpringBoot 2.7.5
+* **자바** : JAVA 11
+* **빌드** : Gradle 6.8
+* **서버** : AWS EC2
+* **배포** : Docker, gitlab
+* **데이터베이스** : MySql 8.0
+* **필수 라이브러리** : SpringBoot Web, MySQL, Spring Data JPA, Lombok, Spring Security
+
+
+## 🎨 진행과정
 
 - [x] gitlab 배포파일 및 ec2 크론탭 설정
 - [x] swagger 문서화 설정
@@ -39,7 +43,7 @@
 
 <br>
 
-## ✏ ENDPOINT
+## 🎯 ENDPOINT
 
 
 |API 종류|HTTP|URI|API 설명|

@@ -28,6 +28,7 @@
 * **데이터베이스** : MySql 8.0
 * **필수 라이브러리** : SpringBoot Web, MySQL, Spring Data JPA, Lombok, Spring Security
 
+<br>
 
 ## 🎨 진행과정
 
@@ -67,7 +68,7 @@
 | `good` | GET | /api/v1/posts/{id}/likes | 좋아요조회기능 |
 | `users` | POST | /api/v1/users/{id}/role/change | 사용자권한변경기능 |
 
-
+<br>
 
 ## ERD
 

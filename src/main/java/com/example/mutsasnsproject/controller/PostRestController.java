@@ -29,7 +29,8 @@ import org.springframework.web.bind.annotation.*;
 public class PostRestController {
     private final PostService postService;
 
-   //게시글 crud ----------------------------------------------------
+//    게시글 crud ----------------------------------------------------
+
     @PostMapping
     public Response<PostResponse> addPost(Authentication authentication,@RequestBody PostRequest postRequest){
         log.info("게시글 작성 컨트롤러");
@@ -66,7 +67,7 @@ public class PostRestController {
         return Response.success(postListResponses);
     }
 
-//댓글 crud ----------------------------------------------------
+//      댓글 crud ----------------------------------------------------
 
     @PostMapping("/{id}/comment")
     public Response<CommentResponse> addComment(Authentication authentication, @PathVariable Long id, @RequestBody CommentRequest commentRequest){
@@ -95,8 +96,8 @@ public class PostRestController {
         return Response.success(commentResponse);
     }
 
+//    좋아요기능 ----------------------------------------------------
 
-    //좋아요기능 ----------------------------------------------------
     @PostMapping("/{id}/likes")
     public Response<String> goodPost(@PathVariable Long id,Authentication authentication){
         log.info("게시글 좋아요 컨트롤러");

@@ -40,6 +40,13 @@ public class PostService {
     private final UserRepository userRepository;
     private final CommentRepository commentRepository;
     private final GoodRepository goodRepository;
+
+//    게시글 CRUD -----------------------------------------------
+//            add 등록;
+//            modify 수정;
+//            delete 삭제;
+//            get 상세조회;
+//            list 전체조회;
     public PostResponse add(String userName,String body, String title){
         log.info("포스트 작성 서비스");
         // 토큰으로 로그인한 아이디 비교
@@ -117,6 +124,13 @@ public class PostService {
         Page<PostDetailResponse> postDetailResponsePage = PostDetailResponse.toDtoList(page);
         return postDetailResponsePage;
     }
+
+
+//    댓글 CRUD -----------------------------------------------
+//            comment_add 등록;
+//            comment_modify 수정;
+//            comment_delete 삭제;
+//            comment_list 전체조회;
 
     public CommentResponse commentAdd(String userName, Long postId, String comment) {
         // #1 토큰으로 로그인한 아이디가 없을 경우
@@ -202,6 +216,11 @@ public class PostService {
         commentRepository.delete(comment);
         return CommentResponse.builder().comment(postId + " 의 댓글인 " + commentId + " 의 내용이 삭제됨").build();
     }
+
+//      좋아요 기능 -----------------------------------------------
+//            postGood 좋아요 실행/취소;
+//            countGood 좋아요 개수리턴;
+
 
     public String postGood(Long postId,String userName) {
         // #1 토큰으로 로그인한 아이디가 없을 경우

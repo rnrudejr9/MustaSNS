@@ -21,6 +21,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 @RestController
 @RequestMapping("/api/v1/posts")
@@ -32,7 +33,7 @@ public class PostRestController {
 //    게시글 crud ----------------------------------------------------
 
     @PostMapping
-    public Response<PostResponse> addPost(Authentication authentication,@RequestBody PostRequest postRequest){
+    public Response<PostResponse> addPost(@ApiIgnore Authentication authentication, @RequestBody PostRequest postRequest){
         log.info("게시글 작성 컨트롤러");
         String userName = authentication.getName();
         PostResponse postResponse = postService.add(userName,postRequest.getBody(),postRequest.getTitle());
@@ -40,7 +41,7 @@ public class PostRestController {
     }
 
     @PutMapping("/{id}")
-    public Response<PostResponse> modifyPost(Authentication authentication, @RequestBody PostRequest postRequest,@PathVariable Long id){
+    public Response<PostResponse> modifyPost(@ApiIgnore Authentication authentication, @RequestBody PostRequest postRequest,@PathVariable Long id){
         log.info("게시글 수정 컨트롤러");
         String userName = authentication.getName();
         PostResponse postResponse =postService.modify(userName,id, postRequest);
@@ -48,7 +49,7 @@ public class PostRestController {
     }
 
     @DeleteMapping("/{id}")
-    public Response<PostResponse> deletePost(Authentication authentication,@PathVariable Long id){
+    public Response<PostResponse> deletePost(@ApiIgnore Authentication authentication,@PathVariable Long id){
         log.info("게시글 삭제 컨트롤러");
         String userName = authentication.getName();
         PostResponse postResponse = postService.delete(userName,id);
@@ -56,7 +57,7 @@ public class PostRestController {
     }
 
     @GetMapping("/{id}")
-    public Response<PostDetailResponse> getPost(Authentication authentication,@PathVariable Long id){
+    public Response<PostDetailResponse> getPost(@ApiIgnore Authentication authentication,@PathVariable Long id){
         String userName = authentication.getName();
         PostDetailResponse postDetailResponse = postService.get(userName,id);
         return Response.success(postDetailResponse);

@@ -65,6 +65,15 @@ public class PostService {
         return postResponse;
     }
 
+    public PostResponse addRe(PostRequest postRequest, String userName){
+        // 토큰으로 로그인한 아이디 비교
+        User user = userRepository.findByUserName(userName)
+                .orElseThrow(()->new AppException(ErrorCode.USERNAME_NOT_FOUND,userName +" 이 존재하지 않습니다."));
+        Post savedPost = postRequest.toEntity();
+        postRepository.save(savedPost);
+        return new PostResponse("게시글 작성완료",savedPost.getId());
+    }
+
     @Transactional
     public PostResponse modify(String userName, Long postId, PostRequest postRequest){
         // #1 토큰으로 로그인한 아이디 없을 경우
@@ -214,7 +223,7 @@ public class PostService {
             throw new AppException(ErrorCode.INVALID_PERMISSION, "작성자 불일치로 수정할 수 없는 아이디입니다");
         }
         commentRepository.delete(comment);
-        return CommentResponse.builder().comment(postId + " 가 작성한 " + commentId + " 의 " + comment.getComment()  +" 내용이 삭제됨").build();
+        return CommentResponse.builder().comment(post.getUser().getUserName() + " 가 작성한 " + commentId + " 의 " + comment.getComment()  +" 내용이 삭제됨").build();
     }
 
 //      좋아요 기능 -----------------------------------------------

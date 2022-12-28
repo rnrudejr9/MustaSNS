@@ -39,26 +39,26 @@ public class PostRestController {
         return Response.success(postResponse);
     }
 
-    @PutMapping("/{postId}")
-    public Response<PostResponse> modifyPost(Authentication authentication, @RequestBody PostRequest postRequest,@PathVariable Long postId){
+    @PutMapping("/{id}")
+    public Response<PostResponse> modifyPost(Authentication authentication, @RequestBody PostRequest postRequest,@PathVariable Long id){
         log.info("게시글 수정 컨트롤러");
         String userName = authentication.getName();
-        PostResponse postResponse =postService.modify(userName,postId, postRequest);
+        PostResponse postResponse =postService.modify(userName,id, postRequest);
         return Response.success(postResponse);
     }
 
-    @DeleteMapping("/{postId}")
-    public Response<PostResponse> deletePost(Authentication authentication,@PathVariable Long postId){
+    @DeleteMapping("/{id}")
+    public Response<PostResponse> deletePost(Authentication authentication,@PathVariable Long id){
         log.info("게시글 삭제 컨트롤러");
         String userName = authentication.getName();
-        PostResponse postResponse = postService.delete(userName,postId);
+        PostResponse postResponse = postService.delete(userName,id);
         return Response.success(postResponse);
     }
 
-    @GetMapping("/{postId}")
-    public Response<PostDetailResponse> getPost(Authentication authentication,@PathVariable Long postId){
+    @GetMapping("/{id}")
+    public Response<PostDetailResponse> getPost(Authentication authentication,@PathVariable Long id){
         String userName = authentication.getName();
-        PostDetailResponse postDetailResponse = postService.get(userName,postId);
+        PostDetailResponse postDetailResponse = postService.get(userName,id);
         return Response.success(postDetailResponse);
     }
     @GetMapping

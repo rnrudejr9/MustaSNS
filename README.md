@@ -71,6 +71,16 @@
 
 <br>
 
+![image](https://user-images.githubusercontent.com/49141751/209741337-49e7fe52-abb9-4c40-b6d1-525c3ab4d152.png)
+
+* `users`, `method.get` 을 제외한 `API`는 로그인 후 `JWT`토큰을 
+
+![image](https://user-images.githubusercontent.com/49141751/209741359-80f5d3c0-01cc-4f61-a895-d2985c343ebe.png)
+
+* `Bearer Token` 으로 인증받아 사용한다.
+
+<br>
+
 ## 📢 특이사항
 
 ##### 공부해야될것

@@ -39,26 +39,26 @@ public class PostRestController {
         return Response.success(postResponse);
     }
 
-    @PutMapping("/{id}")
-    public Response<PostResponse> modifyPost(Authentication authentication, @RequestBody PostRequest postRequest,@PathVariable Long id){
+    @PutMapping("/{postId}")
+    public Response<PostResponse> modifyPost(Authentication authentication, @RequestBody PostRequest postRequest,@PathVariable Long postId){
         log.info("게시글 수정 컨트롤러");
         String userName = authentication.getName();
-        PostResponse postResponse =postService.modify(userName,id, postRequest);
+        PostResponse postResponse =postService.modify(userName,postId, postRequest);
         return Response.success(postResponse);
     }
 
-    @DeleteMapping("/{id}")
-    public Response<PostResponse> deletePost(Authentication authentication,@PathVariable Long id){
+    @DeleteMapping("/{postId}")
+    public Response<PostResponse> deletePost(Authentication authentication,@PathVariable Long postId){
         log.info("게시글 삭제 컨트롤러");
         String userName = authentication.getName();
-        PostResponse postResponse = postService.delete(userName,id);
+        PostResponse postResponse = postService.delete(userName,postId);
         return Response.success(postResponse);
     }
 
-    @GetMapping("/{id}")
-    public Response<PostDetailResponse> getPost(Authentication authentication,@PathVariable Long id){
+    @GetMapping("/{postId}")
+    public Response<PostDetailResponse> getPost(Authentication authentication,@PathVariable Long postId){
         String userName = authentication.getName();
-        PostDetailResponse postDetailResponse = postService.get(userName,id);
+        PostDetailResponse postDetailResponse = postService.get(userName,postId);
         return Response.success(postDetailResponse);
     }
     @GetMapping
@@ -69,16 +69,16 @@ public class PostRestController {
 
 //      댓글 crud ----------------------------------------------------
 
-    @PostMapping("/{id}/comment")
-    public Response<CommentResponse> addComment(Authentication authentication, @PathVariable Long id, @RequestBody CommentRequest commentRequest){
+    @PostMapping("/{postId}/comment")
+    public Response<CommentResponse> addComment(Authentication authentication, @PathVariable Long postId, @RequestBody CommentRequest commentRequest){
         String userName = authentication.getName();
-        CommentResponse commentResponse = postService.commentAdd(userName,id, commentRequest.getComment());
+        CommentResponse commentResponse = postService.commentAdd(userName,postId, commentRequest.getComment());
         return Response.success(commentResponse);
     }
 
-    @GetMapping("/{id}/comment")
-    public Response<CommentListResponse> listComment(@PathVariable Long id,@PageableDefault(size = 20, sort = "createdAt",direction = Sort.Direction.DESC) Pageable pageable){
-        CommentListResponse commentListResponse = postService.commentList(id,pageable);
+    @GetMapping("/{postId}/comment")
+    public Response<CommentListResponse> listComment(@PathVariable Long postId,@PageableDefault(size = 20, sort = "createdAt",direction = Sort.Direction.DESC) Pageable pageable){
+        CommentListResponse commentListResponse = postService.commentList(postId,pageable);
         return Response.success(commentListResponse);
     }
 

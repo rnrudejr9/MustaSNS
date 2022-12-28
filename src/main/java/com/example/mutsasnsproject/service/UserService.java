@@ -25,9 +25,10 @@ public class UserService {
     private final BCryptPasswordEncoder encoder;
     @Value("${jwt.secretKey}")
     private String key;
-    public UserJoinResponse join(String userName, String password){
-        Optional<User> optionalUser = userRepository.findByUserName(userName);
 
+    // User 회원가입 / 로그인 기능 -------------------------------------
+
+    public UserJoinResponse join(String userName, String password){
         // #1 userName 중복체크
         userRepository.findByUserName(userName)
                 .ifPresent(user -> {
@@ -42,14 +43,16 @@ public class UserService {
                     .role(UserRole.ADMIN)
                     .build();
         }else {
-            //저장
             user = User.builder()
                     .userName(userName)
                     .password(encoder.encode(password))
                     .role(UserRole.USER)
                     .build();
         }
+        // 저장할때 저장한 데이터타입을 확인하고 Admin 이면 등급을 바꾸는 static메소드를 만들기 : 리펙토링
+
         userRepository.save(user);
+        // 저장 후 반환할 DTO로 변환 해주는 작업 --> 엔티티를 매개변수로 받는 DTO의 메소드를 구현해보기 : 리펙토링
         UserJoinResponse userJoinResponse = UserJoinResponse
                 .builder()
                 .userName(user.getUserName())
@@ -59,27 +62,33 @@ public class UserService {
     }
 
     public UserLoginResponse login(String userName,String password) {
-        //username 없음
+        // #1 userName 존재하지 않을 경우
         User loginUser = userRepository.findByUserName(userName)
                 .orElseThrow(()->new AppException(ErrorCode.USERNAME_NOT_FOUND,userName+"없습니다.!"));
 
-        //password 틀림
+        // #2 입력한 password 가 틀렸을 경우
         if(!encoder.matches(password,loginUser.getPassword())){
             throw new AppException(ErrorCode.INVALID_PASSWORD,"패스워드 오류");
         }
         long expireTimeMs = 1000 * 60 * 60L;
+
         String token = JwtTokenUtils.generateAccessToken(loginUser.getUserName(),key,expireTimeMs);
+
+        // 저장 후 반환할 DTO로 변환 해주는 작업 --> 엔티티를 매개변수로 받는 DTO의 메소드를 구현해보기 : 리펙토링
         UserLoginResponse userLoginResponse = UserLoginResponse
                 .builder()
                 .jwt(token)
                 .build();
-        //앞에서 예외처리 안되었으면 토큰 발행
         return userLoginResponse;
     }
+
+    // user권한 찾기 -------------------------------------
 
     public User loadUserByUsername(String username) throws UsernameNotFoundException {
         return userRepository.findByUserName(username).orElseThrow(()->new AppException(ErrorCode.USERNAME_NOT_FOUND,"유저가 없습니다."));
     }
+
+    // User 권한 설정 ------------------------------------
 
     @Transactional
     public String userRoleChange(String userName,Long userId,String userRole){

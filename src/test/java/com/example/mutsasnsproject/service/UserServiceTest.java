@@ -1,6 +1,7 @@
 package com.example.mutsasnsproject.service;
 
 import com.example.mutsasnsproject.configuration.utils.JwtTokenUtils;
+import com.example.mutsasnsproject.domain.dto.user.UserJoinResponse;
 import com.example.mutsasnsproject.domain.dto.user.UserLoginResponse;
 import com.example.mutsasnsproject.domain.entity.User;
 import com.example.mutsasnsproject.exception.AppException;
@@ -48,9 +49,9 @@ class UserServiceTest {
         TestInfoFixture.TestInfo fixture =TestInfoFixture.get();
         User user = mock(User.class);
 
-        when(userRepository.findByUserName(any())).thenReturn(Optional.of(user));
-        when(encoder.matches(any(),any())).thenReturn(true);
-        when(JwtTokenUtils.generateAccessToken(any(),"secketKey",any())).thenReturn("String");
+        when(userRepository.findByUserName(fixture.getUserName())).thenReturn(Optional.of(user));
+        when(encoder.matches(fixture.getUserName(),fixture.getPassword())).thenReturn(true);
+//        when(JwtTokenUtils.generateAccessToken(any(),"secketKey",any())).thenReturn("String");
 
         Assertions.assertDoesNotThrow(()->userService.login(fixture.getUserName(), fixture.getPassword()));
     }

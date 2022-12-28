@@ -8,7 +8,6 @@ import com.example.mutsasnsproject.domain.dto.user.UserLoginRequest;
 import com.example.mutsasnsproject.domain.dto.user.UserLoginResponse;
 import com.example.mutsasnsproject.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,6 +32,7 @@ public class UserController  {
     }
 
     //Admin 기능 ------------------------------------
+
     @PostMapping("/{id}/role/change")
     public Response<String> changeRole(@RequestBody UserRoleRequest userRoleRequest, @PathVariable Long id,Authentication authentication){
         String userName = authentication.getName();

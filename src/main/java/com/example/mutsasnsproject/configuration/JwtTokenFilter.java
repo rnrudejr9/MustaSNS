@@ -34,7 +34,6 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
         final String header = request.getHeader(HttpHeaders.AUTHORIZATION);
         final String token;
-
         try {
             if (header == null || !header.startsWith("Bearer ")) {
 //                log.error("Authorization Header does not start with Bearer {}", request.getRequestURI());
@@ -57,10 +56,6 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             );
             authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
             SecurityContextHolder.getContext().setAuthentication(authentication);
-
-            log.info("2. auth : " + authentication);
-
-
 
         } catch (RuntimeException e) {
             chain.doFilter(request, response);

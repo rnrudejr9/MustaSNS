@@ -26,6 +26,7 @@ public class PostDetailResponse {
                 .body(m.getBody())
                 .userName(m.getUser().getUserName())
                 .createdAt(m.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-mm-dd hh:mm:ss")))
+                .lastModifiedAt(m.getLastModifiedAt().format(DateTimeFormatter.ofPattern("yyyy-mm-dd hh:mm:ss")))
                 .build());
         return postDetailResponses;
     }

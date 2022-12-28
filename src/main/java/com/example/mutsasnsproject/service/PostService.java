@@ -51,7 +51,7 @@ public class PostService {
         log.info("포스트 작성 서비스");
         // 토큰으로 로그인한 아이디 비교
         User user = userRepository.findByUserName(userName)
-                .orElseThrow(()->new AppException(ErrorCode.USERNAME_NOT_FOUND,userName+"없습니다.!"));;
+                .orElseThrow(()->new AppException(ErrorCode.USERNAME_NOT_FOUND,userName +" 이 존재하지 않습니다."));;
         Post savedPost = Post.builder()
                 .body(body)
                 .title(title)
@@ -60,7 +60,7 @@ public class PostService {
         postRepository.save(savedPost);
         PostResponse postResponse = PostResponse.builder()
                 .postId(savedPost.getId())
-                .message("포스트 작성완료")
+                .message("게시글 작성완료")
                 .build();
         return postResponse;
     }
@@ -69,9 +69,9 @@ public class PostService {
     public PostResponse modify(String userName, Long postId, PostRequest postRequest){
         // #1 토큰으로 로그인한 아이디 없을 경우
         User user = userRepository.findByUserName(userName)
-                .orElseThrow(()->new AppException(ErrorCode.USERNAME_NOT_FOUND,userName+"없습니다.!"));
+                .orElseThrow(()->new AppException(ErrorCode.USERNAME_NOT_FOUND,userName +" 이 존재하지 않습니다."));
         // #2 수정할 포스트가 없을 경우
-        Post post = postRepository.findById(postId).orElseThrow(()->new AppException(ErrorCode.POST_NOT_FOUND,"해당포스트가 없습니다."));
+        Post post = postRepository.findById(postId).orElseThrow(()->new AppException(ErrorCode.POST_NOT_FOUND,"게시글이 존재하지 않습니다!"));
         // #3 사용자와 수정할 포스트의 작성자가 다를 경우 + 계정이 ADMIN 이 아닐 경우
         if(!Objects.equals(post.getUser().getUserName(),user.getUserName()) && !user.getRole().equals(UserRole.ADMIN)) {
             throw new AppException(ErrorCode.INVALID_PERMISSION, "작성자 불일치로 수정할 수 없는 아이디입니다");
@@ -87,12 +87,12 @@ public class PostService {
     public PostResponse delete(String userName, Long postId){
         // #1 토큰으로 로그인한 아이디가 없을 경우
         User user = userRepository.findByUserName(userName)
-                .orElseThrow(()->new AppException(ErrorCode.USERNAME_NOT_FOUND,userName+"없습니다.!"));
+                .orElseThrow(()->new AppException(ErrorCode.USERNAME_NOT_FOUND,userName +" 이 존재하지 않습니다."));
         // #2 삭제할 포스트가 없을 경우
-        Post post = postRepository.findById(postId).orElseThrow(()->new AppException(ErrorCode.POST_NOT_FOUND,"해당포스트가 없습니다."));
+        Post post = postRepository.findById(postId).orElseThrow(()->new AppException(ErrorCode.POST_NOT_FOUND,"게시글이 존재하지 않습니다!"));
         // #3 사용자와 삭제할 포스트의 작성자가 다를 경우
         if(!Objects.equals(post.getUser().getUserName(),user.getUserName()) && !user.getRole().equals(UserRole.ADMIN)) {
-            throw new AppException(ErrorCode.INVALID_PERMISSION, "작성자 불일치로 삭제할 수 없는 아이디입니다");
+            throw new AppException(ErrorCode.INVALID_PERMISSION, "작성자 불일치로 삭제할 수 없는 아이디입니다.");
         }
 
         postRepository.delete(post);
@@ -103,9 +103,9 @@ public class PostService {
     public PostDetailResponse get(String userName, Long postId){
         // #1 토큰으로 로그인한 아이디가 없을 경우
         User user = userRepository.findByUserName(userName)
-                .orElseThrow(()->new AppException(ErrorCode.USERNAME_NOT_FOUND,userName+"없습니다.!"));
+                .orElseThrow(()->new AppException(ErrorCode.USERNAME_NOT_FOUND,userName +" 이 존재하지 않습니다."));
         // #2 해당 게시글이 존재하지 않을 경우
-        Post post = postRepository.findById(postId).orElseThrow(()->new AppException(ErrorCode.POST_NOT_FOUND,"게시글이 존재하지않습니다."));
+        Post post = postRepository.findById(postId).orElseThrow(()->new AppException(ErrorCode.POST_NOT_FOUND,"게시글이 존재하지 않습니다!"));
 
         PostDetailResponse postDetailResponse = PostDetailResponse.builder()
                 .id(postId)
@@ -135,7 +135,7 @@ public class PostService {
     public CommentResponse commentAdd(String userName, Long postId, String comment) {
         // #1 토큰으로 로그인한 아이디가 없을 경우
         User user = userRepository.findByUserName(userName)
-                .orElseThrow(()->new AppException(ErrorCode.USERNAME_NOT_FOUND,userName+"없습니다.!"));
+                .orElseThrow(()->new AppException(ErrorCode.USERNAME_NOT_FOUND,userName +" 이 존재하지 않습니다."));
         // #2 해당 게시글이 존재하지 않을 경우
         Post post = postRepository.findById(postId).orElseThrow(()->new AppException(ErrorCode.POST_NOT_FOUND,"게시글이 존재하지않습니다."));
 
@@ -182,12 +182,12 @@ public class PostService {
     public CommentResponse commentModify(String userName, Long postId,CommentRequest commentRequest,Long commentId){
         // #1 토큰으로 로그인한 아이디가 없을 경우
         User user = userRepository.findByUserName(userName)
-                .orElseThrow(()->new AppException(ErrorCode.USERNAME_NOT_FOUND,userName+"없습니다.!"));
+                .orElseThrow(()->new AppException(ErrorCode.USERNAME_NOT_FOUND,userName +" 이 존재하지 않습니다."));
         // #2 해당 게시글이 존재하지 않을 경우
         Post post = postRepository.findById(postId).orElseThrow(()->new AppException(ErrorCode.POST_NOT_FOUND,"게시글이 존재하지않습니다."));
 
         // #3 수정할 댓글의 작성자가 본인인지?
-        Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new AppException(ErrorCode.DATABASE_ERROR,"댓글이 없습니다"));
+        Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new AppException(ErrorCode.DATABASE_ERROR,"댓글이 존재하지 않습니다."));
 
         if(!Objects.equals(comment.getUser().getUserName(),userName) && !user.getRole().equals(UserRole.ADMIN)) {
             throw new AppException(ErrorCode.INVALID_PERMISSION, "작성자 불일치로 수정할 수 없는 아이디입니다");
@@ -203,18 +203,18 @@ public class PostService {
     public CommentResponse commentDelete(String userName, Long postId, Long commentId){
         // #1 토큰으로 로그인한 아이디가 없을 경우
         User user = userRepository.findByUserName(userName)
-                .orElseThrow(()->new AppException(ErrorCode.USERNAME_NOT_FOUND,userName+"없습니다.!"));
+                .orElseThrow(()->new AppException(ErrorCode.USERNAME_NOT_FOUND,userName +" 이 존재하지 않습니다."));
         // #2 해당 게시글이 존재하지 않을 경우
         Post post = postRepository.findById(postId).orElseThrow(()->new AppException(ErrorCode.POST_NOT_FOUND,"게시글이 존재하지않습니다."));
 
         // #3 삭제할 댓글의 작성자가 본인인지?
-        Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new AppException(ErrorCode.DATABASE_ERROR,"댓글이 없습니다"));
+        Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new AppException(ErrorCode.DATABASE_ERROR,"댓글이 존재하지 않습니다."));
 
         if(!Objects.equals(comment.getUser().getUserName(),userName) && !user.getRole().equals(UserRole.ADMIN)){
             throw new AppException(ErrorCode.INVALID_PERMISSION, "작성자 불일치로 수정할 수 없는 아이디입니다");
         }
         commentRepository.delete(comment);
-        return CommentResponse.builder().comment(postId + " 의 댓글인 " + commentId + " 의 내용이 삭제됨").build();
+        return CommentResponse.builder().comment(postId + " 가 작성한 " + commentId + " 의 " + comment.getComment()  +" 내용이 삭제됨").build();
     }
 
 //      좋아요 기능 -----------------------------------------------
@@ -225,7 +225,7 @@ public class PostService {
     public String postGood(Long postId,String userName) {
         // #1 토큰으로 로그인한 아이디가 없을 경우
         User user = userRepository.findByUserName(userName)
-                .orElseThrow(()->new AppException(ErrorCode.USERNAME_NOT_FOUND,userName+"없습니다.!"));
+                .orElseThrow(()->new AppException(ErrorCode.USERNAME_NOT_FOUND,userName +" 이 존재하지 않습니다."));
 
         // #2 해당 게시글이 존재하지 않을 경우
         Post post = postRepository.findById(postId).orElseThrow(()->new AppException(ErrorCode.POST_NOT_FOUND,"게시글이 존재하지않습니다."));

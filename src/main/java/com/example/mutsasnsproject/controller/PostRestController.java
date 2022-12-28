@@ -98,17 +98,17 @@ public class PostRestController {
 
 //    좋아요기능 ----------------------------------------------------
 
-    @PostMapping("/{id}/likes")
-    public Response<String> goodPost(@PathVariable Long id,Authentication authentication){
+    @PostMapping("/{postId}/likes")
+    public Response<String> goodPost(@PathVariable Long postId,Authentication authentication){
         log.info("게시글 좋아요 컨트롤러");
         String userName = authentication.getName();
-        String message = postService.postGood(id,userName);
+        String message = postService.postGood(postId,userName);
         return Response.success(message);
     }
 
-    @GetMapping("/{id}/likes")
-    public Response<Integer> goodCount(@PathVariable long id){
-        int count = postService.countGood(id);
+    @GetMapping("/{postId}/likes")
+    public Response<Integer> goodCount(@PathVariable long postId){
+        int count = postService.countGood(postId);
         return Response.success(count);
     }
 

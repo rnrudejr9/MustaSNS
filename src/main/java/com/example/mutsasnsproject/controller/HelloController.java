@@ -13,6 +13,6 @@ import org.springframework.web.servlet.ModelAndView;
 public class HelloController {
     @GetMapping("/hello")
     public ResponseEntity<String> hello(){
-        return ResponseEntity.ok().body("안녕하세요!");
+        return ResponseEntity.ok().body("구경덕");
     }
 }

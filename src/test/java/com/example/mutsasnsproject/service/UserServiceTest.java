@@ -29,13 +29,12 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-@ExtendWith(MockitoExtension.class)
 class UserServiceTest {
-    @InjectMocks
+
     UserService userService;
-    @Mock
+
     UserRepository userRepository = mock(UserRepository.class);
-    @Mock
+
     BCryptPasswordEncoder encoder = mock(BCryptPasswordEncoder.class);
     @BeforeEach
     void setUp() {

@@ -1,5 +1,7 @@
 package com.example.mutsasnsproject.controller;
 
+import com.example.mutsasnsproject.service.AlgorithmService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.parameters.P;
@@ -12,7 +14,9 @@ import org.springframework.web.servlet.ModelAndView;
 @RestController
 @RequestMapping("api/v1/")
 @Slf4j
+@RequiredArgsConstructor
 public class HelloController {
+    private final AlgorithmService algorithmService;
     @GetMapping("/hello")
     public ResponseEntity<String> hello(){
         return ResponseEntity.ok().body("구경덕");
@@ -20,14 +24,6 @@ public class HelloController {
 
     @GetMapping("/hello/{num}")
     public ResponseEntity<Integer> calc(@PathVariable int num){
-        int res = 0;
-        System.out.println(num);
-        while(num / 10 != 0){
-            res += num % 10;
-            num = num/10;
-        }
-        res += num % 10;
-        System.out.println(res);
-        return ResponseEntity.ok().body(res);
+        return ResponseEntity.ok().body(algorithmService.sumOfDigit(num));
     }
 }

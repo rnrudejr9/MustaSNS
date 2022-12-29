@@ -1,6 +1,7 @@
 package com.example.mutsasnsproject.controller;
 
 import com.example.mutsasnsproject.domain.dto.post.PostDetailResponse;
+import com.example.mutsasnsproject.service.AlgorithmService;
 import com.example.mutsasnsproject.service.UserService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -12,6 +13,9 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.anonymous;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -26,7 +30,7 @@ class HelloControllerTest {
     @Autowired
     MockMvc mockMvc;
     @MockBean
-    UserService userService;
+    AlgorithmService algorithmService;
 
     @Test
     @WithMockUser
@@ -43,6 +47,9 @@ class HelloControllerTest {
     @WithMockUser
     @DisplayName("계산하는 테스트")
     void calc() throws Exception {
+        when(algorithmService.sumOfDigit(687)) // 값을 지정할 수 있으나 의미가 없다.
+                .thenReturn(21);
+        //값을 지정할 수 있으나 별 의미가 없음
         mockMvc.perform(get("/api/v1/hello/1234").with(csrf()))
                 .andDo(print())
                 .andExpect(status().isOk())

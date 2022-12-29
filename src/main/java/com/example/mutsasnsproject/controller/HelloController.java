@@ -1,6 +1,7 @@
 package com.example.mutsasnsproject.controller;
 
 import com.example.mutsasnsproject.service.AlgorithmService;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +23,7 @@ public class HelloController {
         return ResponseEntity.ok().body("구경덕");
     }
 
+    @ApiOperation(value = "code Test")
     @GetMapping("/hello/{num}")
     public ResponseEntity<Integer> calc(@PathVariable int num){
         return ResponseEntity.ok().body(algorithmService.sumOfDigit(num));

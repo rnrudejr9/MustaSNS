@@ -37,12 +37,14 @@
 - [x] 게시글 CRUD 구현
 - [x] 댓글 기능 구현
 - [x] 좋아요 기능 구현
-- [x] 게시글 CRUD 및 부가기능(댓글, 좋아요) 테스트 코드 작성하기 
+- [x] 게시글 CRUD 테스트 코드
+- [ ] 부가기능(댓글, 좋아요, 권한) 테스트 코드 작성하기 
 - [ ] 알람 기능 구현
 - [x] admin 권한 (Role 역할) 구현 및 ADMIN 권한 부여
 - [ ] 소스코드 리펙토링 (간결화, 효율성 참고)
 - [ ] 화면ui 설정 
 - [ ] 마이페이지 기능 구현
+- [ ] admin 계정 user 데이터 관리
  
 
 > * 진행 간 발생했던 이슈 : https://gitlab.com/rnrudejr9/mustasns/-/issues/?sort=created_date&state=all&first_page_size=20

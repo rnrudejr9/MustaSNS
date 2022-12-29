@@ -5,7 +5,7 @@
 ##### <div align = "center" logoColor="green"> "로그인/회원가입, 게시글 CRUD, 댓글, 좋아요, 알림, 권한 기능이 있는 토이 프로젝트" </div>
 
 
-> * swagger주소 😊 t3(swagger) : http://ec2-54-180-91-171.ap-northeast-2.compute.amazonaws.com:8080/swagger-ui/ 
+> * swagger주소 😊 t3(swagger) : http://ec2-13-209-65-19.ap-northeast-2.compute.amazonaws.com:8080/swagger-ui/
     
 <br>
 

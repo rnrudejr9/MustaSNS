@@ -11,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -37,11 +38,10 @@ public class PostController {
         model.addAttribute("posts",page);
         model.addAttribute("startPage",startPage);
         model.addAttribute("endPage",endPage);
-
         return "posts/list";
     }
 
-    @GetMapping("/posts/{id}")
+    @GetMapping("/{id}")
     public String detail(@PathVariable Long id){
         PostDetailResponse postDetailResponse = postService.get("admin",id);
         return "";
@@ -53,7 +53,7 @@ public class PostController {
         if(id == null){
             model.addAttribute("postRequest",new PostRequest());
         }else{
-            PostDetailResponse postDetailResponse = postService.get("admin",id);
+            PostDetailResponse postDetailResponse = postService.get(postService.findById(id).getUser().getUserName(),id);
             PostRequest postRequest = PostRequest.builder()
                     .body(postDetailResponse.getBody())
                     .title(postDetailResponse.getTitle())
@@ -64,11 +64,11 @@ public class PostController {
     }
 
     @PostMapping("/form")
-    public String form(@Valid PostRequest postRequest, BindingResult bindingResult){
+    public String form(@Valid PostRequest postRequest, BindingResult bindingResult,Authentication authentication){
         if(bindingResult.hasErrors()){
             return "posts/form";
         }
-        postService.add("admin", postRequest.getBody(), postRequest.getTitle());
+        postService.add(authentication.getName(), postRequest.getBody(), postRequest.getTitle());
         return "redirect:/view/v1/posts/list";
     }
 

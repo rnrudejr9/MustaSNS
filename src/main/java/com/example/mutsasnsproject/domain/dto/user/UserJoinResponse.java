@@ -1,15 +1,15 @@
 package com.example.mutsasnsproject.domain.dto.user;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
+import lombok.*;
 import net.bytebuddy.asm.Advice;
 
 import java.time.LocalDateTime;
 
 @AllArgsConstructor
-@Getter
 @Builder
+@Getter
+@Setter
+@NoArgsConstructor
 public class UserJoinResponse {
     private Long id;
     private String userName;

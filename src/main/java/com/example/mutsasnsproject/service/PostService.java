@@ -46,6 +46,10 @@ public class PostService {
 //            delete 삭제;
 //            get 상세조회;
 //            list 전체조회;
+
+    public Post findById(Long id){
+        return postRepository.findById(id).orElseThrow(()->new AppException(ErrorCode.USERNAME_NOT_FOUND,"이름없음"));
+    }
     public PostResponse add(String userName,String body, String title){
         log.info("포스트 작성 서비스");
         // #1 토큰으로 로그인한 아이디 비교

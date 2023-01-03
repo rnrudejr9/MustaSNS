@@ -1,9 +1,7 @@
 package com.example.mutsasnsproject.domain.dto.post;
 
 import com.example.mutsasnsproject.domain.entity.Post;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
+import lombok.*;
 import org.springframework.data.domain.Page;
 
 import java.time.LocalDateTime;
@@ -12,6 +10,8 @@ import java.time.format.DateTimeFormatter;
 @AllArgsConstructor
 @Builder
 @Getter
+@Setter
+@NoArgsConstructor
 public class PostDetailResponse {
     private Long id;
     private String title;

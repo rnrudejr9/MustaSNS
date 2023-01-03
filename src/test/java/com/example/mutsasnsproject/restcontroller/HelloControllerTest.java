@@ -1,21 +1,16 @@
-package com.example.mutsasnsproject.controller;
+package com.example.mutsasnsproject.restcontroller;
 
-import com.example.mutsasnsproject.domain.dto.post.PostDetailResponse;
 import com.example.mutsasnsproject.service.AlgorithmService;
-import com.example.mutsasnsproject.service.UserService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.anonymous;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -24,7 +19,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 //컨트롤러 로직만 따로 검증하고 실제 호출했을때 어떤 리턴을 하는지 체크하는 테스트
 //배포를 하지않고도 배포된 모습을 테스트로 확인 할 수 있어야한다.
 
-@WebMvcTest(HelloController.class)
+@WebMvcTest(HelloRestController.class)
 class HelloControllerTest {
 
     @Autowired

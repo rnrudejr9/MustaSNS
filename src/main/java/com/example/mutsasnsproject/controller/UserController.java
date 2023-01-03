@@ -1,52 +1,60 @@
 package com.example.mutsasnsproject.controller;
 
-import com.example.mutsasnsproject.domain.dto.Response;
-import com.example.mutsasnsproject.domain.dto.user.UserRoleRequest;
+
 import com.example.mutsasnsproject.domain.dto.user.UserJoinRequest;
 import com.example.mutsasnsproject.domain.dto.user.UserJoinResponse;
 import com.example.mutsasnsproject.domain.dto.user.UserLoginRequest;
 import com.example.mutsasnsproject.domain.dto.user.UserLoginResponse;
+import com.example.mutsasnsproject.exception.AppException;
+import com.example.mutsasnsproject.exception.ErrorCode;
 import com.example.mutsasnsproject.service.UserService;
-import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.Authentication;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-@RestController
+@Controller
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/users")
-public class UserController  {
-    private final UserService userService;
+@RequestMapping("/view/v1/")
+public class UserController {
+    UserService userService;
 
-    //Login 기능 ------------------------------------
-
-    @ApiOperation(value = "회원가입 기능",notes = "userName, password 입력해서 회원가입")
-    @PostMapping("/join")
-    public Response<UserJoinResponse> join(@RequestBody UserJoinRequest userJoinRequest){
-        UserJoinResponse userJoinResponse =userService.join(userJoinRequest.getUserName(),userJoinRequest.getPassword());
-        return Response.success(userJoinResponse);
+    @GetMapping("/users/login")
+    public String login(){
+       return "login";
     }
-
-    @ApiOperation(value = "로그인 기능",notes = "회원가입한 정보로 로그인")
-    @PostMapping("/login")
-    public Response<UserLoginResponse> login(@RequestBody UserLoginRequest userLoginRequest) {
+    @PostMapping("/users/login")
+    public String login(@RequestBody UserLoginRequest userLoginRequest){
         UserLoginResponse userLoginResponse = userService.login(userLoginRequest.getUserName(),userLoginRequest.getPassword());
-        return Response.success(userLoginResponse);
+        return "redirect:/";
     }
 
-    //Admin 기능 ------------------------------------
-
-    @ApiOperation(value = "권한 기능",notes = "ADMIN 계정이 사용자 권한 설정")
-    @PostMapping("/{id}/role/change")
-    public Response<String> changeRole(@RequestBody UserRoleRequest userRoleRequest, @PathVariable Long id,Authentication authentication){
-        String userName = authentication.getName();
-        String role = userRoleRequest.getRole();
-        String message =userService.userRoleChange(userName,id,role);
-        return Response.success(message);
+    @GetMapping("/users/join")
+    public String join2(Model model){
+        model.addAttribute("userJoinRequest", new UserJoinRequest());
+        return "users/join";
     }
 
-    //알림 기능 -------------------------------------
-
-
-
+    //modelAtrribute 로 데이터 값을 받음
+    @PostMapping("/users/join")
+    public String join(@ModelAttribute UserJoinRequest userJoinRequest, Model model){
+        System.out.println(userJoinRequest.getUserName());
+        try {
+            userService.join(userJoinRequest.getUserName(), userJoinRequest.getPassword());
+        } catch(AppException e) {
+            if(e.getErrorCode() == ErrorCode.USERNAME_DUPLICATED) {
+                model.addAttribute("message", "UserName이 중복됩니다");
+                model.addAttribute("nextUrl", "/users/join");
+                model.addAttribute("userJoinRequest", new UserJoinRequest());
+                return "users/join";
+            }
+        } catch (Exception e) {
+            throw e;
+        }
+        System.out.println(userJoinRequest.getUserName());
+        model.addAttribute("userLoginRequest", new UserLoginRequest());
+        model.addAttribute("message", "회원가입이 완료 되었습니다\n로그인 해주세요");
+        model.addAttribute("nextUrl", "/users/login");
+        return "users/login";
+    }
 }

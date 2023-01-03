@@ -1,0 +1,30 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div class="container">
+
+    <form class="offset-4 col-4 form-group" th:method="post" th:action="@{/view/v1/users/join}" th:object="${userJoinRequest}" align="center">
+        <br/><br/>
+        <div>
+            <label th:for="userName">UserName : </label>
+            <input type="text" th:field="*{userName}" th:errorclass="error-class" style="color: black"/>
+            <div class="error-class" th:errors="*{userName}"/>
+        </div>
+        <br/>
+        <div>
+            <label th:for="password">Password : </label>
+            <input type="password" th:field="*{password}"/>
+        </div>
+        <br/><br/>
+        <div align="center">
+            <button class="btn body-btn" type="submit">회원가입</button>
+        </div>
+    </form>
+
+</div> <!-- /container -->
+</body>
+</html>

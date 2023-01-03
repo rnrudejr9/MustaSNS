@@ -9,6 +9,12 @@
     
 <br>
 
+- [ ] 시연, 공유하고싶은 내용
+- [ ] 코드 로직설명, 추가 개발 기능
+- [ ] 리펙토링할 내용
+- [ ] 겪었던 시련, 해결방법
+- [ ] 느낀점
+
 ## ✏ 개요 설명
 <div align="center">
  <img src="https://img.shields.io/badge/SpringBoot-6DB33F.svg?logo=Spring-Boot&logoColor=white" />

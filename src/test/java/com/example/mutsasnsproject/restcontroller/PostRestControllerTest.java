@@ -1,43 +1,26 @@
-package com.example.mutsasnsproject.controller;
+package com.example.mutsasnsproject.restcontroller;
 
-import com.example.mutsasnsproject.domain.dto.Response;
 import com.example.mutsasnsproject.domain.dto.comment.CommentRequest;
 import com.example.mutsasnsproject.domain.dto.comment.CommentResponse;
 import com.example.mutsasnsproject.domain.dto.post.PostDetailResponse;
-import com.example.mutsasnsproject.domain.dto.post.PostListResponse;
 import com.example.mutsasnsproject.domain.dto.post.PostRequest;
 import com.example.mutsasnsproject.domain.dto.post.PostResponse;
-import com.example.mutsasnsproject.domain.dto.user.UserLoginRequest;
-import com.example.mutsasnsproject.domain.entity.Comment;
-import com.example.mutsasnsproject.domain.entity.Post;
-import com.example.mutsasnsproject.domain.entity.User;
 import com.example.mutsasnsproject.exception.AppException;
 import com.example.mutsasnsproject.exception.ErrorCode;
-import com.example.mutsasnsproject.fixture.PostEntityFixture;
-import com.example.mutsasnsproject.fixture.UserEntityFixture;
 import com.example.mutsasnsproject.service.PostService;
-import com.example.mutsasnsproject.service.UserService;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.MediaType;
-import org.springframework.security.core.parameters.P;
 import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.time.LocalDateTime;
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;

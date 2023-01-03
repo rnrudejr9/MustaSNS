@@ -33,6 +33,8 @@ public class Post extends BaseEntity{
 
 //
     //하나의 post는 여러개의 coments를 가진다
+    //cascadeType.ALL : 모든작업을 하위 엔티티까지 전파
+    //orphanRemoval = true : 관계가 끊어진 자식개체들을 자동 제거
     @OneToMany(mappedBy = "post",cascade = CascadeType.ALL,orphanRemoval = true)
     @Builder.Default
     private List<Comment> comments = new ArrayList<>();

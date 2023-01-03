@@ -1,16 +1,14 @@
 package com.example.mutsasnsproject.domain.dto.user;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @AllArgsConstructor
 @Builder
 @Getter
-@JsonAutoDetect
+@Setter
 @NoArgsConstructor
+@JsonAutoDetect
 public class UserRoleRequest {
     private String role;
 }

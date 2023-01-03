@@ -1,12 +1,12 @@
 package com.example.mutsasnsproject.domain.dto.user;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
+import lombok.*;
 
 @AllArgsConstructor
-@Getter
 @Builder
+@Getter
+@Setter
+@NoArgsConstructor
 public class UserLoginResponse {
     private String jwt;
 }

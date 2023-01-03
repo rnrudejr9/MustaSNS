@@ -38,6 +38,8 @@ dependencies {
     implementation "io.springfox:springfox-boot-starter:3.0.0"
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-mustache'
 
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-validation'
+    //의존성 추가 valid
 }
 
 tasks.named('test') {

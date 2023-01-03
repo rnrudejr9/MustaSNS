@@ -1,11 +1,9 @@
 package com.example.mutsasnsproject.service;
 
-import com.example.mutsasnsproject.domain.dto.Response;
 import com.example.mutsasnsproject.domain.dto.comment.CommentListResponse;
 import com.example.mutsasnsproject.domain.dto.comment.CommentRequest;
 import com.example.mutsasnsproject.domain.dto.comment.CommentResponse;
 import com.example.mutsasnsproject.domain.dto.post.PostDetailResponse;
-import com.example.mutsasnsproject.domain.dto.post.PostListResponse;
 import com.example.mutsasnsproject.domain.dto.post.PostRequest;
 import com.example.mutsasnsproject.domain.dto.post.PostResponse;
 import com.example.mutsasnsproject.domain.entity.Comment;
@@ -22,6 +20,7 @@ import com.example.mutsasnsproject.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -47,6 +46,10 @@ public class PostService {
 //            delete 삭제;
 //            get 상세조회;
 //            list 전체조회;
+
+    public Post findById(Long id){
+        return postRepository.findById(id).orElseThrow(()->new AppException(ErrorCode.USERNAME_NOT_FOUND,"이름없음"));
+    }
     public PostResponse add(String userName,String body, String title){
         log.info("포스트 작성 서비스");
         // #1 토큰으로 로그인한 아이디 비교
@@ -129,6 +132,12 @@ public class PostService {
 
     public Page<PostDetailResponse> list(Pageable pageable){
         Page<Post> page = postRepository.findAll(pageable);
+        Page<PostDetailResponse> postDetailResponsePage = PostDetailResponse.toDtoList(page);
+        return postDetailResponsePage;
+    }
+
+    public Page<PostDetailResponse> findList(Pageable pageable, String body,String title){
+        Page<Post> page = postRepository.findByTitleContainingOrBodyContaining(pageable,body,title);
         Page<PostDetailResponse> postDetailResponsePage = PostDetailResponse.toDtoList(page);
         return postDetailResponsePage;
     }

@@ -27,8 +27,11 @@ public class PostController {
     // 리스트 전체 출력 --------------------------
 
     @GetMapping("/list")
-    public String list(Model model,@PageableDefault(size = 10, sort = "createdAt",direction = Sort.Direction.DESC) Pageable pageable){
-        Page<PostDetailResponse> page = postService.list(pageable);
+    public String list(Model model,@PageableDefault(size = 10, sort = "createdAt",direction = Sort.Direction.DESC) Pageable pageable,
+                       @RequestParam(required = false,defaultValue = "") String searchText){
+//        Page<PostDetailResponse> page = postService.list(pageable);
+        Page<PostDetailResponse> page = postService.findList(pageable,searchText,searchText);
+
         int startPage = Math.max(1,page.getPageable().getPageNumber() - 4);
         int endPage = Math.min(page.getTotalPages(),page.getPageable().getPageNumber() + 4);
         model.addAttribute("posts",page);

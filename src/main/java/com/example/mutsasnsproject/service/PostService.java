@@ -132,6 +132,11 @@ public class PostService {
         return postDetailResponsePage;
     }
 
+    public Page<PostDetailResponse> findList(Pageable pageable, String body,String title){
+        Page<Post> page = postRepository.findByTitleContainingOrBodyContaining(pageable,body,title);
+        Page<PostDetailResponse> postDetailResponsePage = PostDetailResponse.toDtoList(page);
+        return postDetailResponsePage;
+    }
 
 
 //    댓글 CRUD -----------------------------------------------

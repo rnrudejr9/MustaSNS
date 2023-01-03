@@ -16,7 +16,7 @@
 </div>
 
 <div>
-    <div> 총 건수 : <span th:text="${#lists.size(posts)}"> </span></div>
+    <div> 총 건수 : <span th:text="${posts.totalElements}"> </span></div>
     <table class="table table-striped table-hover">
         <thead>
         <tr>
@@ -35,6 +35,24 @@
         </tr>
         </tbody>
     </table>
+
+    <nav aria-label="Page navigation example">
+
+
+        <ul class="pagination justify-content-center">
+            <li class ="page-item"th:classappend="${1 == posts.pageable.pageNumber+1}?'disabled'">
+                <a class="page-link" href="" th:href="@{/view/v1/posts/list(page=${posts.pageable.pageNumber - 1})}" tabindex="-1" aria-disabled="true">Previous</a>
+            </li>
+            <li class="page-item" th:classappend="${i == posts.pageable.pageNumber+1}?'disabled'" th:each="i : ${#numbers.sequence(startPage,endPage)}" ><a class="page-link" href="#" th:text="${i}"
+            th:href="@{/view/v1/posts/list(page=${i - 1})}">1</a>
+            </li>
+            <li class ="page-item" th:classappend="${posts.totalPages == posts.pageable.pageNumber+1}?'disabled'" >
+                <a class="page-link" href="" th:href="@{/view/v1/posts/list(page=${posts.pageable.pageNumber + 1})}">Next</a>
+            </li>
+        </ul>
+
+
+    </nav>
 </div>
 
 <div class="row">

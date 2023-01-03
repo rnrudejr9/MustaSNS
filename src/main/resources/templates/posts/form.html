@@ -17,12 +17,20 @@
 <form action="" th:action="@{/view/v1/posts/form}" th:object="${postRequest}" method="post">
     <div class="mb-3">
         <label for="title">제목</label>
-        <input type="text" class="form-control" id="title" th:field="*{title}" placeholder="제목을 입력하세요">
+        <input type="text" class="form-control" th:classappend="${#fields.hasErrors('title')} ? 'is-invalid'" id="title" th:field="*{title}" placeholder="제목을 입력하세요">
+        <div class ="invalid-feedback" th:if="${#fields.hasErrors('title')}" th:errors="*{title}">
+            제목 에러 메세지
+        </div>
     </div>
     <div class="mb-3">
         <label for="body" class="form-label" >내용</label>
-        <textarea class="form-control" id="body" rows="3" th:field="*{body}"></textarea>
+        <textarea class="form-control" th:classappend="${#fields.hasErrors('body')} ? 'is-invalid'" id="body" rows="3" th:field="*{body}"></textarea>
+        <div class="invalid-feedback" th:if="${#fields.hasErrors('body')}" th:errors="*{body}">
+            내용 에러 메세지
+        </div>
     </div>
+
+
     <div class = "text-right">
         <button type="submit" class="btn btn-primary">작성</button>
         <a type="button" class="btn btn-primary" th:href="@{/view/v1/posts/list}">취소</a>

@@ -30,8 +30,7 @@ public class SwaggerConfig {
                 .securitySchemes(Arrays.asList(apiKey()))
                 .select()
 //                .apis(RequestHandlerSelectors.any())
-                .apis(RequestHandlerSelectors.basePackage("com.example.mutsasnsproject.controller"))
-                .apis(RequestHandlerSelectors.basePackage("com.example.mutsasnsproject.restcontroller"))
+                .apis(RequestHandlerSelectors.basePackage("com.example.mutsasnsproject"))
                 .paths(PathSelectors.any())
                 .build();
     }

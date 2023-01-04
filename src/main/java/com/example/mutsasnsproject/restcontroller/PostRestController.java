@@ -68,7 +68,7 @@ public class PostRestController {
 //      댓글 crud ----------------------------------------------------
 
     @ApiOperation(value = "댓글 작성기능")
-    @PostMapping("/{postId}/comment")
+    @PostMapping("/{postId}/comments")
     public Response<CommentResponse> addComment(Authentication authentication, @PathVariable Long postId, @RequestBody CommentRequest commentRequest){
         String userName = authentication.getName();
         CommentResponse commentResponse = postService.commentAdd(userName,postId, commentRequest.getComment());
@@ -76,13 +76,13 @@ public class PostRestController {
     }
 
     @ApiOperation(value = "댓글 조회기능")
-    @GetMapping("/{postId}/comment")
+    @GetMapping("/{postId}/comments")
     public Response<CommentListResponse> listComment(@PathVariable Long postId,@PageableDefault(size = 20, sort = "createdAt",direction = Sort.Direction.DESC) Pageable pageable){
         CommentListResponse commentListResponse = postService.commentList(postId,pageable);
         return Response.success(commentListResponse);
     }
     @ApiOperation(value = "댓글 수정기능")
-    @PutMapping("/{postId}/comment/{id}")
+    @PutMapping("/{postId}/comments/{id}")
     public Response<CommentResponse> modifyComment(Authentication authentication,@PathVariable Long postId, @PathVariable Long id,@RequestBody CommentRequest commentRequest){
         String userName = authentication.getName();
         CommentResponse commentResponse =postService.commentModify(userName,postId,commentRequest,id);
@@ -90,7 +90,7 @@ public class PostRestController {
     }
 
     @ApiOperation(value = "댓글 삭제기능")
-    @DeleteMapping("/{postId}/comment/{id}")
+    @DeleteMapping("/{postId}/comments/{id}")
     public Response<CommentResponse> modifyComment2(Authentication authentication,@PathVariable Long postId, @PathVariable Long id){
         String userName = authentication.getName();
         CommentResponse commentResponse =postService.commentDelete(userName,postId,id);

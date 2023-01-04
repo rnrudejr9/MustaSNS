@@ -67,6 +67,15 @@ public class SecurityConfig {
                 .antMatchers("/view/v1/posts/form").authenticated()
                 .anyRequest().permitAll()
                 .and()
+
+                .formLogin()
+                .loginPage("/view/v1/users/login")    //로그인 페이지
+                .defaultSuccessUrl("/view/v1/posts/list") //로그인 성공 후
+                .and()
+                .logout()
+                .logoutSuccessUrl("/view/v1/posts/login")//로그아웃 성공
+                .and()
+
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()

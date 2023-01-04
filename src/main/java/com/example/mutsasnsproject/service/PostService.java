@@ -19,12 +19,14 @@ import com.example.mutsasnsproject.repository.PostRepository;
 import com.example.mutsasnsproject.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.bytebuddy.asm.Advice;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -213,7 +215,14 @@ public class PostService {
         //JPA 의 영속성 컨텍스트 덕분에 entity 객체의 값만 변경하면 자동으로 변경사항 반영함!
         //따라서 repository.update 를 쓰지 않아도 됨.
         comment.update(commentRequest.toEntity());
-        CommentResponse commentResponse = CommentResponse.builder().comment(comment.getComment()).build();
+        CommentResponse commentResponse = CommentResponse.builder()
+                .createdAt(comment.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-mm-dd hh:mm:ss")))
+                .lastModifiedAt(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-mm-dd hh:mm:ss")))
+                .id(comment.getId())
+                .userName(comment.getUser().getUserName())
+                .comment(comment.getComment())
+                .postId(comment.getPost().getId())
+                .build();
         return commentResponse;
     }
 

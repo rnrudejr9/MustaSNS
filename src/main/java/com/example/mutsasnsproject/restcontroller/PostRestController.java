@@ -77,7 +77,7 @@ public class PostRestController {
 
     @ApiOperation(value = "댓글 조회기능")
     @GetMapping("/{postId}/comments")
-    public Response<CommentListResponse> listComment(@PathVariable Long postId,@PageableDefault(size = 20, sort = "createdAt",direction = Sort.Direction.DESC) Pageable pageable){
+    public Response<CommentListResponse> listComment(@PathVariable Long postId,@PageableDefault(size = 10, sort = "createdAt",direction = Sort.Direction.DESC) Pageable pageable){
         CommentListResponse commentListResponse = postService.commentList(postId,pageable);
         return Response.success(commentListResponse);
     }

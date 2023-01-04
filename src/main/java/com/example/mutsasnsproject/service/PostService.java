@@ -109,7 +109,9 @@ public class PostService {
         }
 
         postRepository.delete(post);
-        PostResponse postResponse = PostResponse.builder().message("게시글 삭제완료").build();
+        PostResponse postResponse = PostResponse.builder()
+                .postId(postId)
+                .message("게시글 삭제완료").build();
         return postResponse;
     }
 

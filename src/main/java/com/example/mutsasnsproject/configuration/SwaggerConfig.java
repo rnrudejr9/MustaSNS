@@ -31,6 +31,7 @@ public class SwaggerConfig {
                 .select()
 //                .apis(RequestHandlerSelectors.any())
                 .apis(RequestHandlerSelectors.basePackage("com.example.mutsasnsproject.controller"))
+                .apis(RequestHandlerSelectors.basePackage("com.example.mutsasnsproject.restcontroller"))
                 .paths(PathSelectors.any())
                 .build();
     }

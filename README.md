@@ -6,6 +6,7 @@
 
 
 > * swagger주소 😊 t3(swagger) : http://ec2-13-209-65-19.ap-northeast-2.compute.amazonaws.com:8080/swagger-ui/
+> * project UI 주소 😊 : http://ec2-13-209-65-19.ap-northeast-2.compute.amazonaws.com:8080/view/v1/home/
     
 <br>
 
@@ -48,6 +49,7 @@
 - [x] 마이피드 기능 구현
 - [x] 알람 기능 구현
 - [x] admin 권한 (Role 역할) 구현 및 ADMIN 권한 부여
+- [ ] soft delete 구현
 - [ ] 소스코드 리펙토링 (간결화, 효율성 참고) -> validateCode, Post ()
 - [ ] 화면ui 설정 (타임리프 템플릿 사용)
 - [ ] 마이페이지 ui 설정

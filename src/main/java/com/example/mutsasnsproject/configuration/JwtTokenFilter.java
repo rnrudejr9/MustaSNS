@@ -11,6 +11,7 @@ import javax.servlet.http.HttpSession;
 import com.example.mutsasnsproject.configuration.utils.JwtTokenUtils;
 import com.example.mutsasnsproject.domain.entity.User;
 import com.example.mutsasnsproject.service.UserService;
+import io.jsonwebtoken.ExpiredJwtException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -35,12 +36,12 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
         String header = request.getHeader(HttpHeaders.AUTHORIZATION);
         final String token;
-
+        HttpSession session = null;
         // authorizationHeader에 "Bearer + JwtToken"이 제대로 들어왔는지 체크
         if(header == null) {
             // 화면 로그인을 위해 Session에서 Token을 꺼내보는 작업 => 여기에도 없으면 인증 실패
             // 여기에 있으면 이 Token으로 인증 진행
-            HttpSession session = request.getSession(false);
+            session = request.getSession(false);
             if(session == null || session.getAttribute("jwt") == null) {
                 chain.doFilter(request, response);
                 return;
@@ -58,19 +59,27 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             System.out.println(token);
         }
 
-        String userName = JwtTokenUtils.getUsername(token, secretKey);
-        User userDetails = userService.loadUserByUsername(userName);
-        if (!JwtTokenUtils.validate(token, userDetails.getUserName(), secretKey)) {
+        try {
+            String userName = JwtTokenUtils.getUsername(token, secretKey);
+            User userDetails = userService.loadUserByUsername(userName);
+            if (!JwtTokenUtils.validate(token, userDetails.getUserName(), secretKey)) {
+                chain.doFilter(request, response);
+                return;
+            }
+            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                    userDetails.getUserName(), null,
+                    userDetails.getAuthorities()
+            );
+            authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+            SecurityContextHolder.getContext().setAuthentication(authentication);
             chain.doFilter(request, response);
+        }catch (ExpiredJwtException e){
+            session.removeAttribute("jwt");
+            session.invalidate();
+            chain.doFilter(request,response);
+        }finally {
             return;
         }
-        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                userDetails.getUserName(), null,
-                userDetails.getAuthorities()
-        );
-        authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        chain.doFilter(request, response);
     }
 
 }

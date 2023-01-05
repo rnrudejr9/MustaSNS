@@ -6,7 +6,7 @@
 
 
 > * swagger주소 😊 t3(swagger) : http://ec2-13-209-65-19.ap-northeast-2.compute.amazonaws.com:8080/swagger-ui/
-> * project UI 주소 😊 : http://ec2-13-209-65-19.ap-northeast-2.compute.amazonaws.com:8080/view/v1/home/
+> * project UI 주소 <`진행중`> 😊 t3(view) : http://ec2-13-209-65-19.ap-northeast-2.compute.amazonaws.com:8080/view/v1/home/ 
     
 <br>
 

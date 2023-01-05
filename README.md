@@ -86,6 +86,7 @@
 | `users` | POST | /api/v1/users/{id}/role/change | 사용자권한변경기능 |
 | `my` | GET | /api/v1/posts/my | 마이피드조회기능 |
 | `alarm` | GET | /api/v1/users/alarm | 알람조회기능 |
+| `view` | GET | /view/v1/home | UI 메인화면 |
 
 <br>
 

@@ -1,22 +1,18 @@
 package com.example.mutsasnsproject.service;
 
+import com.example.mutsasnsproject.domain.dto.alarm.AlarmResponse;
 import com.example.mutsasnsproject.domain.dto.comment.CommentListResponse;
 import com.example.mutsasnsproject.domain.dto.comment.CommentRequest;
 import com.example.mutsasnsproject.domain.dto.comment.CommentResponse;
 import com.example.mutsasnsproject.domain.dto.post.PostDetailResponse;
 import com.example.mutsasnsproject.domain.dto.post.PostRequest;
 import com.example.mutsasnsproject.domain.dto.post.PostResponse;
-import com.example.mutsasnsproject.domain.entity.Comment;
-import com.example.mutsasnsproject.domain.entity.Good;
-import com.example.mutsasnsproject.domain.entity.Post;
-import com.example.mutsasnsproject.domain.entity.User;
+import com.example.mutsasnsproject.domain.entity.*;
+import com.example.mutsasnsproject.domain.role.AlarmType;
 import com.example.mutsasnsproject.domain.role.UserRole;
 import com.example.mutsasnsproject.exception.AppException;
 import com.example.mutsasnsproject.exception.ErrorCode;
-import com.example.mutsasnsproject.repository.CommentRepository;
-import com.example.mutsasnsproject.repository.GoodRepository;
-import com.example.mutsasnsproject.repository.PostRepository;
-import com.example.mutsasnsproject.repository.UserRepository;
+import com.example.mutsasnsproject.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.bytebuddy.asm.Advice;
@@ -41,6 +37,7 @@ public class PostService {
     private final UserRepository userRepository;
     private final CommentRepository commentRepository;
     private final GoodRepository goodRepository;
+    private final AlarmRepository alarmRepository;
 
 //    게시글 CRUD -----------------------------------------------
 //            add 등록;
@@ -168,6 +165,16 @@ public class PostService {
                 .build();
         commentRepository.save(savedcomment);
 
+        // #4 알람 추가
+        Alarm alarm = Alarm.builder()
+                .alarmType(AlarmType.NEW_COMMENT_ON_POST)
+                .fromUserId(user.getId())
+                .targetId(postId)
+                .text("new comment!")
+                .user(user)
+                .build();
+        alarmRepository.save(alarm);
+
         CommentResponse commentResponse = CommentResponse.builder()
                 .id(savedcomment.getId())
                 .comment(comment)
@@ -188,6 +195,7 @@ public class PostService {
                     .postId(postId)
                     .createdAt(comment.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-mm-dd hh:mm:ss")))
                     .userName(comment.getUser().getUserName())
+                    .lastModifiedAt(comment.getLastModifiedAt().format(DateTimeFormatter.ofPattern("yyyy-mm-dd hh:mm:ss")))
                     .build();
             list.add(commentResponse);
         }
@@ -266,6 +274,17 @@ public class PostService {
         }
         Good savedGood = Good.builder().post(post).user(user).build();
         goodRepository.save(savedGood);
+
+        // #4 알람 추가
+        Alarm alarm = Alarm.builder()
+                .alarmType(AlarmType.NEW_LIKE_ON_POST)
+                .fromUserId(user.getId())
+                .targetId(postId)
+                .text("new like!")
+                .user(user)
+                .build();
+        alarmRepository.save(alarm);
+
         return "게시글 좋아요 했습니다";
     }
     public Integer countGood(Long postId){
@@ -273,4 +292,18 @@ public class PostService {
         Post post = postRepository.findById(postId).orElseThrow(()->new AppException(ErrorCode.POST_NOT_FOUND,"게시글이 존재하지않습니다."));
         return post.getGoods().size();
     }
+
+//    마이 피드 기능 --------------------------------------------------
+    public Page<PostDetailResponse> myPages(String userName, Pageable pageable){
+        // #1 토큰으로 로그인한 아이디가 없을 경우
+        User user = userRepository.findByUserName(userName)
+                .orElseThrow(()->new AppException(ErrorCode.USERNAME_NOT_FOUND,userName +" 이 존재하지 않습니다."));
+
+        Page<Post> page = postRepository.findByUserId(pageable,user.getId());
+        Page<PostDetailResponse> postDetailResponsePage = PostDetailResponse.toDtoList(page);
+        return postDetailResponsePage;
+    }
+
+
+
 }

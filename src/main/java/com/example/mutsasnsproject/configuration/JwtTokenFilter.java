@@ -6,6 +6,7 @@ import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import com.example.mutsasnsproject.configuration.utils.JwtTokenUtils;
 import com.example.mutsasnsproject.domain.entity.User;
@@ -32,38 +33,46 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                                     HttpServletResponse response,
                                     FilterChain chain)
             throws ServletException, IOException {
-        final String header = request.getHeader(HttpHeaders.AUTHORIZATION);
+        String header = request.getHeader(HttpHeaders.AUTHORIZATION);
         final String token;
-        try {
-            if (header == null || !header.startsWith("Bearer ")) {
-//                log.error("Authorization Header does not start with Bearer {}", request.getRequestURI());
+
+        // authorizationHeader에 "Bearer + JwtToken"이 제대로 들어왔는지 체크
+        if(header == null) {
+            // 화면 로그인을 위해 Session에서 Token을 꺼내보는 작업 => 여기에도 없으면 인증 실패
+            // 여기에 있으면 이 Token으로 인증 진행
+            HttpSession session = request.getSession(false);
+            if(session == null || session.getAttribute("jwt") == null) {
                 chain.doFilter(request, response);
                 return;
             } else {
-                token = header.split(" ")[1].trim();
-                System.out.println(token);
+                header = request.getSession().getAttribute("jwt").toString();
             }
+        }
 
-            String userName = JwtTokenUtils.getUsername(token, secretKey);
-            User userDetails = userService.loadUserByUsername(userName);
-            if (!JwtTokenUtils.validate(token, userDetails.getUserName(), secretKey)) {
-                chain.doFilter(request, response);
-                return;
-            }
-            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                    userDetails.getUserName(), null,
-                    userDetails.getAuthorities()
-            );
-            authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+        if (!header.startsWith("Bearer ")) {
+            log.error("Authorization Header does not start with Bearer {}", request.getRequestURI());
+            chain.doFilter(request, response);
+            return;
+        } else {
+            token = header.split(" ")[1].trim();
+            System.out.println(token);
+        }
 
-        } catch (RuntimeException e) {
+        String userName = JwtTokenUtils.getUsername(token, secretKey);
+        User userDetails = userService.loadUserByUsername(userName);
+        if (!JwtTokenUtils.validate(token, userDetails.getUserName(), secretKey)) {
             chain.doFilter(request, response);
             return;
         }
-
+        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                userDetails.getUserName(), null,
+                userDetails.getAuthorities()
+        );
+        authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+        SecurityContextHolder.getContext().setAuthentication(authentication);
         chain.doFilter(request, response);
-
     }
+
 }
+
 

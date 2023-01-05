@@ -1,6 +1,7 @@
 package com.example.mutsasnsproject.restcontroller;
 
 import com.example.mutsasnsproject.domain.dto.Response;
+import com.example.mutsasnsproject.domain.dto.alarm.AlarmResponse;
 import com.example.mutsasnsproject.domain.dto.user.UserRoleRequest;
 import com.example.mutsasnsproject.domain.dto.user.UserJoinRequest;
 import com.example.mutsasnsproject.domain.dto.user.UserJoinResponse;
@@ -9,6 +10,10 @@ import com.example.mutsasnsproject.domain.dto.user.UserLoginResponse;
 import com.example.mutsasnsproject.service.UserService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -46,7 +51,12 @@ public class UserRestController {
     }
 
     //알림 기능 -------------------------------------
-
-
+    @ApiOperation(value = "알람 조회 기능")
+    @GetMapping("/alarm")
+    public Response<?> alarm(@PageableDefault(size = 20, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable, Authentication authentication) {
+        String userName = authentication.getName();
+        Page<AlarmResponse> alarmResponsePage = userService.getAlarm(userName,pageable);
+        return Response.success(alarmResponsePage);
+    }
 
 }

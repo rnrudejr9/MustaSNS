@@ -4,8 +4,10 @@ package com.example.mutsasnsproject.controller;
 import com.example.mutsasnsproject.domain.dto.post.PostDetailResponse;
 import com.example.mutsasnsproject.domain.dto.post.PostRequest;
 import com.example.mutsasnsproject.domain.entity.Post;
+import com.example.mutsasnsproject.domain.entity.User;
 import com.example.mutsasnsproject.exception.AppException;
 import com.example.mutsasnsproject.service.PostService;
+import com.example.mutsasnsproject.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.Session;
 import org.springframework.data.domain.Page;
@@ -25,12 +27,13 @@ import javax.validation.Valid;
 @RequestMapping("/view/v1/posts")
 public class PostController {
     private final PostService postService;
+    private final UserService userService;
 
     // 리스트 전체 출력 --------------------------
 
     @GetMapping("/list")
     public String list(Model model,@PageableDefault(size = 10, sort = "createdAt",direction = Sort.Direction.DESC) Pageable pageable,
-                       @RequestParam(required = false,defaultValue = "") String searchText){
+                       @RequestParam(required = false,defaultValue = "") String searchText, Authentication authentication){
 //        Page<PostDetailResponse> page = postService.list(pageable);
 
         Page<PostDetailResponse> page = postService.findList(pageable,searchText,searchText);
@@ -40,13 +43,8 @@ public class PostController {
         model.addAttribute("posts",page);
         model.addAttribute("startPage",startPage);
         model.addAttribute("endPage",endPage);
-        return "posts/list";
-    }
 
-    @GetMapping("/{id}")
-    public String detail(@PathVariable Long id){
-        PostDetailResponse postDetailResponse = postService.get("admin",id);
-        return "";
+        return "posts/list";
     }
 
 
@@ -65,12 +63,28 @@ public class PostController {
         return "posts/form";
     }
 
+    @GetMapping("/detail/{id}")
+    public String detail(Model model, @PathVariable Long id,Authentication authentication){
+        PostDetailResponse postDetailResponse = postService.get(authentication.getName(),id);
+        model.addAttribute("postDetailResponse",postDetailResponse);
+        User user = userService.loadUserByUsername(authentication.getName());
+        model.addAttribute("user",user);
+        return "posts/detail";
+    }
+
     @PostMapping("/form")
     public String form(@Valid PostRequest postRequest, BindingResult bindingResult,Authentication authentication){
         if(bindingResult.hasErrors()){
             return "posts/form";
         }
+
         postService.add(authentication.getName(), postRequest.getBody(), postRequest.getTitle());
+        return "redirect:/view/v1/posts/list";
+    }
+
+    @PostMapping("/detail/delete")
+    public String delete(Authentication authentication, @RequestBody Long postId){
+        postService.delete(authentication.getName(),postId);
         return "redirect:/view/v1/posts/list";
     }
 

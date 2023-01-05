@@ -1,20 +1,31 @@
 package com.example.mutsasnsproject.service;
 
+import com.example.mutsasnsproject.domain.dto.Response;
+import com.example.mutsasnsproject.domain.dto.alarm.AlarmResponse;
 import com.example.mutsasnsproject.domain.dto.user.UserJoinRequest;
 import com.example.mutsasnsproject.domain.dto.user.UserJoinResponse;
 import com.example.mutsasnsproject.domain.dto.user.UserLoginResponse;
+import com.example.mutsasnsproject.domain.entity.Alarm;
 import com.example.mutsasnsproject.domain.entity.User;
 import com.example.mutsasnsproject.domain.role.UserRole;
 import com.example.mutsasnsproject.exception.AppException;
 import com.example.mutsasnsproject.exception.ErrorCode;
+import com.example.mutsasnsproject.repository.AlarmRepository;
 import com.example.mutsasnsproject.repository.UserRepository;
 import com.example.mutsasnsproject.configuration.utils.JwtTokenUtils;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.Optional;
 
@@ -24,6 +35,7 @@ public class UserService {
     private final UserRepository userRepository;
     //join 결과에 대한 메세지를 리턴
     private final BCryptPasswordEncoder encoder;
+    private final AlarmRepository alarmRepository;
     @Value("${jwt.secretKey}")
     private String key;
 
@@ -114,5 +126,17 @@ public class UserService {
         }
 
         return changeableUser.getUserName() + " 의 USER를 " + changeableUser.getRole().name() + " 으로 등급을 조정했습니다.";
+    }
+
+    //    알람 조회 기능 ------------------------------------------------------
+
+    public Page<AlarmResponse> getAlarm(String userName, Pageable pageable){
+        // #1 토큰으로 로그인한 아이디가 없을 경우
+        User user = userRepository.findByUserName(userName)
+                .orElseThrow(()->new AppException(ErrorCode.USERNAME_NOT_FOUND,userName +" 이 존재하지 않습니다."));
+
+        Page<Alarm> page = alarmRepository.findByUser(pageable,user);
+        Page<AlarmResponse> alarmResponsePage = AlarmResponse.toDtoList(page);
+        return alarmResponsePage;
     }
 }

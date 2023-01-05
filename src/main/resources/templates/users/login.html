@@ -13,27 +13,25 @@
     <link th:href="@{/css/signin.css}" rel="stylesheet">
 </head>
 <body class="text-center">
+<div class="alert alert-warning" role="alert" th:text="${error_message}">
+</div>
 
 <form class="form-signin" th:action="@{/view/v1/users/login}" th:object="${userLoginRequest}" method="post">
     <img class="mb-4" src="https://getbootstrap.com/docs/4.0/assets/brand/bootstrap-solid.svg" alt="" width="72"
          height="72">
     <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
 
+
     <label for="userName" class="sr-only">userName</label>
     <input type="text" id="userName" name="userName" class="form-control"
            th:classappend="${#fields.hasErrors('userName')}?'is-invalid'" th:field="*{userName}" placeholder="userName"
            required autofocus>
-    <div class="invalid-feedback" th:if="${#fields.hasErrors('userName')}" th:errors="*{userName}">
-        유저네임 에러
-    </div>
+
 
     <label for="password" class="sr-only">Password</label>
     <input type="password" id="password" name="password" class="form-control"
            th:classappend="${#fields.hasErrors('userName')}?'is-invalid'" th:field="*{password}" placeholder="Password"
            required>
-    <div class="invalid-feedback" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">
-        패스워드 에러
-    </div>
 
     <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
 

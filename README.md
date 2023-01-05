@@ -45,11 +45,12 @@
 - [x] 좋아요 기능 구현
 - [x] 게시글 CRUD 테스트 코드
 - [ ] 부가기능(댓글, 좋아요, 권한) 테스트 코드 작성하기 
-- [ ] 알람 기능 구현
+- [x] 마이피드 기능 구현
+- [x] 알람 기능 구현
 - [x] admin 권한 (Role 역할) 구현 및 ADMIN 권한 부여
 - [ ] 소스코드 리펙토링 (간결화, 효율성 참고) -> validateCode, Post ()
 - [ ] 화면ui 설정 (타임리프 템플릿 사용)
-- [ ] 마이페이지 기능 구현
+- [ ] 마이페이지 ui 설정
 - [ ] admin 계정 user 데이터 관리
  
 
@@ -77,6 +78,7 @@
 | `good` | POST | /api/v1/posts/{id}/likes | 좋아요+취소기능 |
 | `good` | GET | /api/v1/posts/{id}/likes | 좋아요조회기능 |
 | `users` | POST | /api/v1/users/{id}/role/change | 사용자권한변경기능 |
+| `my` | GET | /api/v1/posts/my | 마이피드기능 |
 
 <br>
 

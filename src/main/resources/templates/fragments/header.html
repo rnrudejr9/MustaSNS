@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head th:fragment="head(title)">
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -31,11 +31,19 @@
                     </ul>
 
                     <div class="text-end">
-                        <button type="submit" class="btn btn-outline-light me-2" th:onclick="|location.href='@{/view/v1/users/login}'|">Login</button>
+                        <button type="submit" class="btn btn-outline-light me-2" sec:authorize="!isAuthenticated()" th:onclick="|location.href='@{/view/v1/users/login}'|">Login</button>
+
                     </div>
                     <div class="text-end">
-                        <button type="submit" class="btn btn-warning" th:onclick="|location.href='@{/view/v1/users/join}'|">Sign-up</button>
+                        <button type="submit" class="btn btn-warning" sec:authorize="!isAuthenticated()" th:onclick="|location.href='@{/view/v1/users/join}'|">Sign-up</button>
                     </div>
+                    <div class="text-end">
+                        <button type="submit" class="btn btn-warning" sec:authorize="isAuthenticated()" th:onclick="|location.href='@{/view/v1/users/logout}'|">logout</button>
+                    </div>
+                    <div>
+                        <button type="submit" sec:authorize="isAuthenticated()" sec:authentication="name"></button>
+                    </div>
+<!--                    타임리프 sec 추가해서 로그인 했을 경우 안했을 경우 분리하여 표시-->
                 </div>
             </div>
         </header>

@@ -55,7 +55,7 @@ public class UserController {
     public String logout(HttpSession session) {
         session.removeAttribute("jwt");
         session.invalidate();
-        return "redirect:/";
+        return "redirect:/view/v1/home";
     }
 
 

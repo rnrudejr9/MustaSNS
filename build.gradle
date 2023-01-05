@@ -38,7 +38,8 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok:1.18.24'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     implementation "io.springfox:springfox-boot-starter:3.0.0"
-    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-mustache'
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-thymeleaf'
+    implementation group: 'org.thymeleaf.extras', name: 'thymeleaf-extras-springsecurity5'
 
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-validation'
     //의존성 추가 valid

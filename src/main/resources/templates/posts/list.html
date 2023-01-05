@@ -33,7 +33,7 @@
         <tbody>
         <tr th:each="post : ${posts}">
             <th th:text="${post.id}">1</th>
-            <td><a th:text="${post.title}" th:href="@{/view/v1/posts/form(id=${post.id})}"></a></td>
+            <td><a th:text="${post.title}" th:href="@{/view/v1/posts/detail/{id}(id=${post.id})}"></a></td>
             <td th:text="${post.userName}">Otto</td>
             <td th:text="${post.createdAt}">Otto</td>
         </tr>

@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments/header :: head('게시판 디테일')">
+</head>
+
+<body>
+<nav th:replace="fragments/header :: menu('posts')"></nav>
+
+<div class="container row" th:object="${postDetailResponse}">
+    <div class="card col-md-2" style="width: 500rem;">
+        <div class="card-body">
+            <h5 class="card-title" th:text="*{title}">Card title</h5>
+            <h6 class="card-subtitle mb-2 text-muted" th:text="*{createdAt}">Card subtitle</h6>
+            <p class="card-text" th:text="*{body}">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+        </div>
+
+
+        <div style="float:right;">
+            <button class="btn btn-primary" th:if="${#strings.equals(postDetailResponse.userName, user.userName)} or ${#strings.equals('ADMIN',user.role)}">수정</button>
+            <button class="btn btn-danger" th:if="${#strings.equals(postDetailResponse.userName, user.userName)} or ${#strings.equals('ADMIN',user.role)}">삭제</button>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments/header :: head('게시판')">
+</head>
+
+<body>
+<nav th:replace="fragments/header :: menu('posts')"></nav>
+
+<div class="container">
+    <div class ="row">
+        <div class="col text-center">
+            <h1 class="">여기는 게시판</h1>
+        </div>
+    </div>
+
+    <form action="" th:action="@{'/view/v1/posts/modify/' + *{id}}" th:object="${post}" method="post">
+        <input type="hidden" th:field="*{id}">
+        <div class="mb-3">
+            <label for="title">제목</label>
+            <input type="text" class="form-control" th:classappend="${#fields.hasErrors('title')} ? 'is-invalid'" id="title" th:field="*{title}" placeholder="제목을 입력하세요">
+            <div class ="invalid-feedback" th:if="${#fields.hasErrors('title')}" th:errors="*{title}">
+                제목 에러 메세지
+            </div>
+        </div>
+        <div class="mb-3">
+            <label for="body" class="form-label" >내용</label>
+            <textarea class="form-control" th:classappend="${#fields.hasErrors('body')} ? 'is-invalid'" id="body" rows="3" th:field="*{body}"></textarea>
+            <div class="invalid-feedback" th:if="${#fields.hasErrors('body')}" th:errors="*{body}">
+                내용 에러 메세지
+            </div>
+        </div>
+
+
+        <div class = "text-right">
+            <button type="submit" class="btn btn-primary">수정하기</button>
+            <a type="button" class="btn btn-primary" th:href="@{/view/v1/posts/list}">취소</a>
+        </div>
+    </form>
+</div>
+<!-- Optional JavaScript; choose one of the two! -->
+
+<!-- Option 1: Bootstrap Bundle with Popper -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+
+</body>
+</html>

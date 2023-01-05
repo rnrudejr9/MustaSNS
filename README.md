@@ -51,9 +51,13 @@
 - [x] admin 권한 (Role 역할) 구현 및 ADMIN 권한 부여
 - [ ] soft delete 구현
 - [ ] 소스코드 리펙토링 (간결화, 효율성 참고) -> validateCode, Post ()
-- [ ] 화면ui 설정 (타임리프 템플릿 사용)
-- [ ] 마이페이지 ui 설정
-- [ ] admin 계정 user 데이터 관리
+- [x] ui : 화면 설정 (타임리프 템플릿 사용)
+- [x] ui : 게시글 CRUD 구현 (admin CRUD 가능)
+- [ ] ui : 댓글 기능 구현
+- [ ] ui : 좋아요 기능 구현
+- [ ] ui : 마이피드 기능 구현
+- [ ] ui : 알람 기능 구현
+- [ ] ui : admin 계정 user 데이터 관리
  
 
 > * 진행 간 발생했던 이슈 : https://gitlab.com/rnrudejr9/mustasns/-/issues/?sort=created_date&state=all&first_page_size=20

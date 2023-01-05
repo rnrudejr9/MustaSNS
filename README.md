@@ -58,7 +58,7 @@
 - [ ] ui : 마이피드 기능 구현
 - [ ] ui : 알람 기능 구현
 - [ ] ui : admin 계정 user 데이터 관리
- 
+- [ ] ui : 화면에러처리
 
 > * 진행 간 발생했던 이슈 : https://gitlab.com/rnrudejr9/mustasns/-/issues/?sort=created_date&state=all&first_page_size=20
 

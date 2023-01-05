@@ -48,20 +48,7 @@ public class PostController {
     }
 
 
-    @GetMapping("/form")
-    public String form(Model model, @RequestParam(required = false) Long id){
-        if(id == null){
-            model.addAttribute("postRequest",new PostRequest());
-        }else{
-            PostDetailResponse postDetailResponse = postService.get(postService.findById(id).getUser().getUserName(),id);
-            PostRequest postRequest = PostRequest.builder()
-                    .body(postDetailResponse.getBody())
-                    .title(postDetailResponse.getTitle())
-                    .build();
-            model.addAttribute("postRequest",postRequest);
-        }
-        return "posts/form";
-    }
+
 
     @GetMapping("/detail/{id}")
     public String detail(Model model, @PathVariable Long id,Authentication authentication){
@@ -69,7 +56,22 @@ public class PostController {
         model.addAttribute("postDetailResponse",postDetailResponse);
         User user = userService.loadUserByUsername(authentication.getName());
         model.addAttribute("user",user);
+        model.addAttribute("postId",id);
         return "posts/detail";
+    }
+
+//글 작성 기능 ----------------------------------------------------
+
+    @GetMapping("/form")
+    public String form(Model model, @RequestParam(required = false) Long id){
+        if(id == null){
+            model.addAttribute("postRequest",new PostRequest());
+        }else{
+            Post post = postService.findById(id);
+            model.addAttribute("post",post);
+            return "posts/modify";
+        }
+        return "posts/form";
     }
 
     @PostMapping("/form")
@@ -82,10 +84,21 @@ public class PostController {
         return "redirect:/view/v1/posts/list";
     }
 
-    @PostMapping("/detail/delete")
-    public String delete(Authentication authentication, @RequestBody Long postId){
-        postService.delete(authentication.getName(),postId);
+//    글 삭제 기능 ------------------------------------------------
+
+    @PostMapping("/delete/{id}")
+    public String delete(Authentication authentication, @PathVariable(value="id") Long id){
+        postService.delete(authentication.getName(),id);
         return "redirect:/view/v1/posts/list";
     }
+
+    @PostMapping("/modify/{id}")
+    public String modify(Authentication authentication, @PathVariable(value="id") Long id, @Valid Post post){
+        PostRequest postRequest = PostRequest.builder().body(post.getBody()).title(post.getTitle()).build();
+        postService.modify(authentication.getName(),id,postRequest);
+        return "redirect:/view/v1/posts/list";
+    }
+
+
 
 }

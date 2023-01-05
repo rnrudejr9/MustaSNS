@@ -35,20 +35,10 @@ public class UserController {
     public String login(@Valid UserLoginRequest userLoginRequest , HttpServletRequest httpServletRequest, Model model) {
         String jwtToken = "";
         try {
-            jwtToken = userService.login(userLoginRequest.getUserName(),userLoginRequest.getPassword()).getJwt();
-        } catch (AppException e) {
-            if(e.getErrorCode() == ErrorCode.USERNAME_NOT_FOUND) {
-                model.addAttribute("message", "아이디가 존재하지 않습니다");
-                model.addAttribute("nextUrl", "/users/login");
-                return "users/login";
-            }
-            if(e.getErrorCode() == ErrorCode.INVALID_PASSWORD) {
-                model.addAttribute("message", "비밀번호가 틀렸습니다.");
-                model.addAttribute("nextUrl", "/users/login");
-                return "users/login";
-            }
-        } catch (Exception e) {
-            throw e;
+            jwtToken = userService.login(userLoginRequest.getUserName(), userLoginRequest.getPassword()).getJwt();
+        }catch (AppException e){
+            model.addAttribute("error_message",e.getErrorCode().getMessage());
+            return "users/login";
         }
         // 기존 Session 파기 후 새로 생성
         httpServletRequest.getSession().invalidate();

@@ -26,8 +26,10 @@ dependencies {
     implementation 'javax.xml.bind:jaxb-api:2.3.0'
     testImplementation group: 'org.springframework.security', name: 'spring-security-test'
     compileOnly 'org.projectlombok:lombok'
+
     testCompileOnly 'org.projectlombok:lombok'
     testAnnotationProcessor 'org.projectlombok:lombok'
+    //테스트 롬복
 
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
@@ -40,6 +42,7 @@ dependencies {
 
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-validation'
     //의존성 추가 valid
+
 }
 
 tasks.named('test') {

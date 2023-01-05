@@ -7,4 +7,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface PostRepository extends JpaRepository<Post,Long> {
     Page<Post> findByTitleContainingOrBodyContaining(Pageable pageable, String body, String title);
+    Page<Post> findByUserId(Pageable pageable,Long id);
 }

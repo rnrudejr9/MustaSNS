@@ -7,6 +7,7 @@ import com.example.mutsasnsproject.domain.entity.User;
 import com.example.mutsasnsproject.exception.AppException;
 import com.example.mutsasnsproject.exception.ErrorCode;
 import com.example.mutsasnsproject.fixture.TestInfoFixture;
+import com.example.mutsasnsproject.repository.AlarmRepository;
 import com.example.mutsasnsproject.repository.CommentRepository;
 import com.example.mutsasnsproject.repository.PostRepository;
 import com.example.mutsasnsproject.repository.UserRepository;
@@ -34,11 +35,12 @@ class UserServiceTest {
     UserService userService;
 
     UserRepository userRepository = mock(UserRepository.class);
+    AlarmRepository alarmRepository = mock(AlarmRepository.class);
 
     BCryptPasswordEncoder encoder = mock(BCryptPasswordEncoder.class);
     @BeforeEach
     void setUp() {
-        userService = new UserService(userRepository, encoder);
+        userService = new UserService(userRepository, encoder, alarmRepository);
     }
 
     @Test

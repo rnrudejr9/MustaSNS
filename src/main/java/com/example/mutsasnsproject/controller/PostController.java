@@ -70,6 +70,7 @@ public class PostController {
         if(bindingResult.hasErrors()){
             return "posts/form";
         }
+
         postService.add(authentication.getName(), postRequest.getBody(), postRequest.getTitle());
         return "redirect:/view/v1/posts/list";
     }

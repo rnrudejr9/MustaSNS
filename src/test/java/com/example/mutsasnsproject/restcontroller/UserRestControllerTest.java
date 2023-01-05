@@ -28,7 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(UserRestController.class)
 @MockBean(JpaMetamodelMappingContext.class)
-class UserControllerTest {
+class UserRestControllerTest {
     @Autowired
     MockMvc mockMvc;
     @MockBean
@@ -119,6 +119,16 @@ class UserControllerTest {
                         .content(objectMapper.writeValueAsBytes(new UserJoinRequest(userName,password))))
                 .andDo(print())
                 .andExpect(status().isConflict());
+    }
+
+//    권한 변경하기 ---------------------------------------
+
+    @DisplayName("권한 변경")
+    @Test
+    @WithMockUser
+    void changeRole(){
+
+
     }
 
 }

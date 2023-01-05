@@ -23,20 +23,18 @@
 
                     <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
                         <li class="nav-item active">
-                            <a href="#" class="nav-link px-2 text-white">Home</a>
+                            <a href="#" class="nav-link px-2 text-white" th:onclick="|location.href='@{/view/v1/home}'|">Home</a>
                         </li>
                         <li>
-                            <a href="#" class="nav-link px-2 text-white">게시판</a>
+                            <a href="#" class="nav-link px-2 text-white" th:onclick="|location.href='@{/view/v1/posts/list}'|">게시판</a>
                         </li>
                     </ul>
 
-                    <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3">
-                        <input type="search" class="form-control form-control-dark" placeholder="Search..." aria-label="Search">
-                    </form>
-
                     <div class="text-end">
-                        <button type="button" class="btn btn-outline-light me-2">Login</button>
-                        <button type="button" class="btn btn-warning">Sign-up</button>
+                        <button type="submit" class="btn btn-outline-light me-2" th:onclick="|location.href='@{/view/v1/users/login}'|">Login</button>
+                    </div>
+                    <div class="text-end">
+                        <button type="submit" class="btn btn-warning" th:onclick="|location.href='@{/view/v1/users/join}'|">Sign-up</button>
                     </div>
                 </div>
             </div>

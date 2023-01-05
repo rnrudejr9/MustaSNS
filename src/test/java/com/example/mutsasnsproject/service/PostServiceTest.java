@@ -10,10 +10,7 @@ import com.example.mutsasnsproject.exception.ErrorCode;
 import com.example.mutsasnsproject.fixture.PostEntityFixture;
 import com.example.mutsasnsproject.fixture.TestInfoFixture;
 import com.example.mutsasnsproject.fixture.UserEntityFixture;
-import com.example.mutsasnsproject.repository.CommentRepository;
-import com.example.mutsasnsproject.repository.GoodRepository;
-import com.example.mutsasnsproject.repository.PostRepository;
-import com.example.mutsasnsproject.repository.UserRepository;
+import com.example.mutsasnsproject.repository.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -43,10 +40,11 @@ public class PostServiceTest {
     CommentRepository commentRepository = mock(CommentRepository.class);
 
     GoodRepository goodRepository = mock(GoodRepository.class);
+    AlarmRepository alarmRepository = mock(AlarmRepository.class);
 
     @BeforeEach
     void setUp() {
-        postService = new PostService(postRepository, userRepository,commentRepository,goodRepository);
+        postService = new PostService(postRepository, userRepository,commentRepository,goodRepository,alarmRepository);
     }
 
 //    테스트 코드

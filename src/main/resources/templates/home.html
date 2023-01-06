@@ -10,8 +10,9 @@
     <span sec:authorize="!isAuthenticated()">반갑소</span>
 </div>
 <div class="d-grid gap-2 col-6 mx-auto">
-<button type="submit" sec:authorize="!isAuthenticated()" class="btn btn-primary" th:onclick="|location.href='@{/view/v1/users/login}'|">Login</button>
-<button type="submit" class="btn btn-secondary" th:onclick="|location.href='@{/view/v1/posts/list}'|">List</button>
+    <button type="submit" sec:authorize="!isAuthenticated()" class="btn btn-primary" th:onclick="|location.href='@{/view/v1/users/login}'|">Login</button>
+    <button type="submit" sec:authorize="!isAuthenticated()" class="btn btn-primary" th:onclick="|location.href='@{/view/v1/users/join}'|">Join</button>
+    <button type="submit" class="btn btn-secondary" th:onclick="|location.href='@{/view/v1/posts/list}'|">List</button>
 </div>
 <!-- Optional JavaScript; choose one of the two! -->
 

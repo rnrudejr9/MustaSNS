@@ -35,7 +35,7 @@ public class UserController {
     public String login(@Valid UserLoginRequest userLoginRequest , HttpServletRequest httpServletRequest, Model model) {
         String jwtToken = "";
         try {
-            jwtToken = userService.login(userLoginRequest.getUserName(), userLoginRequest.getPassword()).getJwt();
+            jwtToken = userService.login(userLoginRequest).getJwt();
         }catch (AppException e){
             model.addAttribute("error_message",e.getErrorCode().getMessage());
             return "users/login";
@@ -70,7 +70,7 @@ public class UserController {
     public String join(@ModelAttribute UserJoinRequest userJoinRequest, Model model){
         System.out.println(userJoinRequest.getUserName());
         try {
-            userService.join(userJoinRequest.getUserName(), userJoinRequest.getPassword());
+            userService.join(userJoinRequest);
         } catch(AppException e) {
             if(e.getErrorCode() == ErrorCode.USERNAME_DUPLICATED) {
                 model.addAttribute("message", "UserName이 중복됩니다");

@@ -1,5 +1,7 @@
 package com.example.mutsasnsproject.domain.entity;
 
+import com.example.mutsasnsproject.domain.dto.post.PostDetailResponse;
+import com.example.mutsasnsproject.domain.dto.post.PostResponse;
 import com.sun.istack.NotNull;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -9,6 +11,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,4 +56,23 @@ public class Post extends BaseEntity{
         this.body = update.body;
         this.title = update.title;
     }
+
+    public PostDetailResponse toDetailResponse(){
+        return PostDetailResponse.builder()
+                .id(id)
+                .title(title)
+                .body(body)
+                .lastModifiedAt(getLastModifiedAt().format(DateTimeFormatter.ofPattern("yyyy-mm-dd hh:mm:ss")))
+                .createdAt(getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-mm-dd hh:mm:ss")))
+                .userName(user.getUserName())
+                .build();
+    }
+
+    public PostResponse toResponse(String message){
+        return PostResponse.builder()
+                .postId(id)
+                .message(message)
+                .build();
+    }
+
 }

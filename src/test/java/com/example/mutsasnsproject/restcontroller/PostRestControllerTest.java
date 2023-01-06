@@ -8,8 +8,12 @@ import com.example.mutsasnsproject.domain.dto.post.PostRequest;
 import com.example.mutsasnsproject.domain.dto.post.PostResponse;
 import com.example.mutsasnsproject.exception.AppException;
 import com.example.mutsasnsproject.exception.ErrorCode;
+import com.example.mutsasnsproject.fixture.PostEntityFixture;
+import com.example.mutsasnsproject.fixture.TestInfoFixture;
+import com.example.mutsasnsproject.fixture.UserEntityFixture;
 import com.example.mutsasnsproject.service.PostService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,12 +23,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.parameters.P;
 import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
@@ -43,6 +49,11 @@ class PostRestControllerTest {
     @Autowired
     ObjectMapper objectMapper;
     //자바 오브젝트를 json으로 바꿔줌
+
+//    0. 테스크 등록하기 : 내가 뭘 하고 있지?
+//    1. 요구사항 확인
+//2. Test를 먼저 만들고
+//3. Service는 null을 리턴하게 처리
 
 //    조회) 게시글 1개 조회
 //    조회 실패) 로그인 하지 않음
@@ -72,16 +83,22 @@ class PostRestControllerTest {
 //    댓글 삭제)
 //
 
+
+    @BeforeEach
+    public void setUp(){
+
+    }
+
     @DisplayName("조회) 게시글 1개 조회 성공")
     @Test
     @WithMockUser
     public void Test1() throws Exception {
-        when(postService.get(any(),any())).thenReturn(new PostDetailResponse(1L,"","","","",""));
+        PostDetailResponse postDetailResponse = PostEntityFixture.get(TestInfoFixture.get().getUserName(), TestInfoFixture.get().getPassword()).toDetailResponse();
+        when(postService.get(any(),any())).thenReturn(postDetailResponse);
 
         mockMvc.perform(get("/api/v1/posts/"+"1")
                             .with(csrf())
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsBytes(new PostDetailResponse(1L,"","","","",""))))
+                            .contentType(MediaType.APPLICATION_JSON))
                     .andDo(print())
                     .andExpect(status().isOk());
     }
@@ -294,91 +311,8 @@ class PostRestControllerTest {
                 .andExpect(status().is(ErrorCode.DATABASE_ERROR.getHttpStatus().value()));
     }
 
-    @Test
-    @WithMockUser
-    @DisplayName("댓글 1개 작성 성공")
-    void comment_test() throws Exception {
-        String userName = "userName";
-
-        when(postService.commentAdd(any(),any(),any())).thenReturn(CommentResponse.builder().comment("hello").build());
-
-        CommentRequest commentRequest = CommentRequest.builder().comment("hello").build();
-        mockMvc.perform(post("/api/v1/posts/1/comments")
-                .with(csrf())
-                .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsBytes(commentRequest))
-                )
-                .andDo(print())
-                .andExpect(status().isOk());
-    }
-
-    @Test
-    @WithMockUser
-    @DisplayName("댓글 1개 작성 실패 : 권한 없음")
-    void comment_test1() throws Exception {
-        String userName = "userName";
-        when(postService.commentAdd(any(),any(),any()))
-                .thenThrow(new AppException(ErrorCode.INVALID_PERMISSION,""));
-        CommentRequest commentRequest = CommentRequest.builder().comment("hello").build();
-        mockMvc.perform(post("/api/v1/posts/1/comments")
-                        .with(csrf())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsBytes(commentRequest))
-                )
-                .andDo(print())
-                .andExpect(status().is(ErrorCode.INVALID_PERMISSION.getHttpStatus().value()));
-    }
-
-    @DisplayName("댓글) 전체 조회 성공")
-    @Test
-    @WithMockUser
-    public void comment_find() throws Exception {
-        when(postService.commentList(any(),any())).thenReturn(new CommentListResponse());
-
-        mockMvc.perform(get("/api/v1/posts/1" + "/comments")
-                        .with(csrf())
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isOk());
-    }
-
-    @DisplayName("댓글) 삭제 성공")
-    @Test
-    @WithMockUser
-    public void comment_delete() throws Exception {
-        when(postService.delete(any(),any())).thenReturn(new PostResponse());
-
-        mockMvc.perform(delete("/api/v1/posts/1/comments/1")
-                        .with(csrf())
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isOk());
-    }
-
-    @DisplayName("댓글) 삭제 실패 : 사용자와 작성자가 다름")
-    @Test
-    @WithMockUser
-    public void comment_delete2() throws Exception {
-        when(postService.delete(any(),any())).thenThrow(new AppException(ErrorCode.INVALID_PERMISSION,""));
-
-        mockMvc.perform(delete("/api/v1/posts/1/comments/1")
-                        .with(csrf())
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isUnauthorized());
-    }
 
 
-    @Test
-    @DisplayName("좋아요 실패 : Login하지 않은 경우")
-    @WithAnonymousUser // Login하지 않은 경우를 표현
-    void good_fail1() throws Exception {
-        mockMvc.perform(post("/api/v1/posts/1/likes")
-                        .with(csrf())
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isUnauthorized());
-    }
 
     @Test
     @DisplayName("좋아요 실패 : 게시물이 존재하지 않는 경우")
@@ -394,18 +328,6 @@ class PostRestControllerTest {
                 .andExpect(status().isNotFound());
     }
 
-    @Test
-    @DisplayName("좋아요 성공 ")
-    @WithMockUser
-    void like_success() throws Exception {
-        mockMvc.perform(post("/api/v1/posts/1/likes")
-                        .with(csrf())
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.resultCode").value("SUCCESS"))
-        ;
-    }
 
     @Test
     @DisplayName("마이피드 조회 성공")

@@ -47,9 +47,6 @@ public class PostController {
         return "posts/list";
     }
 
-
-
-
     @GetMapping("/detail/{id}")
     public String detail(Model model, @PathVariable Long id,Authentication authentication){
         PostDetailResponse postDetailResponse = postService.get(authentication.getName(),id);
@@ -80,7 +77,7 @@ public class PostController {
             return "posts/form";
         }
 
-        postService.add(authentication.getName(), postRequest.getBody(), postRequest.getTitle());
+        postService.add(authentication.getName(), postRequest);
         return "redirect:/view/v1/posts/list";
     }
 

@@ -28,14 +28,14 @@ public class UserRestController {
     @ApiOperation(value = "회원가입 기능",notes = "userName, password 입력해서 회원가입")
     @PostMapping("/join")
     public Response<UserJoinResponse> join(@RequestBody UserJoinRequest userJoinRequest){
-        UserJoinResponse userJoinResponse =userService.join(userJoinRequest.getUserName(),userJoinRequest.getPassword());
+        UserJoinResponse userJoinResponse = userService.join(userJoinRequest);
         return Response.success(userJoinResponse);
     }
 
     @ApiOperation(value = "로그인 기능",notes = "회원가입한 정보로 로그인")
     @PostMapping("/login")
     public Response<UserLoginResponse> login(@RequestBody UserLoginRequest userLoginRequest) {
-        UserLoginResponse userLoginResponse = userService.login(userLoginRequest.getUserName(),userLoginRequest.getPassword());
+        UserLoginResponse userLoginResponse = userService.login(userLoginRequest);
         return Response.success(userLoginResponse);
     }
 
@@ -44,9 +44,8 @@ public class UserRestController {
     @ApiOperation(value = "권한 기능",notes = "ADMIN 계정이 사용자 권한 설정")
     @PostMapping("/{id}/role/change")
     public Response<String> changeRole(@RequestBody UserRoleRequest userRoleRequest, @PathVariable Long id,Authentication authentication){
-        String userName = authentication.getName();
         String role = userRoleRequest.getRole();
-        String message =userService.userRoleChange(userName,id,role);
+        String message =userService.userRoleChange(authentication.getName(),id,role);
         return Response.success(message);
     }
 
@@ -54,8 +53,7 @@ public class UserRestController {
     @ApiOperation(value = "알람 조회 기능")
     @GetMapping("/alarm")
     public Response<?> alarm(@PageableDefault(size = 20, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable, Authentication authentication) {
-        String userName = authentication.getName();
-        Page<AlarmResponse> alarmResponsePage = userService.getAlarm(userName,pageable);
+        Page<AlarmResponse> alarmResponsePage = userService.getAlarm(authentication.getName(),pageable);
         return Response.success(alarmResponsePage);
     }
 

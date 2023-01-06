@@ -1,9 +1,11 @@
 package com.example.mutsasnsproject.service;
 
+import com.example.mutsasnsproject.customutils.InValidChecker;
 import com.example.mutsasnsproject.domain.dto.Response;
 import com.example.mutsasnsproject.domain.dto.alarm.AlarmResponse;
 import com.example.mutsasnsproject.domain.dto.user.UserJoinRequest;
 import com.example.mutsasnsproject.domain.dto.user.UserJoinResponse;
+import com.example.mutsasnsproject.domain.dto.user.UserLoginRequest;
 import com.example.mutsasnsproject.domain.dto.user.UserLoginResponse;
 import com.example.mutsasnsproject.domain.entity.Alarm;
 import com.example.mutsasnsproject.domain.entity.User;
@@ -36,87 +38,51 @@ public class UserService {
     //join 결과에 대한 메세지를 리턴
     private final BCryptPasswordEncoder encoder;
     private final AlarmRepository alarmRepository;
+
+    private final InValidChecker inValidChecker;
     @Value("${jwt.secretKey}")
     private String key;
 
     // User 회원가입 / 로그인 기능 -------------------------------------
 
-    public UserJoinResponse join(String userName, String password){
-        // #1 userName 중복체크
-        userRepository.findByUserName(userName)
-                .ifPresent(user -> {
-                    throw new AppException(ErrorCode.USERNAME_DUPLICATED,userName + " 이 중복됩니다.");
-                });
-        // #2 Admin User일 경우
-        User user;
-        if(userName.equals("admin") && password.equals("admin")){
-            user = User.builder()
-                    .userName(userName)
-                    .password(encoder.encode(password))
-                    .role(UserRole.ADMIN)
-                    .build();
-        }else {
-            user = User.builder()
-                    .userName(userName)
-                    .password(encoder.encode(password))
-                    .role(UserRole.USER)
-                    .build();
-        }
-        // 저장할때 저장한 데이터타입을 확인하고 Admin 이면 등급을 바꾸는 static메소드를 만들기 : 리펙토링
-
+    // 저장할때 저장한 데이터타입을 확인하고 Admin 이면 등급을 바꾸는 static메소드를 만들기 : 리펙토링
+    // 저장 후 반환할 DTO로 변환 해주는 작업 --> 엔티티를 매개변수로 받는 DTO의 메소드를 구현해보기 : 리펙토링 완료
+    public UserJoinResponse join(UserJoinRequest userJoinRequest){
+        inValidChecker.isDuplicatedUserName(userJoinRequest.getUserName());
+        User user = userJoinRequest.toDto();
         userRepository.save(user);
-        // 저장 후 반환할 DTO로 변환 해주는 작업 --> 엔티티를 매개변수로 받는 DTO의 메소드를 구현해보기 : 리펙토링
-        UserJoinResponse userJoinResponse = UserJoinResponse
-                .builder()
-                .userName(user.getUserName())
-                .id(user.getId())
-                .build();
-        return userJoinResponse;
+        return UserJoinResponse.of(user);
     }
 
-    public UserLoginResponse login(String userName,String password) {
-        // #1 userName 존재하지 않을 경우
-        User loginUser = userRepository.findByUserName(userName)
-                .orElseThrow(()->new AppException(ErrorCode.USERNAME_NOT_FOUND,userName + " 이 존재하지않습니다."));
-
-        // #2 입력한 password 가 틀렸을 경우
-        if(!encoder.matches(password,loginUser.getPassword())){
-            throw new AppException(ErrorCode.INVALID_PASSWORD,"패스워드가 일치하지 않습니다.");
-        }
+    public UserLoginResponse login(UserLoginRequest userLoginRequest) {
+        User loginUser = inValidChecker.userCheck(userLoginRequest.getUserName());
+        inValidChecker.passwordCheck(userLoginRequest.getPassword(),loginUser.getPassword());
         long expireTimeMs = 1000 * 60 * 60L;
-
         String token = JwtTokenUtils.generateAccessToken(loginUser.getUserName(),key,expireTimeMs);
 
-        // 저장 후 반환할 DTO로 변환 해주는 작업 --> 엔티티를 매개변수로 받는 DTO의 메소드를 구현해보기 : 리펙토링
-        UserLoginResponse userLoginResponse = UserLoginResponse
-                .builder()
-                .jwt(token)
-                .build();
+        UserLoginResponse userLoginResponse = UserLoginResponse.builder().jwt(token).build();
         return userLoginResponse;
     }
 
     // user권한 찾기 -------------------------------------
 
     public User loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userRepository.findByUserName(username).orElseThrow(()->new AppException(ErrorCode.USERNAME_NOT_FOUND,"유저가 없습니다."));
+        return inValidChecker.userCheck(username);
     }
 
     // User 권한 설정 ------------------------------------
 
     @Transactional
     public String userRoleChange(String userName,Long userId,String userRole){
-        // #1 username 없음
-        User loginUser = userRepository.findByUserName(userName)
-                .orElseThrow(()->new AppException(ErrorCode.USERNAME_NOT_FOUND,userName+" 가 존재하지않습니다!"));
 
-        // #2 로그인한 유저가 admin이 아닐 경우
+        User loginUser = inValidChecker.userCheck(userName);
+
         if(loginUser.getRole().equals(UserRole.USER)){
             System.out.println("이 값은 유저입니다");
             throw new AppException(ErrorCode.INVALID_PERMISSION,"USER 권한으로 접근하지 못합니다");
         }
-        User changeableUser = userRepository.findById(userId).orElseThrow(()->new AppException(ErrorCode.DATABASE_ERROR,"해당 USER 가 존재하지않습니다."));
+        User changeableUser = inValidChecker.userCheckById(userId);
 
-        // #3 body 값 오류
         if(userRole.equals("admin")) {
             changeableUser.setRole(UserRole.ADMIN);
         }else if(userRole.equals("user")){
@@ -132,11 +98,10 @@ public class UserService {
 
     public Page<AlarmResponse> getAlarm(String userName, Pageable pageable){
         // #1 토큰으로 로그인한 아이디가 없을 경우
-        User user = userRepository.findByUserName(userName)
-                .orElseThrow(()->new AppException(ErrorCode.USERNAME_NOT_FOUND,userName +" 이 존재하지 않습니다."));
-
+        User user = inValidChecker.userCheck(userName);
         Page<Alarm> page = alarmRepository.findByUser(pageable,user);
         Page<AlarmResponse> alarmResponsePage = AlarmResponse.toDtoList(page);
         return alarmResponsePage;
     }
+
 }

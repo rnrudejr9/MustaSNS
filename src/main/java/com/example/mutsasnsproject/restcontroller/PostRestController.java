@@ -30,32 +30,28 @@ public class PostRestController {
     @ApiOperation(value = "게시글 작성기능", notes = "로그인 한 사용자가 title,body 값으로 게시글 작성")
     @PostMapping
     public Response<PostResponse> addPost(@ApiIgnore Authentication authentication, @RequestBody PostRequest postRequest) {
-        String userName = authentication.getName();
-        PostResponse postResponse = postService.add(userName, postRequest.getBody(), postRequest.getTitle());
+        PostResponse postResponse = postService.add(authentication.getName(), postRequest);
         return Response.success(postResponse);
     }
 
     @ApiOperation(value = "게시글 수정기능", notes = "로그인 한 사용자가 title,body 값으로 게시글 수정")
     @PutMapping("/{id}")
     public Response<PostResponse> modifyPost(@ApiIgnore Authentication authentication, @RequestBody PostRequest postRequest, @PathVariable Long id) {
-        String userName = authentication.getName();
-        PostResponse postResponse = postService.modify(userName, id, postRequest);
+        PostResponse postResponse = postService.modify(authentication.getName(), id, postRequest);
         return Response.success(postResponse);
     }
 
     @ApiOperation(value = "게시글 삭제기능")
     @DeleteMapping("/{id}")
     public Response<PostResponse> deletePost(@ApiIgnore Authentication authentication, @PathVariable Long id) {
-        String userName = authentication.getName();
-        PostResponse postResponse = postService.delete(userName, id);
+        PostResponse postResponse = postService.delete(authentication.getName(), id);
         return Response.success(postResponse);
     }
 
     @ApiOperation(value = "게시글 상세조회기능")
     @GetMapping("/{id}")
     public Response<PostDetailResponse> getPost(@ApiIgnore Authentication authentication, @PathVariable Long id) {
-        String userName = authentication.getName();
-        PostDetailResponse postDetailResponse = postService.get(userName, id);
+        PostDetailResponse postDetailResponse = postService.get(authentication.getName(), id);
         return Response.success(postDetailResponse);
     }
 
@@ -71,7 +67,7 @@ public class PostRestController {
 
     @ApiOperation(value = "마이피드 기능")
     @GetMapping("/my")
-    public Response<?> myPage(@PageableDefault(size = 20, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable, Authentication authentication) {
+    public Response<?> myPage(@PageableDefault(size = 20, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable,@ApiIgnore Authentication authentication) {
         String userName = authentication.getName();
         Page postDetailResponse = postService.myPages(userName, pageable);
         return Response.success(postDetailResponse);

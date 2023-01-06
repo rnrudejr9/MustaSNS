@@ -68,4 +68,11 @@ public class Post extends BaseEntity{
                 .build();
     }
 
+    public PostResponse toResponse(String message){
+        return PostResponse.builder()
+                .postId(id)
+                .message(message)
+                .build();
+    }
+
 }

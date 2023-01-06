@@ -60,10 +60,7 @@ public class PostService {
                 .user(user)
                 .build();
         postRepository.save(savedPost);
-        PostResponse postResponse = PostResponse.builder()
-                .postId(savedPost.getId())
-                .message("게시글 작성완료")
-                .build();
+        PostResponse postResponse = PostResponse.builder().postId(savedPost.getId()).message("게시글 작성완료").build();
         return postResponse;
     }
 
@@ -106,9 +103,7 @@ public class PostService {
         }
 
         postRepository.delete(post);
-        PostResponse postResponse = PostResponse.builder()
-                .postId(postId)
-                .message("게시글 삭제완료").build();
+        PostResponse postResponse = PostResponse.builder().postId(postId).message("게시글 삭제완료").build();
         return postResponse;
     }
 
@@ -118,16 +113,7 @@ public class PostService {
                 .orElseThrow(()->new AppException(ErrorCode.USERNAME_NOT_FOUND,userName +" 이 존재하지 않습니다."));
         // #2 해당 게시글이 존재하지 않을 경우
         Post post = postRepository.findById(postId).orElseThrow(()->new AppException(ErrorCode.POST_NOT_FOUND,"게시글이 존재하지 않습니다!"));
-
-        PostDetailResponse postDetailResponse = PostDetailResponse.builder()
-                .id(postId)
-                .title(post.getTitle())
-                .body(post.getBody())
-                .lastModifiedAt(post.getLastModifiedAt().format(DateTimeFormatter.ofPattern("yyyy-mm-dd hh:mm:ss")))
-                .createdAt(post.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-mm-dd hh:mm:ss")))
-                .userName(post.getUser().getUserName())
-                .build();
-        return postDetailResponse;
+        return post.toDetailResponse();
     }
 
 
@@ -250,7 +236,7 @@ public class PostService {
             throw new AppException(ErrorCode.INVALID_PERMISSION, "작성자 불일치로 수정할 수 없는 아이디입니다");
         }
         commentRepository.delete(comment);
-        return CommentResponse.builder().comment(post.getUser().getUserName() + " 가 작성한 " + commentId + " 의 " + comment.getComment()  +" 내용이 삭제됨").build();
+        return CommentResponse.builder().comment(post.getUser().getUserName() + " 가 작성한 " + commentId + " 의 " + comment.getComment()  +" 내용이 삭제됨").postId(postId).build();
     }
 
 //      좋아요 기능 -----------------------------------------------

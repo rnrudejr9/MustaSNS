@@ -66,55 +66,6 @@ public class PostRestController {
         return Response.success(postListResponses);
     }
 
-//      댓글 crud ----------------------------------------------------
-
-    @ApiOperation(value = "댓글 작성기능")
-    @PostMapping("/{postId}/comments")
-    public Response<CommentResponse> addComment(Authentication authentication, @PathVariable Long postId, @RequestBody CommentRequest commentRequest) {
-        String userName = authentication.getName();
-        CommentResponse commentResponse = postService.commentAdd(userName, postId, commentRequest.getComment());
-        return Response.success(commentResponse);
-    }
-
-    @ApiOperation(value = "댓글 조회기능")
-    @GetMapping("/{postId}/comments")
-    public Response<CommentListResponse> listComment(@PathVariable Long postId, @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
-        CommentListResponse commentListResponse = postService.commentList(postId, pageable);
-        return Response.success(commentListResponse);
-    }
-
-    @ApiOperation(value = "댓글 수정기능")
-    @PutMapping("/{postId}/comments/{id}")
-    public Response<CommentResponse> modifyComment(Authentication authentication, @PathVariable Long postId, @PathVariable Long id, @RequestBody CommentRequest commentRequest) {
-        String userName = authentication.getName();
-        CommentResponse commentResponse = postService.commentModify(userName, postId, commentRequest, id);
-        return Response.success(commentResponse);
-    }
-
-    @ApiOperation(value = "댓글 삭제기능")
-    @DeleteMapping("/{postId}/comments/{id}")
-    public Response<CommentResponse> modifyComment2(Authentication authentication, @PathVariable Long postId, @PathVariable Long id) {
-        String userName = authentication.getName();
-        CommentResponse commentResponse = postService.commentDelete(userName, postId, id);
-        return Response.success(commentResponse);
-    }
-
-//    좋아요기능 ----------------------------------------------------
-
-    @ApiOperation(value = "좋아요 실행/취소기능")
-    @PostMapping("/{postId}/likes")
-    public Response<String> goodPost(@PathVariable Long postId, Authentication authentication) {
-        String userName = authentication.getName();
-        String message = postService.postGood(postId, userName);
-        return Response.success(message);
-    }
-
-    @ApiOperation(value = "좋아요 조회기능")
-    @GetMapping("/{postId}/likes")
-    public Response<Integer> goodCount(@PathVariable long postId) {
-        int count = postService.countGood(postId);
-        return Response.success(count);
-    }
 
 //    마이 피드 기능 ------------------------------------------------------
 

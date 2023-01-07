@@ -49,7 +49,7 @@
 - [x] 마이피드 기능 구현
 - [x] 알람 기능 구현
 - [x] admin 권한 (Role 역할) 구현 및 ADMIN 권한 부여
-- [ ] soft delete 구현
+- [x] soft delete 구현 (SQLDelete, where 활용)
 - [X] 소스코드 리펙토링 (간결화, 효율성 참고) -> validateCode, Controller, Service 완료
 - [x] ui : 화면 설정 (타임리프 템플릿 사용)
 - [x] ui : 게시글 CRUD 구현 (admin CRUD 가능)

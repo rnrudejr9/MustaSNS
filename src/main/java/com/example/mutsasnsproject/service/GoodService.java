@@ -6,8 +6,6 @@ import com.example.mutsasnsproject.domain.entity.Good;
 import com.example.mutsasnsproject.domain.entity.Post;
 import com.example.mutsasnsproject.domain.entity.User;
 import com.example.mutsasnsproject.domain.role.AlarmType;
-import com.example.mutsasnsproject.exception.AppException;
-import com.example.mutsasnsproject.exception.ErrorCode;
 import com.example.mutsasnsproject.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,7 +15,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class GoodSerivce {
+public class GoodService {
     //      좋아요 기능 -----------------------------------------------
 //            postGood 좋아요 실행/취소;
 //            countGood 좋아요 개수리턴;

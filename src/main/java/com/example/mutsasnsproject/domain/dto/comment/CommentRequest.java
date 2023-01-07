@@ -4,16 +4,14 @@ import com.example.mutsasnsproject.domain.entity.Comment;
 import com.example.mutsasnsproject.domain.entity.Post;
 import com.example.mutsasnsproject.domain.entity.User;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@JsonAutoDetect
+@Data
 @Builder
+@Setter
 public class CommentRequest {
     private String comment;
     public Comment toEntity() {

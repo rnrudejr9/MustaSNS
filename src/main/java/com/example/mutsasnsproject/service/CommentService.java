@@ -31,8 +31,6 @@ import java.util.Objects;
 @Service
 @RequiredArgsConstructor
 public class CommentService {
-    private final UserRepository userRepository;
-    private final PostRepository postRepository;
     private final CommentRepository commentRepository;
     private final AlarmRepository alarmRepository;
 
@@ -86,6 +84,12 @@ public class CommentService {
         Comment comment = inValidChecker.commentCheckById(commentId);
         inValidChecker.isInValidPermission(comment,user);
         commentRepository.delete(comment);
+        return comment.toResponse();
+    }
+
+
+    public CommentResponse findById(Long id){
+        Comment comment = inValidChecker.commentCheckById(id);
         return comment.toResponse();
     }
 }

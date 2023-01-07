@@ -4,24 +4,22 @@ import com.example.mutsasnsproject.domain.dto.comment.CommentListResponse;
 import com.example.mutsasnsproject.domain.dto.comment.CommentRequest;
 import com.example.mutsasnsproject.domain.dto.comment.CommentResponse;
 import com.example.mutsasnsproject.domain.dto.post.PostRequest;
-import com.example.mutsasnsproject.domain.dto.post.PostResponse;
 import com.example.mutsasnsproject.exception.AppException;
 import com.example.mutsasnsproject.exception.ErrorCode;
-import com.example.mutsasnsproject.service.PostService;
+import com.example.mutsasnsproject.service.CommentService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -36,7 +34,7 @@ class CommentRestControllerTest {
     @Autowired
     MockMvc mockMvc;
     @MockBean
-    PostService postService;
+    CommentService commentSerivce;
     @Autowired
     ObjectMapper objectMapper;
     @Test
@@ -45,7 +43,7 @@ class CommentRestControllerTest {
     void comment_test() throws Exception {
         String userName = "userName";
 
-        when(postService.commentAdd(any(),any(),any())).thenReturn(CommentResponse.builder().comment("hello").build());
+        when(commentSerivce.commentAdd(any(),any(),any())).thenReturn(CommentResponse.builder().comment("hello").build());
 
         CommentRequest commentRequest = CommentRequest.builder().comment("hello").build();
         mockMvc.perform(post("/api/v1/posts/1/comments")
@@ -62,7 +60,7 @@ class CommentRestControllerTest {
     @DisplayName("댓글 1개 작성 실패 : 권한 없음")
     void comment_test1() throws Exception {
         String userName = "userName";
-        when(postService.commentAdd(any(),any(),any()))
+        when(commentSerivce.commentAdd(any(),any(),any()))
                 .thenThrow(new AppException(ErrorCode.INVALID_PERMISSION,""));
         CommentRequest commentRequest = CommentRequest.builder().comment("hello").build();
         mockMvc.perform(post("/api/v1/posts/1/comments")
@@ -78,7 +76,7 @@ class CommentRestControllerTest {
     @Test
     @WithMockUser
     public void comment_find() throws Exception {
-        when(postService.commentList(any(),any())).thenReturn(new CommentListResponse());
+        when(commentSerivce.commentList(any(),any())).thenReturn(Page.empty());
 
         mockMvc.perform(get("/api/v1/posts/1" + "/comments")
                         .with(csrf())
@@ -92,8 +90,8 @@ class CommentRestControllerTest {
     @WithMockUser
     public void comment_modify() throws Exception {
 
-        when(postService.commentModify(any(),any(),any(),any())).thenReturn(new CommentResponse(1L,"","",1L,"",""));
-//        given(postService.modify(any(),any(),any())).willReturn(postResponse);
+        when(commentSerivce.commentModify(any(),any(),any(),any())).thenReturn(new CommentResponse(1L,"","",1L,"",""));
+//        given(commentSerivce.modify(any(),any(),any())).willReturn(postResponse);
 
         mockMvc.perform(put("/api/v1/posts/1/comments/1")
                         .with(csrf())
@@ -110,7 +108,7 @@ class CommentRestControllerTest {
     @Test
     @WithMockUser
     public void comment_delete() throws Exception {
-        when(postService.delete(any(),any())).thenReturn(new PostResponse());
+        when(commentSerivce.commentDelete(any(),any(),any())).thenReturn(new CommentResponse());
 
         mockMvc.perform(delete("/api/v1/posts/1/comments/1")
                         .with(csrf())
@@ -123,7 +121,7 @@ class CommentRestControllerTest {
     @Test
     @WithMockUser
     public void comment_delete2() throws Exception {
-        when(postService.delete(any(),any())).thenThrow(new AppException(ErrorCode.INVALID_PERMISSION,""));
+        when(commentSerivce.commentDelete(any(),any(),any())).thenThrow(new AppException(ErrorCode.INVALID_PERMISSION,""));
 
         mockMvc.perform(delete("/api/v1/posts/1/comments/1")
                         .with(csrf())

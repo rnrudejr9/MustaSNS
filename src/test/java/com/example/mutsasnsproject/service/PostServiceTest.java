@@ -1,5 +1,6 @@
 package com.example.mutsasnsproject.service;
 
+import com.example.mutsasnsproject.customutils.InValidChecker;
 import com.example.mutsasnsproject.domain.dto.comment.CommentResponse;
 import com.example.mutsasnsproject.domain.dto.post.PostDetailResponse;
 import com.example.mutsasnsproject.domain.dto.post.PostRequest;
@@ -37,14 +38,11 @@ public class PostServiceTest {
 
     UserRepository userRepository = mock(UserRepository.class);
 
-    CommentRepository commentRepository = mock(CommentRepository.class);
-
-    GoodRepository goodRepository = mock(GoodRepository.class);
-    AlarmRepository alarmRepository = mock(AlarmRepository.class);
+    InValidChecker inValidChecker = mock(InValidChecker.class);
 
     @BeforeEach
     void setUp() {
-        postService = new PostService(postRepository, userRepository,commentRepository,goodRepository,alarmRepository);
+        postService = new PostService(postRepository, inValidChecker);
     }
 
 //    테스트 코드
@@ -94,7 +92,7 @@ public class PostServiceTest {
                 .thenReturn(mockPostEntity);
 
 
-        Assertions.assertDoesNotThrow(() -> postService.add(fixture.getUserName(), fixture.getBody(), fixture.getTitle()));
+        Assertions.assertDoesNotThrow(() -> postService.add(fixture.getUserName(), new PostRequest()));
     }
 
     @Test
@@ -102,7 +100,7 @@ public class PostServiceTest {
     void post_fail_no_user() {
         TestInfoFixture.TestInfo fixture = TestInfoFixture.get();
         when(userRepository.findByUserName(fixture.getUserName())).thenReturn(Optional.empty());
-        AppException exception = Assertions.assertThrows(AppException.class, () -> postService.add(fixture.getUserName(), fixture.getTitle(), fixture.getBody()));
+        AppException exception = Assertions.assertThrows(AppException.class, () -> postService.add(fixture.getUserName(),new PostRequest()));
 
         assertEquals(ErrorCode.USERNAME_NOT_FOUND, exception.getErrorCode());
     }

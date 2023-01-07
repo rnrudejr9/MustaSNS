@@ -1,28 +1,44 @@
 package com.example.mutsasnsproject.restcontroller;
 
-import com.example.mutsasnsproject.domain.dto.user.UserJoinRequest;
-import com.example.mutsasnsproject.domain.dto.user.UserJoinResponse;
-import com.example.mutsasnsproject.domain.dto.user.UserLoginRequest;
-import com.example.mutsasnsproject.domain.dto.user.UserLoginResponse;
+import com.example.mutsasnsproject.domain.dto.comment.CommentListResponse;
+import com.example.mutsasnsproject.domain.dto.comment.CommentRequest;
+import com.example.mutsasnsproject.domain.dto.comment.CommentResponse;
+import com.example.mutsasnsproject.domain.dto.post.PostDetailResponse;
+import com.example.mutsasnsproject.domain.dto.post.PostRequest;
+import com.example.mutsasnsproject.domain.dto.post.PostResponse;
+import com.example.mutsasnsproject.domain.dto.user.*;
 import com.example.mutsasnsproject.exception.AppException;
 import com.example.mutsasnsproject.exception.ErrorCode;
+import com.example.mutsasnsproject.fixture.PostEntityFixture;
+import com.example.mutsasnsproject.fixture.TestInfoFixture;
+import com.example.mutsasnsproject.fixture.UserEntityFixture;
+import com.example.mutsasnsproject.service.PostService;
 import com.example.mutsasnsproject.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.parameters.P;
+import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
@@ -37,19 +53,21 @@ class UserRestControllerTest {
     ObjectMapper objectMapper;
     //자바 오브젝트를 json으로 바꿔줌
 
+    static String userName = TestInfoFixture.get().getUserName();
+    static String password = TestInfoFixture.get().getPassword();
+
     @Test
     @DisplayName("로그인 성공")
     @WithMockUser
     public void login() throws Exception {
-        String userName = "hello";
-        String password = "1234";
-        when(userService.login(any(),any())).thenReturn(new UserLoginResponse("jwt"));
+        when(userService.login(any())).thenReturn(new UserLoginResponse("jwt"));
 
         mockMvc.perform(post("/api/v1/users/login")
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsBytes(new UserLoginRequest(userName,password))))
                 .andDo(print())
+                .andExpect(jsonPath("$.result.jwt").value("jwt"))
                 .andExpect(status().isOk());
     }
     @Test
@@ -57,30 +75,28 @@ class UserRestControllerTest {
     @WithMockUser
     //시큐리티떄문에 안넘어가는 현상 방지
     public void login2() throws Exception {
-        String userName = "he";
-        String password = "1234";
-        when(userService.login(any(),any()))
+        when(userService.login(any()))
                 .thenThrow(new AppException(ErrorCode.USERNAME_NOT_FOUND,""));
         mockMvc.perform(post("/api/v1/users/login")
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsBytes(new UserLoginRequest(userName,password))))
                 .andDo(print())
+                .andExpect(jsonPath("$.resultCode").value("ERROR"))
                 .andExpect(status().isNotFound());
     }
     @Test
     @DisplayName("로그인 실패 : 패스워드 틀림")
     @WithMockUser
     public void login3() throws Exception {
-        String userName = "hello";
-        String password = "5555";
-        when(userService.login(any(),any()))
+        when(userService.login(any()))
                 .thenThrow(new AppException(ErrorCode.INVALID_PASSWORD,""));
         mockMvc.perform(post("/api/v1/users/login")
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsBytes(new UserLoginRequest(userName,password))))
                 .andDo(print())
+                .andExpect(jsonPath("$.resultCode").value("ERROR"))
                 .andExpect(status().isUnauthorized());
     }
 
@@ -89,10 +105,8 @@ class UserRestControllerTest {
     @DisplayName("회원가입 성공")
     @WithMockUser
     void join() throws Exception {
-        String userName = "hello";
-        String password = "1234";
-        when(userService.join(any(),any()))
-                .thenReturn(new UserJoinResponse(1L,"userName"));
+        when(userService.join(any()))
+                .thenReturn(new UserJoinResponse(1L,userName));
 
         mockMvc.perform(post("/api/v1/users/join")
                         .with(csrf())
@@ -100,6 +114,7 @@ class UserRestControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsBytes(new UserJoinRequest(userName,password))))
                 .andDo(print())
+                .andExpect(jsonPath("$.result.userName").value(userName))
                 .andExpect(status().isOk());
     }
 
@@ -108,27 +123,49 @@ class UserRestControllerTest {
     @WithMockUser
     void join_fail() throws Exception {
 
-        String userName = "hello";
-        String password = "1234";
-
-        when(userService.join(any(),any()))
-                .thenThrow(new RuntimeException("해당유저는 중복됨"));
+        when(userService.join(any()))
+                .thenThrow(new AppException(ErrorCode.USERNAME_DUPLICATED,""));
         mockMvc.perform(post("/api/v1/users/join")
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsBytes(new UserJoinRequest(userName,password))))
                 .andDo(print())
+                .andExpect(jsonPath("$.resultCode").value("ERROR"))
                 .andExpect(status().isConflict());
     }
 
 //    권한 변경하기 ---------------------------------------
 
-    @DisplayName("권한 변경")
+    @DisplayName("권한 변경 성공")
     @Test
     @WithMockUser
-    void changeRole(){
+    void changeRole() throws Exception {
+        when(userService.userRoleChange(any(),any(),any())).thenReturn("message");
+        mockMvc.perform(post("/api/v1/users/1/role/change")
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsBytes(new UserRoleRequest("role"))))
+                .andDo(print())
+                .andExpect(jsonPath("$.result").value("message"))
+                .andExpect(status().isOk());
+
+    }
 
 
+//   알림 기능 ----------------------------
+
+    @DisplayName("알림 조회 성공")
+    @Test
+    @WithMockUser
+    void alarm() throws Exception {
+        when(userService.getAlarm(any(),any())).thenReturn(Page.empty());
+        mockMvc.perform(get("/api/v1/users/alarm")
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(jsonPath("$.resultCode").value("SUCCESS"))
+                .andExpect(jsonPath("$.result.totalElements").value(0))
+                .andExpect(status().isOk());
     }
 
 }

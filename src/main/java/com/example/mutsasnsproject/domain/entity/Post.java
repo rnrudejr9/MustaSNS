@@ -4,6 +4,8 @@ import com.example.mutsasnsproject.domain.dto.post.PostDetailResponse;
 import com.example.mutsasnsproject.domain.dto.post.PostResponse;
 import com.sun.istack.NotNull;
 import lombok.*;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -22,6 +24,8 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @Setter
+@Where(clause = "deleted_at is NULL")
+@SQLDelete(sql = "UPDATE post SET deleted_at = now()  WHERE id=?")
 public class Post extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

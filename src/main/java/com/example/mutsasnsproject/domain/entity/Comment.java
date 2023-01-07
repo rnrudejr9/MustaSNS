@@ -3,6 +3,8 @@ package com.example.mutsasnsproject.domain.entity;
 import com.example.mutsasnsproject.domain.dto.comment.CommentResponse;
 import com.example.mutsasnsproject.domain.dto.post.PostResponse;
 import lombok.*;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -16,11 +18,14 @@ import java.time.format.DateTimeFormatter;
 @Getter
 @Setter
 @Table(name = "comment")
+@Where(clause = "deleted_at is NULL")
+@SQLDelete(sql = "UPDATE comment SET deleted_at = now()  WHERE id=?")
 public class Comment extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String comment;
+    private LocalDateTime deletedAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id")

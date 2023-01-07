@@ -6,6 +6,7 @@ import com.example.mutsasnsproject.exception.AppException;
 import com.example.mutsasnsproject.exception.ErrorCode;
 import com.example.mutsasnsproject.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.swagger.v3.oas.models.PathItem;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -53,13 +54,13 @@ public class SecurityConfig {
                 .csrf().disable()
                 .cors().and()
                 .authorizeRequests()
-                .antMatchers("/api/v1/users/join", "/api/v1/users/login").permitAll()
-//                .antMatchers("/api/*/users/alarm/subscribe/*").permitAll()
-                .antMatchers(HttpMethod.POST,"/api/v1/posts/**", "/api/v1/posts").authenticated()
-                .antMatchers(HttpMethod.DELETE,"/api/v1/posts/**").authenticated()
-                .antMatchers(HttpMethod.PUT,"/api/v1/posts/**").authenticated()
-                .antMatchers(HttpMethod.POST, "/api/v1/users/**/role/change").hasAuthority(UserRole.ADMIN.name())
-                .antMatchers(HttpMethod.POST, "/api/v1/posts/**/comment").authenticated()
+                .antMatchers(HttpMethod.POST, "/api/v1/posts/**").authenticated()
+                .antMatchers(HttpMethod.POST, "/api/v1/posts/{postId}/likes").authenticated()
+                .antMatchers(HttpMethod.PUT, "/api/v1/posts/**").authenticated()
+                .antMatchers(HttpMethod.DELETE, "/api/v1/posts/**").authenticated()
+                .antMatchers(HttpMethod.GET,"/api/v1/posts/{id}").authenticated()
+                .antMatchers("/api/v1/users/join","/api/v1/users/login").permitAll()
+                .antMatchers("/api/v1/users/{id}/role/change").authenticated()
 
                 //UI
                 .antMatchers("/view/v1/users/**").permitAll()
@@ -71,7 +72,6 @@ public class SecurityConfig {
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                .addFilterBefore(new JwtTokenFilter(userService, secretKey), UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling()
                 .authenticationEntryPoint(new AuthenticationEntryPoint() {
                     @Override
@@ -87,6 +87,7 @@ public class SecurityConfig {
                     }
                 })
                 .and()
+                .addFilterBefore(new JwtTokenFilter(userService, secretKey), UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 

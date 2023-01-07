@@ -21,6 +21,7 @@ import java.util.List;
 public class CommentListResponse {
     private Long id;
     private String userName;
+    private String comment;
     private Long postId;
     private LocalDateTime createdAt;
 
@@ -28,6 +29,7 @@ public class CommentListResponse {
         Page<CommentListResponse> page = comments.map(m -> CommentListResponse.builder()
                 .id(m.getId())
                 .userName(m.getUser().getUserName())
+                .comment(m.getComment())
                 .createdAt(m.getCreatedAt())
                 .postId(m.getPost().getId())
                 .build());

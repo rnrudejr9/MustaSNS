@@ -1,11 +1,14 @@
 package com.example.mutsasnsproject.controller;
 
 
+import com.example.mutsasnsproject.domain.dto.comment.CommentListResponse;
+import com.example.mutsasnsproject.domain.dto.comment.CommentRequest;
 import com.example.mutsasnsproject.domain.dto.post.PostDetailResponse;
 import com.example.mutsasnsproject.domain.dto.post.PostRequest;
 import com.example.mutsasnsproject.domain.entity.Post;
 import com.example.mutsasnsproject.domain.entity.User;
 import com.example.mutsasnsproject.exception.AppException;
+import com.example.mutsasnsproject.service.CommentService;
 import com.example.mutsasnsproject.service.PostService;
 import com.example.mutsasnsproject.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +31,7 @@ import javax.validation.Valid;
 public class PostController {
     private final PostService postService;
     private final UserService userService;
+    private final CommentService commentService;
 
     // 리스트 전체 출력 --------------------------
 
@@ -48,12 +52,22 @@ public class PostController {
     }
 
     @GetMapping("/detail/{id}")
-    public String detail(Model model, @PathVariable Long id,Authentication authentication){
+    public String detail(Model model, @PathVariable Long id,Authentication authentication,@PageableDefault(size = 5, sort = "createdAt",direction = Sort.Direction.DESC) Pageable pageable){
         PostDetailResponse postDetailResponse = postService.get(authentication.getName(),id);
         model.addAttribute("postDetailResponse",postDetailResponse);
         User user = userService.loadUserByUsername(authentication.getName());
+
+        Page<CommentListResponse> page = commentService.commentList(id,pageable);
+        int startPage = Math.max(1,page.getPageable().getPageNumber() - 4);
+        int endPage = Math.min(page.getTotalPages(),page.getPageable().getPageNumber() + 4);
+
         model.addAttribute("user",user);
         model.addAttribute("postId",id);
+
+        model.addAttribute("commentRequest", new CommentRequest());
+        model.addAttribute("comments",page);
+        model.addAttribute("startPage",startPage);
+        model.addAttribute("endPage",endPage);
         return "posts/detail";
     }
 
@@ -80,6 +94,8 @@ public class PostController {
         postService.add(authentication.getName(), postRequest);
         return "redirect:/view/v1/posts/list";
     }
+
+
 
 //    글 삭제 기능 ------------------------------------------------
 

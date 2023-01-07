@@ -45,9 +45,7 @@ public class CommentService {
 //            comment_list 전체조회;
 
     public CommentResponse commentAdd(String userName, Long postId, CommentRequest commentRequest) {
-        // #1 토큰으로 로그인한 아이디가 없을 경우
         User user = inValidChecker.userCheck(userName);
-        // #2 해당 게시글이 존재하지 않을 경우
         Post post = inValidChecker.postCheckById(postId);
 
         Comment savedcomment = commentRequest.toEntity();

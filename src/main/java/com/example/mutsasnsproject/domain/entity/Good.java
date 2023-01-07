@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import javax.annotation.Generated;
 import javax.persistence.*;
@@ -15,8 +16,8 @@ import java.time.LocalDateTime;
 @Getter
 @Entity
 @Builder
-@SQLDelete(sql = "UPDATE \"good\" SET deleted_at = current_timestamp WHERE id = ?")
-//@Where(clause = "deleted_at is NULL")
+@Where(clause = "deleted_at is NULL")
+@SQLDelete(sql = "UPDATE good SET deleted_at = now()  WHERE id=?")
 public class Good extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,5 +29,4 @@ public class Good extends BaseEntity{
     @JoinColumn(name = "post_id")
     private Post post;
 
-    LocalDateTime deletedAt;
 }

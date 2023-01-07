@@ -46,9 +46,9 @@
                 <h6 class="card-subtitle mb-2 text-muted" th:text="${comment.createdAt}">Card subtitle</h6>
                 <h6 class="card-subtitle mb-2 text-muted" th:text="${comment.userName}">Card subtitle</h6>
                 <a class="btn btn-success" th:href="@{'/view/v1/posts/' + ${postId} + '/comments/modify/' + ${comment.id}}"
-                   th:if="${#strings.equals(postDetailResponse.userName, user.userName)} or ${#strings.equals('ADMIN',user.role)}">수정</a>
-                <form th:action="@{'/view/v1/posts/' + ${postId} + '/comments/delete' + ${comment.id}}" method="post">
-                    <input type="submit" class="btn btn-danger" th:if="${#strings.equals(postDetailResponse.userName, user.userName)} or ${#strings.equals('ADMIN',user.role)}" value="삭제">
+                   th:if="${#strings.equals(comment.userName, user.userName)} or ${#strings.equals('ADMIN',user.role)}">수정</a>
+                <form th:action="@{'/view/v1/posts/' + ${postId} + '/comments/delete/' + ${comment.id}}" method="post">
+                    <input type="submit" class="btn btn-danger" th:if="${#strings.equals(comment.userName, user.userName)} or ${#strings.equals('ADMIN',user.role)}" value="삭제">
                 </form>
             </div>
 

@@ -9,6 +9,7 @@ import com.example.mutsasnsproject.domain.entity.Post;
 import com.example.mutsasnsproject.domain.entity.User;
 import com.example.mutsasnsproject.exception.AppException;
 import com.example.mutsasnsproject.service.CommentService;
+import com.example.mutsasnsproject.service.GoodService;
 import com.example.mutsasnsproject.service.PostService;
 import com.example.mutsasnsproject.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +33,7 @@ public class PostController {
     private final PostService postService;
     private final UserService userService;
     private final CommentService commentService;
+    private final GoodService goodService;
 
     // 리스트 전체 출력 --------------------------
 
@@ -41,7 +43,6 @@ public class PostController {
 //        Page<PostDetailResponse> page = postService.list(pageable);
 
         Page<PostDetailResponse> page = postService.findList(pageable,searchText,searchText);
-
         int startPage = Math.max(1,page.getPageable().getPageNumber() - 4);
         int endPage = Math.min(page.getTotalPages(),page.getPageable().getPageNumber() + 4);
         model.addAttribute("posts",page);
@@ -58,12 +59,21 @@ public class PostController {
         User user = userService.loadUserByUsername(authentication.getName());
 
         Page<CommentListResponse> page = commentService.commentList(id,pageable);
-        int startPage = Math.max(1,page.getPageable().getPageNumber() - 4);
-        int endPage = Math.min(page.getTotalPages(),page.getPageable().getPageNumber() + 4);
+        int nowPage = page.getPageable().getPageNumber() + 1;
+        int startPage = Math.max(nowPage - 4,1);
+        int endPage = Math.min(page.getTotalPages(),nowPage + 4);
+
+        boolean isContainGood = goodService.isContainGood(user,postService.findById(id));
+        if(isContainGood){
+            model.addAttribute("goodCheck",1);
+        }else{
+            model.addAttribute("goodCheck",0);
+        }
+
+
 
         model.addAttribute("user",user);
         model.addAttribute("postId",id);
-
         model.addAttribute("commentRequest", new CommentRequest());
         model.addAttribute("comments",page);
         model.addAttribute("startPage",startPage);
@@ -112,6 +122,16 @@ public class PostController {
         return "redirect:/view/v1/posts/list";
     }
 
-
+//    마이페이지 기능 --------------------------------------------
+    @GetMapping("/my")
+    public String myPage(Authentication authentication, Model model, @PageableDefault(size = 5, sort = "createdAt",direction = Sort.Direction.DESC) Pageable pageable){
+        Page<PostDetailResponse> page = postService.myPages(authentication.getName(),pageable);
+        int startPage = Math.max(1,page.getPageable().getPageNumber() - 4);
+        int endPage = Math.min(page.getTotalPages(),page.getPageable().getPageNumber() + 4);
+        model.addAttribute("posts",page);
+        model.addAttribute("startPage",startPage);
+        model.addAttribute("endPage",endPage);
+        return "posts/my";
+    }
 
 }

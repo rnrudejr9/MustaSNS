@@ -24,6 +24,13 @@
             <form th:action="@{'/view/v1/posts/delete/' + ${postId}}" method="post">
             <input type="submit" class="btn btn-danger" th:if="${#strings.equals(postDetailResponse.userName, user.userName)} or ${#strings.equals('ADMIN',user.role)}" value="삭제"></input>
             </form>
+
+            <form th:action="@{'/view/v1/posts/good/' + ${postId}}" method="post">
+                <input type="submit" class="btn btn-primary" th:if="${goodCheck} == 1" value="좋아요취소"></input>
+            </form>
+            <form th:action="@{'/view/v1/posts/good/' + ${postId}}" method="post">
+                <input type="submit" class="btn btn-primary" th:if="${goodCheck} != 1" value="좋아요"></input>
+            </form>
         </div>
 
     </div>
@@ -57,7 +64,7 @@
         <nav aria-label="Page navigation example">
 
 
-            <ul class="pagination justify-content-center">
+            <ul class="pagination justify-content-center" th:if="${comments.totalPages > 0}">
                 <li class="page-item" th:classappend="${1 == comments.pageable.pageNumber + 1}?'disabled'">
                     <a class="page-link" th:href="@{/view/v1/posts/detail/{postId}(page=${comments.pageable.pageNumber - 1},postId = ${postId})}"
                        tabindex="-1" aria-disabled="true">Previous</a>
@@ -71,6 +78,7 @@
                        th:href="@{/view/v1/posts/detail/{postId}(page=${comments.pageable.pageNumber + 1}, postId = ${postId})}">Next</a>
                 </li>
             </ul>
+
 
 
         </nav>

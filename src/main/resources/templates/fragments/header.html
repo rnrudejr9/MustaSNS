@@ -41,6 +41,10 @@
                         <button type="submit" class="btn btn-warning" sec:authorize="isAuthenticated()" th:onclick="|location.href='@{/view/v1/users/logout}'|">logout</button>
                     </div>
 
+                    <div class="text-end">
+                        <button type="submit" class="btn btn-warning" sec:authorize="isAuthenticated()" th:onclick="|location.href='@{/view/v1/posts/my}'|">myPage</button>
+                    </div>
+
                     <div>
                         <button type="submit" sec:authorize="isAuthenticated()" sec:authentication="name"></button>
                     </div>

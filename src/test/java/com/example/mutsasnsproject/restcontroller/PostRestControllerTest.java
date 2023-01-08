@@ -110,7 +110,7 @@ class PostRestControllerTest {
         mockMvc.perform(get("/api/v1/posts/")
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsBytes(new PostDetailResponse(1L,"","","","",""))))
+                        .content(objectMapper.writeValueAsBytes(new PostDetailResponse(1L,"","","","","",1,1))))
                 .andDo(print())
                 .andExpect(status().isUnauthorized());
     }

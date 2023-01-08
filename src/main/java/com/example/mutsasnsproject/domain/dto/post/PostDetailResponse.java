@@ -19,6 +19,9 @@ public class PostDetailResponse {
     private String userName;
     private String createdAt;
     private String lastModifiedAt;
+
+    private Integer goodCount;
+    private Integer commentCount;
     public static Page<PostDetailResponse> toDtoList(Page<Post> postEntities){
         Page<PostDetailResponse> postDetailResponses = postEntities.map(m -> PostDetailResponse.builder()
                 .id(m.getId())
@@ -27,6 +30,8 @@ public class PostDetailResponse {
                 .userName(m.getUser().getUserName())
                 .createdAt(m.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-mm-dd hh:mm:ss")))
                 .lastModifiedAt(m.getLastModifiedAt().format(DateTimeFormatter.ofPattern("yyyy-mm-dd hh:mm:ss")))
+                .goodCount(m.getGoods().size())
+                .commentCount(m.getComments().size())
                 .build());
         return postDetailResponses;
     }

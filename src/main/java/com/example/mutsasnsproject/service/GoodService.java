@@ -51,4 +51,13 @@ public class GoodService {
         Post post = inValidChecker.postCheckById(postId);
         return post.getGoods().size();
     }
+
+    public boolean isContainGood(User user, Post post){
+        Optional<Good> good = goodRepository.findByUserAndPost(user,post);
+        // #3 이미 좋아요를 누른 상황
+        if(good.isPresent()){
+            return true;
+        }
+        return false;
+    }
 }

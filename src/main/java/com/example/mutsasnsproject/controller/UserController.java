@@ -90,5 +90,12 @@ public class UserController {
     }
 
 
+//    관리자모드 ------------------------------------
+    @GetMapping("/list")
+    public String userList(Authentication authentication, Model model){
+        String userName = authentication.getName();
+//        userService.findAll(Pageable);
+        return "users/list";
+    }
 
 }

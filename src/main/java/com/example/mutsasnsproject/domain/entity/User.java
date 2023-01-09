@@ -40,7 +40,6 @@ public class User extends BaseEntity {
     @OneToMany(mappedBy = "user")
     private List<Good> goods = new ArrayList<>();
 
-
     @Builder.Default
     @OneToMany(mappedBy = "user")
     private List<Alarm> alarms = new ArrayList<>();

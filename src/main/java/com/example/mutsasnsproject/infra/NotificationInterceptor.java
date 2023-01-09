@@ -27,7 +27,10 @@ public class NotificationInterceptor implements HandlerInterceptor {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (modelAndView != null && !isRedirectView(modelAndView) && authentication != null) {
             String userName = authentication.getName();
-            long count = alarmRepository.countAlarmByUserAndReadCheck(userService.loadUserByUsername(userName),false);
+            long count = alarmRepository.countByTargetUserIdAndReadCheck(userService.loadUserByUsername(userName).getId(),false);
+            log.info(userName);
+            log.info(userService.loadUserByUsername(userName).getId() + " ");
+            log.info(String.valueOf(count));
             modelAndView.addObject("hasNotification", count > 0);
         }
     }

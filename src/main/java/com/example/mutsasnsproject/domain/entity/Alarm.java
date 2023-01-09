@@ -26,18 +26,23 @@ public class Alarm extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // 알람을 받은 사람
+    // 게시글 주인장 아이디 찾을때
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "post_id")
+    private Post post;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
+    private Long targetUserId;
+
+    private Long formUserId;
+    private Long targetId;
     @Enumerated(EnumType.STRING)
     private AlarmType alarmType;
 // like인지 comment 인지
 
-    private Long fromUserId;
-// 누가 좋아요했는지
-    private Long targetId;
 // 어떤글에 달렸는지
     private String text;
 
@@ -47,7 +52,7 @@ public class Alarm extends BaseEntity {
     public void updateRead(){
         this.readCheck = true;
     }
-    public static Alarm makeByType(AlarmType alarmType,User user,Long postId){
+    public static Alarm makeByType(AlarmType alarmType,User user,Post post){
         String message = "";
         if (alarmType == AlarmType.NEW_COMMENT_ON_POST){
             message = "new comment!";
@@ -56,10 +61,12 @@ public class Alarm extends BaseEntity {
             message = "new like!";
         }
         return Alarm.builder()
-                .user(user)
                 .alarmType(alarmType)
-                .fromUserId(user.getId())
-                .targetId(postId)
+                .targetId(post.getId())
+                .formUserId(user.getId())
+                .post(post)
+                .user(user)
+                .targetUserId(post.getUser().getId())
                 .text(message)
                 .readCheck(false)
                 .build();
@@ -70,8 +77,6 @@ public class Alarm extends BaseEntity {
                 .id(id)
                 .readCheck(readCheck)
                 .createdAt(getCreatedAt())
-                .targetId(targetId)
-                .fromUserId(fromUserId)
                 .text(text)
                 .alarmType(alarmType)
                 .build();

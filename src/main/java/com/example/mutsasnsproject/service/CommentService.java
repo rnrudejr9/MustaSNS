@@ -52,7 +52,7 @@ public class CommentService {
         commentRepository.save(savedcomment);
 
         // #4 알람 추가
-        Alarm alarm = Alarm.makeByType(AlarmType.NEW_COMMENT_ON_POST,user,postId);
+        Alarm alarm = Alarm.makeByType(AlarmType.NEW_COMMENT_ON_POST,user,post);
         alarmRepository.save(alarm);
 
         CommentResponse commentResponse = savedcomment.toResponse();

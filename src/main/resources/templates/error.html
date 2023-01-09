@@ -47,15 +47,17 @@
 </header>
 
 <h1>Musta SNS!</h1>
-<div class = "container">
-    <span sec:authentication="name"></span>
-    <span sec:authorize="!isAuthenticated()">반갑소</span>
+<span th:text="${error}"></span>
+<h2> 여기는 에러 페이지 입니다 로그인 이후에 이용해주시기 바랍니다!</h2>
+<div>
+<div class="text-end">
+    <button type="submit" class="btn btn-primary" sec:authorize="!isAuthenticated()" th:onclick="|location.href='@{/view/v1/users/login}'|">Login</button>
 </div>
-<div class="d-grid gap-2 col-6 mx-auto">
-    <button type="submit" sec:authorize="!isAuthenticated()" class="btn btn-primary" th:onclick="|location.href='@{/view/v1/users/login}'|">Login</button>
-    <button type="submit" sec:authorize="!isAuthenticated()" class="btn btn-primary" th:onclick="|location.href='@{/view/v1/users/join}'|">Join</button>
-    <button type="submit" class="btn btn-secondary" th:onclick="|location.href='@{/view/v1/posts/list}'|">List</button>
+<div class="text-end">
+    <button type="submit" class="btn btn-warning" sec:authorize="!isAuthenticated()" th:onclick="|location.href='@{/view/v1/users/join}'|">Sign-up</button>
 </div>
+</div>
+
 
 <!-- Optional JavaScript; choose one of the two! -->
 

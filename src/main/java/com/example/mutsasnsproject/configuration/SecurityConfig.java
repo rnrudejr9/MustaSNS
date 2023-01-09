@@ -65,7 +65,6 @@ public class SecurityConfig {
                 //UI
                 .antMatchers("/view/v1/users/**").permitAll()
                 .antMatchers("/css/**").permitAll()
-                .antMatchers(HttpMethod.POST, "/view/v1/posts/**").authenticated()
                 .anyRequest().permitAll()
                 .and()
 

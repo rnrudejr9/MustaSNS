@@ -21,30 +21,29 @@ public class CommentController {
 
     @PostMapping("/{postId}/comments")
     public String makeComment(@PathVariable("postId") Long postId, @Valid CommentRequest commentRequest, Authentication authentication){
-        commentService.commentAdd(authentication.getName(),postId,commentRequest);
-
-        return "redirect:/view/v1/posts/detail/" + postId;
+            commentService.commentAdd(authentication.getName(), postId, commentRequest);
+            return "redirect:/view/v1/posts/detail/" + postId;
     }
 
     @PostMapping("/{postId}/comments/delete/{id}")
     public String deleteComment(@PathVariable("postId") Long postId, Authentication authentication,@PathVariable Long id){
-        commentService.commentDelete(authentication.getName(),postId,id);
-        return "redirect:/view/v1/posts/detail/" + postId;
+            commentService.commentDelete(authentication.getName(), postId, id);
+            return "redirect:/view/v1/posts/detail/" + postId;
     }
 
     @GetMapping("/{postId}/comments/modify/{id}")
     public String modifyComment(@PathVariable("postId") Long postId, Authentication authentication, @PathVariable Long id, Model model){
-        CommentResponse commentResponse = commentService.findById(id);
-        model.addAttribute("commentRequest", new CommentRequest(commentResponse.getComment()));
-        model.addAttribute("postId",postId);
-        model.addAttribute("id",id);
-        return "comments/modify";
+            CommentResponse commentResponse = commentService.findById(id);
+            model.addAttribute("commentRequest", new CommentRequest(commentResponse.getComment()));
+            model.addAttribute("postId", postId);
+            model.addAttribute("id", id);
+            return "comments/modify";
     }
 
     @PostMapping("/{postId}/comments/modify/{id}")
     public String modifyComment(@PathVariable("postId") Long postId, Authentication authentication, @PathVariable Long id, @Valid CommentRequest commentRequest){
-        commentService.commentModify(authentication.getName(),postId,commentRequest,id);
-        return "redirect:/view/v1/posts/detail/" + postId;
+            commentService.commentModify(authentication.getName(), postId, commentRequest, id);
+            return "redirect:/view/v1/posts/detail/" + postId;
     }
 
 

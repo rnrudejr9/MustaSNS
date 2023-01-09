@@ -38,7 +38,7 @@ public class AlarmResponse {
                 .id(m.getId())
                 .createdAt(m.getCreatedAt())
                 .text(m.getText())
-                .fromUserId(m.getFromUserId())
+                .fromUserId(m.getFormUserId())
                 .targetId(m.getTargetId())
                 .readCheck(m.isReadCheck())
                 .build());

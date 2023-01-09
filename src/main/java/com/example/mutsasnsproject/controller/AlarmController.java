@@ -1,6 +1,7 @@
 package com.example.mutsasnsproject.controller;
 
 import com.example.mutsasnsproject.domain.dto.alarm.AlarmResponse;
+import com.example.mutsasnsproject.domain.entity.Alarm;
 import com.example.mutsasnsproject.service.AlarmService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -15,6 +16,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.List;
+
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/view/v1/")
@@ -24,7 +27,6 @@ public class AlarmController {
     public String getAlarm(Model model, Authentication authentication, @PageableDefault(size = 5, sort = "createdAt",direction = Sort.Direction.DESC) Pageable pageable){
         String userName = authentication.getName();
         Page<AlarmResponse> page = alarmService.getAlarmList(userName, pageable);
-
         int nowPage = page.getPageable().getPageNumber() + 1;
         int startPage = Math.max(nowPage - 4,1);
         int endPage = Math.min(page.getTotalPages(),nowPage + 4);

@@ -54,6 +54,10 @@ public class Post extends BaseEntity{
     @Builder.Default
     private List<Good> goods = new ArrayList<>();
 
+    @OneToMany(mappedBy = "post")
+    @Builder.Default
+    private List<Alarm> alarms = new ArrayList<>();
+
     //userId 값 매핑
 
     public void update(Post update){

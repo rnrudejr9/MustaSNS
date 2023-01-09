@@ -34,7 +34,7 @@ public class GoodService {
         Optional<Good> good = goodRepository.findByUserAndPost(user,post);
         // #3 이미 좋아요를 누른 상황
         if(good.isPresent()){
-            Alarm alarm = alarmRepository.findByAlarmTypeAndUserAndTargetId(AlarmType.NEW_LIKE_ON_POST,user,postId);
+            Alarm alarm = alarmRepository.findByAlarmTypeAndUserAndPost(AlarmType.NEW_LIKE_ON_POST,user,post);
             alarmRepository.delete(alarm);
             goodRepository.delete(good.get());
             return "게시글 좋아요 취소했습니다";
@@ -43,7 +43,7 @@ public class GoodService {
         goodRepository.save(savedGood);
 
         // #4 알람 추가
-        Alarm alarm = Alarm.makeByType(AlarmType.NEW_LIKE_ON_POST,user,postId);
+        Alarm alarm = Alarm.makeByType(AlarmType.NEW_LIKE_ON_POST,user,post);
         alarmRepository.save(alarm);
 
         return "게시글 좋아요 했습니다";

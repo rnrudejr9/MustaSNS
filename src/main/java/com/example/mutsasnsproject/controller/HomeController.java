@@ -1,5 +1,6 @@
 package com.example.mutsasnsproject.controller;
 
+import com.example.mutsasnsproject.exception.AppException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,8 +17,13 @@ import java.util.Map;
 public class HomeController {
     @GetMapping("/home")
     public String index(Model model){
-        model.addAttribute("home","hello");
-        return "home";
+        try {
+            model.addAttribute("home", "hello");
+            return "home";
+        }catch (AppException e){
+            model.addAttribute("error",e.getErrorCode().getMessage());
+            return "error";
+        }
     }
 
 

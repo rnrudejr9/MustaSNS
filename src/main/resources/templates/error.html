@@ -48,7 +48,16 @@
 
 <h1>Musta SNS!</h1>
 <span th:text="${error}"></span>
-<h2> 여기는 에러 페이지 입니다</h2>
+<h2> 여기는 에러 페이지 입니다 로그인 이후에 이용해주시기 바랍니다!</h2>
+<div>
+<div class="text-end">
+    <button type="submit" class="btn btn-primary" sec:authorize="!isAuthenticated()" th:onclick="|location.href='@{/view/v1/users/login}'|">Login</button>
+</div>
+<div class="text-end">
+    <button type="submit" class="btn btn-warning" sec:authorize="!isAuthenticated()" th:onclick="|location.href='@{/view/v1/users/join}'|">Sign-up</button>
+</div>
+</div>
+
 
 <!-- Optional JavaScript; choose one of the two! -->
 

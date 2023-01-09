@@ -25,16 +25,20 @@ public class AlarmController {
     private final AlarmService alarmService;
     @GetMapping("/alarms")
     public String getAlarm(Model model, Authentication authentication, @PageableDefault(size = 5, sort = "createdAt",direction = Sort.Direction.DESC) Pageable pageable){
-        String userName = authentication.getName();
-        Page<AlarmResponse> page = alarmService.getAlarmList(userName, pageable);
-        int nowPage = page.getPageable().getPageNumber() + 1;
-        int startPage = Math.max(nowPage - 4,1);
-        int endPage = Math.min(page.getTotalPages(),nowPage + 4);
-        model.addAttribute("alarms",page);
-        model.addAttribute("startPage",startPage);
-        model.addAttribute("endPage",endPage);
+        try {
+            String userName = authentication.getName();
+            Page<AlarmResponse> page = alarmService.getAlarmList(userName, pageable);
+            int nowPage = page.getPageable().getPageNumber() + 1;
+            int startPage = Math.max(nowPage - 4, 1);
+            int endPage = Math.min(page.getTotalPages(), nowPage + 4);
+            model.addAttribute("alarms", page);
+            model.addAttribute("startPage", startPage);
+            model.addAttribute("endPage", endPage);
 
-        return "users/alarm";
+            return "users/alarm";
+        }catch (Exception e){
+            return "error";
+        }
     }
 
     @PostMapping("/alarms/{id}")

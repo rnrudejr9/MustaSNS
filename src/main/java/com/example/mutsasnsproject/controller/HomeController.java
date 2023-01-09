@@ -17,13 +17,13 @@ import java.util.Map;
 public class HomeController {
     @GetMapping("/home")
     public String index(Model model){
-        try {
             model.addAttribute("home", "hello");
             return "home";
-        }catch (AppException e){
-            model.addAttribute("error",e.getErrorCode().getMessage());
-            return "error";
-        }
+    }
+
+    @GetMapping("/error")
+    public String error(){
+        return "error";
     }
 
 

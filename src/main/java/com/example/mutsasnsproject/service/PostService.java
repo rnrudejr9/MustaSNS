@@ -103,7 +103,7 @@ public class PostService {
 
 //    UI 기능 -------------------------------------------------------
 
-    public Page<PostDetailResponse> findList(Pageable pageable, String body,String title) throws Exception{
+    public Page<PostDetailResponse> findList(Pageable pageable, String body,String title) {
         Page<Post> page = postRepository.findByTitleContainingOrBodyContaining(pageable,body,title);
         Page<PostDetailResponse> postDetailResponsePage = PostDetailResponse.toDtoList(page);
         return postDetailResponsePage;

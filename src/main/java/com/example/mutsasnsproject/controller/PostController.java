@@ -41,7 +41,6 @@ public class PostController {
     public String list(Model model,@PageableDefault(size = 10, sort = "createdAt",direction = Sort.Direction.DESC) Pageable pageable,
                        @RequestParam(required = false,defaultValue = "") String searchText, Authentication authentication){
 //        Page<PostDetailResponse> page = postService.list(pageable);
-        try {
             Page<PostDetailResponse> page = postService.findList(pageable, searchText, searchText);
             int nowPage = page.getPageable().getPageNumber() + 1;
             int startPage = Math.max(nowPage - 4, 1);
@@ -50,12 +49,6 @@ public class PostController {
             model.addAttribute("startPage", startPage);
             model.addAttribute("endPage", endPage);
             return "posts/list";
-        }catch (AppException e){
-            model.addAttribute("error",e.getErrorCode().getMessage());
-            return "error";
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
 
     }
 
@@ -87,7 +80,6 @@ public class PostController {
             model.addAttribute("endPage", endPage);
             return "posts/detail";
         }catch (Exception e){
-            model.addAttribute("error",e.getMessage());
             return "error";
         }
     }
@@ -108,16 +100,11 @@ public class PostController {
 
     @PostMapping("/form")
     public String form(@Valid PostRequest postRequest, BindingResult bindingResult,Authentication authentication){
-        try {
             if (bindingResult.hasErrors()) {
                 return "posts/form";
             }
-
             postService.add(authentication.getName(), postRequest);
             return "redirect:/view/v1/posts/list";
-        }catch (Exception e){
-            return "error";
-        }
     }
 
 
@@ -126,29 +113,20 @@ public class PostController {
 
     @PostMapping("/delete/{id}")
     public String delete(Authentication authentication, @PathVariable(value="id") Long id){
-        try {
             postService.delete(authentication.getName(), id);
             return "redirect:/view/v1/posts/list";
-        }catch (Exception e){
-            return "error";
-        }
     }
 
     @PostMapping("/modify/{id}")
     public String modify(Authentication authentication, @PathVariable(value="id") Long id, @Valid Post post){
-        try {
             PostRequest postRequest = PostRequest.builder().body(post.getBody()).title(post.getTitle()).build();
             postService.modify(authentication.getName(), id, postRequest);
             return "redirect:/view/v1/posts/list";
-        }catch (Exception e){
-            return "error";
-        }
     }
 
 //    마이페이지 기능 --------------------------------------------
     @GetMapping("/my")
     public String myPage(Authentication authentication, Model model, @PageableDefault(size = 5, sort = "createdAt",direction = Sort.Direction.DESC) Pageable pageable){
-        try {
             Page<PostDetailResponse> page = postService.myPages(authentication.getName(), pageable);
             int nowPage = page.getPageable().getPageNumber() + 1;
             int startPage = Math.max(nowPage - 4, 1);
@@ -157,9 +135,6 @@ public class PostController {
             model.addAttribute("startPage", startPage);
             model.addAttribute("endPage", endPage);
             return "posts/my";
-        }catch (Exception e){
-            return "error";
-        }
     }
 
 }

@@ -29,7 +29,7 @@
                 <input type="submit" class="btn btn-primary" th:if="${goodCheck} == 1" value="좋아요취소"></input>
             </form>
             <form th:action="@{'/view/v1/posts/good/' + ${postId}}" method="post">
-                <input type="submit" class="btn btn-primary" th:if="${goodCheck} != 1" value="좋아요"></input>
+                <input type="submit" onclick="login()" class="btn btn-primary" th:if="${goodCheck} != 1" value="좋아요"></input>
             </form>
         </div>
 
@@ -87,6 +87,8 @@
 
 
 </div>
+
+
 
 
 

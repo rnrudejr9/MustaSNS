@@ -14,6 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,7 +27,7 @@ public class UserRestController {
     //Login 기능 ------------------------------------
 
     @ApiOperation(value = "회원가입 기능",notes = "userName, password 입력해서 회원가입")
-    @PostMapping("/join")
+    @PostMapping(value = "/join" , consumes = "application/json")
     public Response<UserJoinResponse> join(@RequestBody UserJoinRequest userJoinRequest){
         UserJoinResponse userJoinResponse = userService.join(userJoinRequest);
         return Response.success(userJoinResponse);

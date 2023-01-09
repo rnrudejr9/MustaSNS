@@ -1,6 +1,7 @@
 package com.example.mutsasnsproject.domain.entity;
 
 
+import com.example.mutsasnsproject.domain.dto.alarm.AlarmResponse;
 import com.example.mutsasnsproject.domain.entity.BaseEntity;
 import com.example.mutsasnsproject.domain.role.AlarmType;
 import lombok.AllArgsConstructor;
@@ -34,8 +35,13 @@ public class Alarm extends BaseEntity {
     private Long targetId;
 // 어떤글에 달렸는지
     private String text;
+
+    private boolean readCheck = false;
 // 내용
 
+    public void updateRead(){
+        this.readCheck = true;
+    }
     public static Alarm makeByType(AlarmType alarmType,User user,Long postId){
         String message = "";
         if (alarmType == AlarmType.NEW_COMMENT_ON_POST){
@@ -50,6 +56,19 @@ public class Alarm extends BaseEntity {
                 .fromUserId(user.getId())
                 .targetId(postId)
                 .text(message)
+                .readCheck(false)
+                .build();
+    }
+
+    public AlarmResponse toResponse(){
+        return AlarmResponse.builder()
+                .id(id)
+                .readCheck(readCheck)
+                .createdAt(getCreatedAt())
+                .targetId(targetId)
+                .fromUserId(fromUserId)
+                .text(text)
+                .alarmType(alarmType)
                 .build();
     }
 }

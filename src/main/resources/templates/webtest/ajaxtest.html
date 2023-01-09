@@ -1,0 +1,99 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<button id="request" type="button" value="hello" onclick="request()">hello</button>
+<button id="ex" type="button" value="hello" onclick="ex()">22</button>
+<button id="hello" type="button" value="hello" onclick="updateComment()">22</button>
+<input type="text" id="userName"></text>
+<input type="text" id="password"></text>
+<input type="text"></text>
+<input type="text"></text>
+
+<button id="ajaxCall">호출</button><br><br>
+<button onclick="insert()">호출</button><br><br>
+<button onclick="selectAll()">호출</button><br><br>
+
+<input type="button" value="fetch" onclick="
+    fetch('html').then(function (response){
+    console.log(response.status);
+    if(response.status == '404'){
+        alert('not found');
+    }
+    })"
+>
+
+
+<table id="memberTable" th:fragment="memberTable">
+    <tr th:each="member : ${memberList}">
+        <td th:text="${member.key}" />
+        <td th:text="${member.value}" />
+    </tr>
+</table>
+<article></article>
+
+<script type="text/javascript">
+    window.onload = function() {
+        var httpRequest;
+        // 호출 버튼을 클릭하였을 때, 데이터를 요청하고 받아오는 Ajax 구현 부분
+        document.getElementById("ajaxCall").addEventListener('click', () => {
+            httpRequest = new XMLHttpRequest();
+            httpRequest.onreadystatechange = () => {
+                if (httpRequest.readyState === XMLHttpRequest.DONE) {
+                    if (httpRequest.status === 200) {
+                        document.getElementById("memberTable").innerHTML = httpRequest.response;
+                        document.querySelector('article').innerHTML = '<h2> hello </h2>';
+                    } else {
+                        alert('Request Error!');
+                    }
+                }
+            };
+            httpRequest.open('POST', '/view/v1/ajax');
+            httpRequest.send();
+        });
+    }
+
+    function insert(userJoinRequest, callback){
+        var userJoinRequest = {
+            "userName":"hello2",
+            "password":"hi"
+        }
+        $.ajax({
+            type:"POST", // 생성이기에 POST 방식
+            url:"/api/v1/users/join",
+            data:JSON.stringify(userJoinRequest), // 생성을 위한 정보의 객체를 JSON으로 바꿔서 데이터로 보냄
+            contentType:"application/json; charset=utf-8", // JSON 객체로 보내기 때문에 타입 설정
+            success:function(result, status, xhr) {
+                if(callback){
+                    callback(result); // 성공할 시의 결과를 callback 함수를 이용해 실행
+                }
+                console.log(status);
+            },
+            error:function() {
+
+            }
+        })
+    }
+
+    function selectAll(data, callback){
+
+        // ajax인데 결과로 JSON을 받는 함수
+        // $.getJSON(요청URI, 성공시 호출할 함수).fail(실패시 호출할 함수)
+        $.getJSON(
+            // 요청의 응답을 json으로 받아온다. ".json"
+            "/api/v1/posts/5".json,
+            // 위의 uri의 JSON을 정상적으로 읽어왔다면 아래에 있는 함수를 호출해준다.
+            // 그 때 매개변수 data에는 읽어온 json 내용이 담기게 된다.
+            function(data) {
+                // data : {replyCnt:댓글개수, list:[ReplyDTO, ...]}
+                if(callback) {
+                    callback(data.list);
+                }
+            }
+        ).fail(function() {})
+    }
+
+</script>
+
+</body>
+</html>
+

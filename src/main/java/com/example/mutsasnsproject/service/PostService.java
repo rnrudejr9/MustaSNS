@@ -49,6 +49,8 @@ public class PostService {
         return postRepository.findById(id).orElseThrow(()->new AppException(ErrorCode.USERNAME_NOT_FOUND,"이름없음"));
     }
 
+
+
     public PostResponse add(String userName, PostRequest postRequest){
         // #1 토큰으로 로그인한 아이디 비교
         User user = inValidChecker.userCheck(userName);

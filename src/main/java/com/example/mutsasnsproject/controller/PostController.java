@@ -43,8 +43,9 @@ public class PostController {
 //        Page<PostDetailResponse> page = postService.list(pageable);
 
         Page<PostDetailResponse> page = postService.findList(pageable,searchText,searchText);
-        int startPage = Math.max(1,page.getPageable().getPageNumber() - 4);
-        int endPage = Math.min(page.getTotalPages(),page.getPageable().getPageNumber() + 4);
+        int nowPage = page.getPageable().getPageNumber() + 1;
+        int startPage = Math.max(nowPage - 4,1);
+        int endPage = Math.min(page.getTotalPages(),nowPage + 4);
         model.addAttribute("posts",page);
         model.addAttribute("startPage",startPage);
         model.addAttribute("endPage",endPage);
@@ -126,8 +127,9 @@ public class PostController {
     @GetMapping("/my")
     public String myPage(Authentication authentication, Model model, @PageableDefault(size = 5, sort = "createdAt",direction = Sort.Direction.DESC) Pageable pageable){
         Page<PostDetailResponse> page = postService.myPages(authentication.getName(),pageable);
-        int startPage = Math.max(1,page.getPageable().getPageNumber() - 4);
-        int endPage = Math.min(page.getTotalPages(),page.getPageable().getPageNumber() + 4);
+        int nowPage = page.getPageable().getPageNumber() + 1;
+        int startPage = Math.max(nowPage - 4,1);
+        int endPage = Math.min(page.getTotalPages(),nowPage + 4);
         model.addAttribute("posts",page);
         model.addAttribute("startPage",startPage);
         model.addAttribute("endPage",endPage);

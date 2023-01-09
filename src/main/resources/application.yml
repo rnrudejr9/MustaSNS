@@ -28,3 +28,5 @@ spring:
 
 jwt:
   secretKey: hello.world.ee.ff
+
+

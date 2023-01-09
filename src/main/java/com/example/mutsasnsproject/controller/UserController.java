@@ -7,6 +7,7 @@ import com.example.mutsasnsproject.domain.dto.user.UserLoginRequest;
 import com.example.mutsasnsproject.domain.dto.user.UserLoginResponse;
 import com.example.mutsasnsproject.exception.AppException;
 import com.example.mutsasnsproject.exception.ErrorCode;
+import com.example.mutsasnsproject.service.NotificationService;
 import com.example.mutsasnsproject.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.Banner;

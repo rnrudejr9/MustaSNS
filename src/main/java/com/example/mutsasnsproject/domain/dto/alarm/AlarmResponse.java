@@ -30,6 +30,7 @@ public class AlarmResponse {
     // 어떤글에 달렸는지
     private String text;
     private LocalDateTime createdAt;
+    private Boolean readCheck;
 
     public static Page<AlarmResponse> toDtoList(Page<Alarm> alarms){
         Page<AlarmResponse> alarmResponsePage = alarms.map(m -> AlarmResponse.builder()
@@ -39,6 +40,7 @@ public class AlarmResponse {
                 .text(m.getText())
                 .fromUserId(m.getFromUserId())
                 .targetId(m.getTargetId())
+                .readCheck(m.isReadCheck())
                 .build());
         return alarmResponsePage;
     }

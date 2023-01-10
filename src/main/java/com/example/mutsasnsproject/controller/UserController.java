@@ -39,16 +39,14 @@ public class UserController {
         try {
             jwtToken = userService.login(userLoginRequest).getJwt();
         }catch (AppException e){
-            model.addAttribute("error_message",e.getErrorCode().getMessage());
+            model.addAttribute("errorMessage",e.getErrorCode().getMessage());
             return "users/login";
         }
-        // 기존 Session 파기 후 새로 생성
         httpServletRequest.getSession().invalidate();
         HttpSession session = httpServletRequest.getSession(true);
 
-        // login 후 받은 jwt Token 값을 session에 넣어줌
         session.setAttribute("jwt", "Bearer " + jwtToken);
-        session.setMaxInactiveInterval(1800); // Session이 30분동안 유지
+        session.setMaxInactiveInterval(1800);
 
         return "redirect:/view/v1/posts/list";
     }

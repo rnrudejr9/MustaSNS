@@ -24,19 +24,27 @@
 
     <label for="userName" class="sr-only">userName</label>
     <input type="text" id="userName" name="userName" class="form-control"
-           th:classappend="${#fields.hasErrors('userName')}?'is-invalid'" th:field="*{userName}" placeholder="userName"
+           th:classappend="${errorMessage}?'is-invalid'" th:field="*{userName}" placeholder="userName"
            required autofocus onclick="login()">
+    <div class="invalid-feedback" th:if="${errorMessage}">
+
+    </div>
 
 
     <label for="password" class="sr-only">Password</label>
     <input type="password" id="password" name="password" class="form-control"
-           th:classappend="${#fields.hasErrors('userName')}?'is-invalid'" th:field="*{password}" placeholder="Password"
+           th:classappend="${errorMessage}?'is-invalid'" th:field="*{password}" placeholder="Password"
            required>
+    <div class="invalid-feedback" th:if="${errorMessage}">
+    </div>
+
+    <div th:unless="${errorMessage}">
+    </div>
 
     <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
 </form>
 
-<button class="btn btn-primary" onclick="history.back()">뒤로가기</button>
+<button class="btn btn-primary" th:onclick="|location.href='@{/view/v1/home}'|" >뒤로가기</button>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"

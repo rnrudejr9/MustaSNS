@@ -12,6 +12,7 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
+import java.time.format.DateTimeFormatter;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -76,7 +77,7 @@ public class Alarm extends BaseEntity {
         return AlarmResponse.builder()
                 .id(id)
                 .readCheck(readCheck)
-                .createdAt(getCreatedAt())
+                .createdAt(getCreatedAt().format(DateTimeFormatter.ofPattern("YYYY-MM-DD hh:mm:ss")))
                 .text(text)
                 .alarmType(alarmType)
                 .build();

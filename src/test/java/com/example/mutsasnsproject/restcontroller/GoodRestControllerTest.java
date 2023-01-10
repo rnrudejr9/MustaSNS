@@ -1,5 +1,8 @@
 package com.example.mutsasnsproject.restcontroller;
 
+import com.example.mutsasnsproject.exception.AppException;
+import com.example.mutsasnsproject.exception.ErrorCode;
+import com.example.mutsasnsproject.infra.NotificationInterceptor;
 import com.example.mutsasnsproject.service.GoodService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
@@ -30,6 +33,12 @@ class GoodRestControllerTest {
     GoodService goodSerivce;
     @Autowired
     ObjectMapper objectMapper;
+    @MockBean
+    NotificationInterceptor notificationInterceptor;
+
+//    좋아요 누르기 성공
+//    좋아요 누르기 실패(1) - 로그인 하지 않은 경우
+//    좋아요 누르기 실패(2) - 해당 Post가 없는 경우
 
     @Test
     @DisplayName("좋아요 성공 ")
@@ -56,6 +65,20 @@ class GoodRestControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @DisplayName("좋아요 실패 : 게시글이 없을경우")
+    @WithMockUser
+        // Login하지 않은 경우를 표현
+    void good_fail2() throws Exception {
+
+        when(goodSerivce.postGood(any(),any())).thenThrow(new AppException(ErrorCode.POST_NOT_FOUND,""));
+        mockMvc.perform(post("/api/v1/posts/1/likes")
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isNotFound());
     }
 
 

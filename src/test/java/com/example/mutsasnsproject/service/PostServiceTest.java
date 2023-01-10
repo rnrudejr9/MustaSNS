@@ -50,6 +50,8 @@ public class PostServiceTest {
         postService = new PostService(postRepository, inValidChecker);
         user = UserEntity.get();
         post = PostEntity.get();
+        post.setLastModifiedAt(LocalDateTime.now());
+        post.setCreatedAt(LocalDateTime.now());
 
     }
 

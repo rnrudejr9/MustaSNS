@@ -55,8 +55,7 @@ public class PostController {
     @GetMapping("/detail/{id}")
     public String detail(Model model, @PathVariable Long id,Authentication authentication,@PageableDefault(size = 5, sort = "createdAt",direction = Sort.Direction.DESC) Pageable pageable){
         try {
-            System.out.println(authentication.getName());
-            if (authentication.getName() == "anonymousUser") {
+            if (authentication.getName().equals("anonymousUser")) {
                 PostDetailResponse postDetailResponse = postService.get(authentication.getName(), id);
                 model.addAttribute("postDetailResponse", postDetailResponse);
                 Page<CommentListResponse> page = commentService.commentList(id, pageable);

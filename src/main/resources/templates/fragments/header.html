@@ -32,6 +32,10 @@
                 <li>
                     <a href="#" class="nav-link px-2 text-white" th:onclick="|location.href='@{/view/v1/posts/list}'|">게시판</a>
                 </li>
+                <li>
+                    <a th:if="${isAdmin}"  class="nav-link px-2 text-white" th:onclick="|location.href='@{/view/v1/users/list}'|">관리자모드</a>
+                    <a th:unless="${isAdmin}"></a>
+                </li>
             </ul>
 
             <div class="text-end">

@@ -1,5 +1,7 @@
 package com.example.mutsasnsproject.infra;
 
+import com.example.mutsasnsproject.domain.entity.User;
+import com.example.mutsasnsproject.domain.role.UserRole;
 import com.example.mutsasnsproject.repository.AlarmRepository;
 import com.example.mutsasnsproject.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +29,14 @@ public class NotificationInterceptor implements HandlerInterceptor {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (modelAndView != null && !isRedirectView(modelAndView) && authentication != null && authentication.getName() != "anonymousUser") {
             String userName = authentication.getName();
-            long count = alarmRepository.countByTargetUserIdAndReadCheck(userService.loadUserByUsername(userName).getId(),false);
+            User user = userService.loadUserByUsername(userName);
+            long count = alarmRepository.countByTargetUserIdAndReadCheck(user.getId(),false);
+            if(user.getRole().equals(UserRole.ADMIN)) {
+                modelAndView.addObject("isAdmin", true);
+            }else{
+
+                modelAndView.addObject("isAdmin", false);
+            }
             modelAndView.addObject("hasNotification", count > 0);
         }
     }

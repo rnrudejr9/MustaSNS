@@ -94,6 +94,12 @@ public class PostService {
         Post post = inValidChecker.postCheckById(postId);
         return post.toDetailResponse();
     }
+    public PostDetailResponse get(Long postId){
+        // #2 해당 게시글이 존재하지 않을 경우
+        Post post = inValidChecker.postCheckById(postId);
+        return post.toDetailResponse();
+    }
+
 
     public Page<PostDetailResponse> list(Pageable pageable){
         Page<Post> page = postRepository.findAll(pageable);

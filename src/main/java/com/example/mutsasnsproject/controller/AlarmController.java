@@ -49,4 +49,12 @@ public class AlarmController {
         return "redirect:/view/v1/alarms";
     }
 
+    @PostMapping("/alarmsto/{id}/{target}")
+    public String readAlarms(@PathVariable Long id,@PathVariable Long target, Authentication authentication){
+        String userName = authentication.getName();
+        alarmService.readAlarm(userName,id);
+
+        return "redirect:/view/v1/posts/detail/" + target;
+    }
+
 }

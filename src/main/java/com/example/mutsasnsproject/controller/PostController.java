@@ -55,32 +55,64 @@ public class PostController {
     @GetMapping("/detail/{id}")
     public String detail(Model model, @PathVariable Long id,Authentication authentication,@PageableDefault(size = 5, sort = "createdAt",direction = Sort.Direction.DESC) Pageable pageable){
         try {
-            PostDetailResponse postDetailResponse = postService.get(authentication.getName(), id);
-            model.addAttribute("postDetailResponse", postDetailResponse);
-            User user = userService.loadUserByUsername(authentication.getName());
+            System.out.println(authentication.getName());
+            if (authentication.getName() == "anonymousUser") {
+                PostDetailResponse postDetailResponse = postService.get(authentication.getName(), id);
+                model.addAttribute("postDetailResponse", postDetailResponse);
+                Page<CommentListResponse> page = commentService.commentList(id, pageable);
+                int nowPage = page.getPageable().getPageNumber() + 1;
+                int startPage = Math.max(nowPage - 4, 1);
+                int endPage = Math.min(page.getTotalPages(), nowPage + 4);
 
+                model.addAttribute("commentRequest", new CommentRequest());
+                model.addAttribute("comments", page);
+                model.addAttribute("startPage", startPage);
+                model.addAttribute("endPage", endPage);
+                return "posts/detail";
+            }
+
+            try {
+                PostDetailResponse postDetailResponse = postService.get(authentication.getName(), id);
+                model.addAttribute("postDetailResponse", postDetailResponse);
+                User user = userService.loadUserByUsername(authentication.getName());
+
+                Page<CommentListResponse> page = commentService.commentList(id, pageable);
+                int nowPage = page.getPageable().getPageNumber() + 1;
+                int startPage = Math.max(nowPage - 4, 1);
+                int endPage = Math.min(page.getTotalPages(), nowPage + 4);
+
+                boolean isContainGood = goodService.isContainGood(user, postService.findById(id));
+                if (isContainGood) {
+                    model.addAttribute("goodCheck", 1);
+                } else {
+                    model.addAttribute("goodCheck", 0);
+                }
+
+
+                model.addAttribute("user", user);
+                model.addAttribute("postId", id);
+                model.addAttribute("commentRequest", new CommentRequest());
+                model.addAttribute("comments", page);
+                model.addAttribute("startPage", startPage);
+                model.addAttribute("endPage", endPage);
+                return "posts/detail";
+            } catch (Exception e) {
+                return "error";
+            }
+        }catch (NullPointerException e){
+            PostDetailResponse postDetailResponse = postService.get(id);
+            model.addAttribute("postDetailResponse", postDetailResponse);
             Page<CommentListResponse> page = commentService.commentList(id, pageable);
             int nowPage = page.getPageable().getPageNumber() + 1;
             int startPage = Math.max(nowPage - 4, 1);
             int endPage = Math.min(page.getTotalPages(), nowPage + 4);
 
-            boolean isContainGood = goodService.isContainGood(user, postService.findById(id));
-            if (isContainGood) {
-                model.addAttribute("goodCheck", 1);
-            } else {
-                model.addAttribute("goodCheck", 0);
-            }
-
-
-            model.addAttribute("user", user);
-            model.addAttribute("postId", id);
+            model.addAttribute("postId",postDetailResponse.getId());
             model.addAttribute("commentRequest", new CommentRequest());
             model.addAttribute("comments", page);
             model.addAttribute("startPage", startPage);
             model.addAttribute("endPage", endPage);
             return "posts/detail";
-        }catch (Exception e){
-            return "error";
         }
     }
 

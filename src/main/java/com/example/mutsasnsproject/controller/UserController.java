@@ -85,10 +85,16 @@ public class UserController {
         System.out.println(userJoinRequest.getUserName());
         model.addAttribute("userLoginRequest", new UserLoginRequest());
         model.addAttribute("message", "회원가입이 완료 되었습니다\n로그인 해주세요");
-        model.addAttribute("nextUrl", "/users/login");
         return "users/login";
     }
 
 
+//    관리자모드 ------------------------------------
+    @GetMapping("/list")
+    public String userList(Authentication authentication, Model model){
+        String userName = authentication.getName();
+//        userService.findAll(Pageable);
+        return "users/list";
+    }
 
 }

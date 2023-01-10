@@ -8,12 +8,6 @@
 <body>
 <nav th:replace="fragments/header :: menu('posts')"></nav>
 <div class="container">
-
-    <div class="row">
-        <div class="col text-center">
-            <h1 class="">여기는 게시판</h1>
-        </div>
-    </div>
     <div> 총 건수 : <span th:text="${posts.totalElements}"> </span>
         <form class="form-inline d-flex justify-content-end" method="get" th:action="@{/view/v1/posts/list}">
             <div class="form-group mx-sm-3 mb-2">

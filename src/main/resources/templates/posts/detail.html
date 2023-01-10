@@ -1,5 +1,6 @@
 <!doctype html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml"
+      xmlns="http://www.w3.org/1999/html">
 
 <head th:replace="fragments/header :: head('게시판 디테일')">
 
@@ -9,46 +10,51 @@
 <nav th:replace="fragments/header :: menu('posts')"></nav>
 
 
-<div class="container row" th:object="${postDetailResponse}">
-    <div class="card col-md-2" style="width: 500rem;">
+<div class="container" th:object="${postDetailResponse}">
+    <div class="card col mb-1 mt-1">
         <div class="card-body">
             <h5 class="card-title" th:text="*{title}">Card title</h5>
             <h6 class="card-subtitle mb-2 text-muted" th:text="*{createdAt}">Card subtitle</h6>
-            <p class="card-text" th:text="*{body}">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-        </div>
+            <p class="card-text" th:text="*{body}">Some quick example text to build on the card title and make up the
+                bulk of the card's content.</p>
 
 
-        <div style="float:right;" sec:authorize="isAuthenticated()">
-            <a class="btn btn-success" th:href="@{/view/v1/posts/form(id=${postId})}"
-               th:if="${#strings.equals(postDetailResponse.userName, user.userName)} or ${#strings.equals('ADMIN',user.role)}">수정</a>
-            <form th:action="@{'/view/v1/posts/delete/' + ${postId}}" method="post">
-            <input type="submit" class="btn btn-danger" th:if="${#strings.equals(postDetailResponse.userName, user.userName)} or ${#strings.equals('ADMIN',user.role)}" value="삭제"></input>
-            </form>
+            <div style="float:right;" sec:authorize="isAuthenticated()">
+                <a class="btn btn-success c" th:href="@{/view/v1/posts/form(id=${postId})}"
+                   th:if="${#strings.equals(postDetailResponse.userName, user.userName)} or ${#strings.equals('ADMIN',user.role)}">수정</a>
+                <form th:action="@{'/view/v1/posts/delete/' + ${postId}}" method="post">
+                    <input type="submit" class="btn btn-danger"
+                           th:if="${#strings.equals(postDetailResponse.userName, user.userName)} or ${#strings.equals('ADMIN',user.role)}"
+                           value="삭제"></input>
+                </form>
 
-            <form th:action="@{'/view/v1/posts/good/' + ${postId}}" method="post">
-                <input type="submit" class="btn btn-primary" th:if="${goodCheck} == 1" value="좋아요취소"></input>
-            </form>
-            <form th:action="@{'/view/v1/posts/good/' + ${postId}}" method="post">
-                <input type="submit" onclick="login()" class="btn btn-primary" th:if="${goodCheck} != 1" value="좋아요"></input>
-            </form>
+                <form th:action="@{'/view/v1/posts/good/' + ${postId}}" method="post">
+                    <input type="submit" class="btn btn-primary" th:if="${goodCheck} == 1" value="좋아요취소"></input>
+                </form>
+                <form th:action="@{'/view/v1/posts/good/' + ${postId}}" method="post">
+                    <input type="submit" onclick="login()" class="btn btn-primary" th:if="${goodCheck} != 1"
+                           value="좋아요"></input>
+                </form>
+            </div>
         </div>
 
     </div>
-
-    <div>
-        <form action="" th:action="@{'/view/v1/posts/' + ${postId} + '/comments'}" th:object="${commentRequest}" method="post" sec:authorize="isAuthenticated()" >
-            <div class="mb-3">
-                <input type="text" class="form-control" id="comment" th:id="comment" th:field="*{comment}" placeholder="댓글 작성입력">
+        <div class="card col mb-1 pt-1">
+            <div class="col">
+            <form action="" th:action="@{'/view/v1/posts/' + ${postId} + '/comments'}" th:object="${commentRequest}"
+                  method="post" sec:authorize="isAuthenticated()">
+                    <input type="text" class="form-control" id="comment" th:id="comment" th:field="*{comment}"
+                           placeholder="댓글 작성입력">
+                <div style="float: right">
+                    <button type="submit" class="btn btn-primary">작성</button>
+                </div>
+            </form>
             </div>
-            <div class = "text-right">
-                <button type="submit" class="btn btn-primary">작성</button>
-            </div>
-        </form>
-    </div>
-
-    <div>
-        <div class="card" style="width: 18rem;" th:each="comment : ${comments}">
-            <div class="card-body">
+        </div>
+    <div class="col mb-1">
+    <div class ="col">
+        <div class="card col mb-1" th:each="comment : ${comments}">
+            <div class="card-body col">
                 <h5 class="card-title" th:text="${comment.comment}">Card title</h5>
                 <h6 class="card-subtitle mb-2 text-muted" th:text="${comment.createdAt}">Card subtitle</h6>
                 <h6 class="card-subtitle mb-2 text-muted" th:text="${comment.userName}">Card subtitle</h6>
@@ -85,6 +91,7 @@
 
         </nav>
 
+    </div>
     </div>
 
 

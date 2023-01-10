@@ -33,7 +33,9 @@
                 </form>
                 <td><a th:text="${alarm.alarmType}"></a></td>
                 <td th:text="${alarm.fromUserId}">Otto</td>
-                <td th:text="${alarm.targetId}">Otto</td>
+                <form method="post" th:action="@{'/view/v1/alarmsto/' + ${alarm.id} + '/' + ${alarm.targetId}}">
+                    <th><button type="submit" th:text="${alarm.targetId}"></button></th>
+                </form>
                 <td th:text="${alarm.text}">Otto</td>
                 <td th:text="${alarm.createdAt}">Otto</td>
             </tr>

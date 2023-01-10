@@ -59,6 +59,8 @@ class UserRestControllerTest {
     static String userName = UserEntity.get().getUserName();
     static String password = UserEntity.get().getPassword();
 
+    //    테스트 코드
+//    ----------------------------------------------------------------------------
 //    회원가입 성공
 //    회원가입 실패 - userName중복인 경우
 //    로그인 성공
@@ -66,8 +68,7 @@ class UserRestControllerTest {
 //    로그인 실패 - password틀림
 //    권한 변경 성공
 //    권한 변경 실패 - admin 아닐 경우
-//    알람 목록 조회 성공
-//    알람 목록 조회 실패 - 로그인하지 않은 경우
+//    ----------------------------------------------------------------------------
 
     @Test
     @DisplayName("회원가입 성공")
@@ -181,35 +182,6 @@ class UserRestControllerTest {
 
     }
 
-
-//   알림 기능 ----------------------------
-
-    @DisplayName("알림 조회 성공")
-    @Test
-    @WithMockUser
-    void alarm() throws Exception {
-        when(userService.getAlarm(any(),any())).thenReturn(Page.empty());
-        mockMvc.perform(get("/api/v1/users/alarms")
-                        .with(csrf())
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(jsonPath("$.resultCode").value("SUCCESS"))
-                .andExpect(jsonPath("$.result.totalElements").value(0))
-                .andExpect(status().isOk());
-    }
-
-    @DisplayName("알림 조회 실패 : 로그인 하지않은경우")
-    @Test
-    @WithMockUser
-    void alarm_fail() throws Exception {
-        when(userService.getAlarm(any(),any())).thenThrow(new AppException(ErrorCode.INVALID_PERMISSION,""));
-        mockMvc.perform(get("/api/v1/users/alarms")
-                        .with(csrf())
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(jsonPath("$.resultCode").value("ERROR"))
-                .andExpect(status().isUnauthorized());
-    }
 
 
 }

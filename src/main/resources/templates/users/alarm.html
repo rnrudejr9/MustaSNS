@@ -29,12 +29,12 @@
             <tbody>
             <tr th:each="alarm : ${alarms}">
                 <form method="post" th:action="@{'/view/v1/alarms/' + ${alarm.id}}">
-                <th><button type="submit" th:text="${alarm.id}"></button></th>
+                <th><button type="submit" class="btn btn-secondary" th:text="${alarm.id}"></button></th>
                 </form>
                 <td><a th:text="${alarm.alarmType}"></a></td>
-                <td th:text="${alarm.fromUserId}">Otto</td>
+                <td th:text="${alarm.fromUserName}">Otto</td>
                 <form method="post" th:action="@{'/view/v1/alarmsto/' + ${alarm.id} + '/' + ${alarm.targetId}}">
-                    <th><button type="submit" th:text="${alarm.targetId}"></button></th>
+                    <th><button type="submit" class="btn btn-secondary" th:text="${alarm.targetId}"></button></th>
                 </form>
                 <td th:text="${alarm.text}">Otto</td>
                 <td th:text="${alarm.createdAt}">Otto</td>

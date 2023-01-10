@@ -30,11 +30,11 @@
                 <button type="submit" class="btn btn-warning" sec:authorize="!isAuthenticated()" th:onclick="|location.href='@{/view/v1/users/join}'|">Sign-up</button>
             </div>
             <div class="text-end">
-                <button type="submit" class="btn btn-warning" sec:authorize="isAuthenticated()" th:onclick="|location.href='@{/view/v1/users/logout}'|">logout</button>
+                <button type="submit" class="btn btn-warning me-2" sec:authorize="isAuthenticated()" th:onclick="|location.href='@{/view/v1/users/logout}'|">logout</button>
             </div>
 
             <div class="text-end">
-                <button type="submit" class="btn btn-warning" sec:authorize="isAuthenticated()" th:onclick="|location.href='@{/view/v1/posts/my}'|">myPage</button>
+                <button type="submit" class="btn btn-warning me-2" sec:authorize="isAuthenticated()" th:onclick="|location.href='@{/view/v1/posts/my}'|">myPage</button>
             </div>
 
             <div>

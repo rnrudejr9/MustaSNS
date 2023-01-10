@@ -9,9 +9,6 @@
 
     <div class="container">
         <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
-            <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
-                <svg class="bi me-2" width="40" height="32" role="img" aria-label="Bootstrap"><use xlink:href="#bootstrap"/></svg>
-            </a>
 
             <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
                 <li class="nav-item active">
@@ -46,11 +43,25 @@
     </div>
 </header>
 
+
+
+
 <div class = "container center">
     <h1 class="center">Musta SNS!</h1>
     <div class="col text-center">
-    <span sec:authentication="name"></span>
-    <span sec:authorize="!isAuthenticated()">반갑습니다! 회원가입 로그인 이후 사용해주시기바랍니다!</span>
+
+        <div class="alert alert-primary align-items-center" role="alert">
+            <div>
+                <span sec:authentication="name"> </span>
+                <span sec:authorize="!isAuthenticated()"> 반갑습니다! 회원가입 로그인 이후 사용해주시기바랍니다!<br></span>
+                <span sec:authorize="isAuthenticated()">반갑습니다! 사이트를 즐겨주세요!<br></span>
+            </div>
+        </div>
+
+        <div class="alert alert-warning" role="alert" sec:authorize="!isAuthenticated()">
+        <span sec:authorize="!isAuthenticated()">admin 계정은 아이디와 비밀번호가 admin 입니다.<br></span>
+        <span sec:authorize="!isAuthenticated()">계정이 없을 경우 가입해주시기 바랍니다!</span>
+        </div>
     </div>
 </div>
 <div class="d-grid gap-2 col-6 mx-auto">

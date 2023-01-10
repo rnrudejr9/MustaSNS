@@ -1,16 +1,17 @@
 package com.example.mutsasnsproject.controller;
 
 
-import com.example.mutsasnsproject.domain.dto.user.UserJoinRequest;
-import com.example.mutsasnsproject.domain.dto.user.UserJoinResponse;
-import com.example.mutsasnsproject.domain.dto.user.UserLoginRequest;
-import com.example.mutsasnsproject.domain.dto.user.UserLoginResponse;
+import com.example.mutsasnsproject.domain.dto.user.*;
+import com.example.mutsasnsproject.domain.entity.User;
+import com.example.mutsasnsproject.domain.role.UserRole;
 import com.example.mutsasnsproject.exception.AppException;
 import com.example.mutsasnsproject.exception.ErrorCode;
 import com.example.mutsasnsproject.service.NotificationService;
 import com.example.mutsasnsproject.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.Banner;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -75,7 +76,6 @@ public class UserController {
         } catch(AppException e) {
             if(e.getErrorCode() == ErrorCode.USERNAME_DUPLICATED) {
                 model.addAttribute("message", "UserName이 중복됩니다");
-                model.addAttribute("nextUrl", "/users/join");
                 model.addAttribute("userJoinRequest", new UserJoinRequest());
                 return "users/join";
             }
@@ -84,17 +84,36 @@ public class UserController {
         }
         System.out.println(userJoinRequest.getUserName());
         model.addAttribute("userLoginRequest", new UserLoginRequest());
-        model.addAttribute("message", "회원가입이 완료 되었습니다\n로그인 해주세요");
+        model.addAttribute("message", "회원가입이 완료 되었습니다");
         return "users/login";
     }
 
 
 //    관리자모드 ------------------------------------
     @GetMapping("/list")
-    public String userList(Authentication authentication, Model model){
+    public String userList(Authentication authentication, Model model, Pageable pageable){
         String userName = authentication.getName();
+        Page<UserResponse> page = userService.getList(userName,pageable);
+
+        int nowPage = page.getPageable().getPageNumber() + 1;
+        int startPage = Math.max(nowPage - 4, 1);
+        int endPage = Math.min(page.getTotalPages(), nowPage + 4);
+        model.addAttribute("users", page);
+        model.addAttribute("startPage", startPage);
+        model.addAttribute("endPage", endPage);
 //        userService.findAll(Pageable);
         return "users/list";
+    }
+
+
+    @PostMapping("/list/{name}")
+    public String userList(Authentication authentication, Model model, @PathVariable String name){
+        User user = userService.loadUserByUsername(name);
+        if(authentication.getName().equals(name)){
+            return "redirect:/view/v1/users/list";
+        }
+        userService.userRoleChange(authentication.getName(),user.getId(),user.getRole().toString());
+        return "redirect:/view/v1/users/list";
     }
 
 }

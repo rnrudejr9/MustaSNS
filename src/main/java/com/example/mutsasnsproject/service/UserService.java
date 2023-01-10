@@ -3,10 +3,7 @@ package com.example.mutsasnsproject.service;
 import com.example.mutsasnsproject.customutils.InValidChecker;
 import com.example.mutsasnsproject.domain.dto.Response;
 import com.example.mutsasnsproject.domain.dto.alarm.AlarmResponse;
-import com.example.mutsasnsproject.domain.dto.user.UserJoinRequest;
-import com.example.mutsasnsproject.domain.dto.user.UserJoinResponse;
-import com.example.mutsasnsproject.domain.dto.user.UserLoginRequest;
-import com.example.mutsasnsproject.domain.dto.user.UserLoginResponse;
+import com.example.mutsasnsproject.domain.dto.user.*;
 import com.example.mutsasnsproject.domain.entity.Alarm;
 import com.example.mutsasnsproject.domain.entity.User;
 import com.example.mutsasnsproject.domain.role.UserRole;
@@ -83,9 +80,9 @@ public class UserService {
         }
         User changeableUser = inValidChecker.userCheckById(userId);
 
-        if(userRole.equals("admin")) {
+        if(userRole.equals("admin") || userRole.equals("USER")) {
             changeableUser.setRole(UserRole.ADMIN);
-        }else if(userRole.equals("user")){
+        }else if(userRole.equals("user") || userRole.equals("ADMIN")){
             changeableUser.setRole(UserRole.USER);
         }else{
             throw new AppException(ErrorCode.INVALID_PERMISSION,"올바르지않은 권한 값을 입력하셨습니다.");
@@ -104,4 +101,15 @@ public class UserService {
         return alarmResponsePage;
     }
 
+
+    // UI 기능 ---------------------------------
+    public Page<UserResponse> getList(String userName, Pageable pageable){
+        User user = inValidChecker.userCheck(userName);
+        if(!(user.getRole() == UserRole.ADMIN)){
+            return Page.empty();
+        }
+        Page<User> page = userRepository.findAll(pageable);
+        Page<UserResponse> list = UserResponse.toDtoList(page);
+        return list;
+    }
 }

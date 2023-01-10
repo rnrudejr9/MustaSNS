@@ -38,7 +38,8 @@ public class Alarm extends BaseEntity {
 
     private Long targetUserId;
 
-    private Long formUserId;
+    private Long fromUserId;
+    private String fromUserName;
     private Long targetId;
     @Enumerated(EnumType.STRING)
     private AlarmType alarmType;
@@ -64,7 +65,8 @@ public class Alarm extends BaseEntity {
         return Alarm.builder()
                 .alarmType(alarmType)
                 .targetId(post.getId())
-                .formUserId(user.getId())
+                .fromUserId(user.getId())
+                .fromUserName(user.getUserName())
                 .post(post)
                 .user(user)
                 .targetUserId(post.getUser().getId())
@@ -77,8 +79,9 @@ public class Alarm extends BaseEntity {
         return AlarmResponse.builder()
                 .id(id)
                 .readCheck(readCheck)
-                .createdAt(getCreatedAt().format(DateTimeFormatter.ofPattern("YYYY-MM-DD hh:mm:ss")))
+                .createdAt(getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
                 .text(text)
+                .fromUserName(fromUserName)
                 .alarmType(alarmType)
                 .build();
     }

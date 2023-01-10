@@ -33,9 +33,9 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="post : ${posts}">
+            <tr th:onclick="|location.href='@{/view/v1/posts/detail/{id}(id=${post.id})}'|" th:each="post : ${posts}">
                 <th th:text="${post.id}">1</th>
-                <td><a th:text="${post.title}" th:href="@{/view/v1/posts/detail/{id}(id=${post.id})}"></a></td>
+                <td><a th:text="${post.title}" ></a></td>
                 <td th:text="${post.userName}">Otto</td>
                 <td th:text="${post.goodCount}">Otto</td>
                 <td th:text="${post.commentCount}">Otto</td>
@@ -47,7 +47,7 @@
         <nav aria-label="Page navigation example">
 
 
-            <ul class="pagination justify-content-center">
+            <ul class="pagination justify-content-center" th:if="${posts.totalPages > 0}">
                 <li class="page-item" th:classappend="${1 == posts.pageable.pageNumber + 1}?'disabled'">
                     <a class="page-link" th:href="@{/view/v1/posts/my(page=${posts.pageable.pageNumber - 1},searchText=${param.searchText})}"
                        tabindex="-1" aria-disabled="true">Previous</a>

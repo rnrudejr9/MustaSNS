@@ -30,17 +30,19 @@ public class AlarmResponse {
     // 어떤글에 달렸는지
     private String text;
     private String createdAt;
+    private String fromUserName;
     private Boolean readCheck;
 
     public static Page<AlarmResponse> toDtoList(Page<Alarm> alarms){
         Page<AlarmResponse> alarmResponsePage = alarms.map(m -> AlarmResponse.builder()
                 .alarmType(m.getAlarmType())
                 .id(m.getId())
-                .createdAt(m.getCreatedAt().format(DateTimeFormatter.ofPattern("YYYY-MM-DD hh:mm:ss")))
+                .createdAt(m.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
                 .text(m.getText())
-                .fromUserId(m.getFormUserId())
+                .fromUserId(m.getFromUserId())
                 .targetId(m.getTargetId())
                 .readCheck(m.isReadCheck())
+                .fromUserName(m.getFromUserName())
                 .build());
         return alarmResponsePage;
     }

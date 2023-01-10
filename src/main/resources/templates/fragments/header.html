@@ -43,24 +43,24 @@
 
             </div>
             <div class="text-end">
-                <button type="submit" class="btn btn-warning" sec:authorize="!isAuthenticated()" th:onclick="|location.href='@{/view/v1/users/join}'|">Sign-up</button>
+                <button type="submit" class="btn btn-warning me-2" sec:authorize="!isAuthenticated()" th:onclick="|location.href='@{/view/v1/users/join}'|">Sign-up</button>
             </div>
             <div class="text-end">
-                <button type="submit" class="btn btn-warning" sec:authorize="isAuthenticated()" th:onclick="|location.href='@{/view/v1/users/logout}'|">logout</button>
+                <button type="submit" class="btn btn-warning me-2" sec:authorize="isAuthenticated()" th:onclick="|location.href='@{/view/v1/users/logout}'|">logout</button>
             </div>
 
             <div class="text-end">
-                <button type="submit" class="btn btn-warning" sec:authorize="isAuthenticated()" th:onclick="|location.href='@{/view/v1/posts/my}'|">myPage</button>
+                <button type="submit" class="btn btn-warning me-2" sec:authorize="isAuthenticated()" th:onclick="|location.href='@{/view/v1/posts/my}'|">myPage</button>
             </div>
 
             <div>
                 <button type="submit" sec:authorize="isAuthenticated()" sec:authentication="name"></button>
             </div>
 
-            <li class="nav-item" sec:authorize="isAuthenticated()">
+            <li class="nav" sec:authorize="isAuthenticated()">
                 <a class="nav-link" th:href="@{/view/v1/alarms}" >
-                    <i th:if="${!hasNotification}" class="bi bi-bell" aria-hidden="true"></i>
-                    <i th:if="${hasNotification}"  class="bi bi-bell-fill" aria-hidden="true"></i>
+                    <i th:if="${hasNotification}"  class="bi bi-bell-fill fs-3" aria-hidden="true"></i>
+                    <i th:unless="${hasNotification}" class="bi bi-bell fs-3" aria-hidden="true"></i>
                 </a>
             </li>
 

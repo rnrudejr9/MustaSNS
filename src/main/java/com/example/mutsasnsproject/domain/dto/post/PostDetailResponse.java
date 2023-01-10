@@ -28,8 +28,8 @@ public class PostDetailResponse {
                 .title(m.getTitle())
                 .body(m.getBody())
                 .userName(m.getUser().getUserName())
-                .createdAt(m.getCreatedAt().format(DateTimeFormatter.ofPattern("YYYY-MM-DD hh:mm:ss")))
-                .lastModifiedAt(m.getLastModifiedAt().format(DateTimeFormatter.ofPattern("YYYY-MM-DD hh:mm:ss")))
+                .createdAt(m.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
+                .lastModifiedAt(m.getLastModifiedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
                 .goodCount(m.getGoods().size())
                 .commentCount(m.getComments().size())
                 .build());

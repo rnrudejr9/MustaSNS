@@ -30,7 +30,7 @@ public class CommentListResponse {
                 .id(m.getId())
                 .userName(m.getUser().getUserName())
                 .comment(m.getComment())
-                .createdAt(m.getCreatedAt().format(DateTimeFormatter.ofPattern("YYYY-MM-DD hh:mm:ss")))
+                .createdAt(m.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
                 .postId(m.getPost().getId())
                 .build());
         return page;

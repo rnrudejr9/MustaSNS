@@ -52,7 +52,7 @@ public class UserRestController {
 
     //알림 기능 -------------------------------------
     @ApiOperation(value = "알람 조회 기능")
-    @GetMapping("/alarm")
+    @GetMapping("/alarms")
     public Response<?> alarm(@PageableDefault(size = 20, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable, Authentication authentication) {
         Page<AlarmResponse> alarmResponsePage = userService.getAlarm(authentication.getName(),pageable);
         return Response.success(alarmResponsePage);

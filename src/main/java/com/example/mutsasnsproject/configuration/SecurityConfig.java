@@ -58,12 +58,13 @@ public class SecurityConfig {
                 .antMatchers(HttpMethod.POST, "/api/v1/posts/{postId}/likes").authenticated()
                 .antMatchers(HttpMethod.PUT, "/api/v1/posts/**").authenticated()
                 .antMatchers(HttpMethod.DELETE, "/api/v1/posts/**").authenticated()
-                .antMatchers(HttpMethod.GET,"/api/v1/posts/{id}").authenticated()
+                .antMatchers(HttpMethod.GET,"/api/v1/posts/{id}").permitAll()
                 .antMatchers("/api/v1/users/join","/api/v1/users/login").permitAll()
                 .antMatchers("/api/v1/users/{id}/role/change").authenticated()
 
                 //UI
                 .antMatchers("/view/v1/users/**").permitAll()
+                .antMatchers(HttpMethod.GET,"/view/v1/**").permitAll()
                 .antMatchers("/css/**").permitAll()
                 .anyRequest().permitAll()
                 .and()

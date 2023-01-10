@@ -23,14 +23,14 @@ public class CommentListResponse {
     private String userName;
     private String comment;
     private Long postId;
-    private LocalDateTime createdAt;
+    private String createdAt;
 
     public static Page<CommentListResponse> toDtoList(Page<Comment> comments){
         Page<CommentListResponse> page = comments.map(m -> CommentListResponse.builder()
                 .id(m.getId())
                 .userName(m.getUser().getUserName())
                 .comment(m.getComment())
-                .createdAt(m.getCreatedAt())
+                .createdAt(m.getCreatedAt().format(DateTimeFormatter.ofPattern("YYYY-MM-DD hh:mm:ss")))
                 .postId(m.getPost().getId())
                 .build());
         return page;

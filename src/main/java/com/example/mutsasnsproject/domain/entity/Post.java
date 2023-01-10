@@ -70,8 +70,8 @@ public class Post extends BaseEntity{
                 .id(id)
                 .title(title)
                 .body(body)
-                .lastModifiedAt(getLastModifiedAt().format(DateTimeFormatter.ofPattern("yyyy-mm-dd hh:mm:ss")))
-                .createdAt(getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-mm-dd hh:mm:ss")))
+                .lastModifiedAt(getLastModifiedAt().format(DateTimeFormatter.ofPattern("YYYY-MM-DD hh:mm:ss")))
+                .createdAt(getCreatedAt().format(DateTimeFormatter.ofPattern("YYYY-MM-DD hh:mm:ss")))
                 .userName(user.getUserName())
                 .build();
     }

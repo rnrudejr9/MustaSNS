@@ -8,9 +8,7 @@ import com.example.mutsasnsproject.domain.dto.post.PostRequest;
 import com.example.mutsasnsproject.domain.dto.post.PostResponse;
 import com.example.mutsasnsproject.exception.AppException;
 import com.example.mutsasnsproject.exception.ErrorCode;
-import com.example.mutsasnsproject.fixture.PostEntityFixture;
-import com.example.mutsasnsproject.fixture.TestInfoFixture;
-import com.example.mutsasnsproject.fixture.UserEntityFixture;
+import com.example.mutsasnsproject.infra.NotificationInterceptor;
 import com.example.mutsasnsproject.service.PostService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -50,39 +48,33 @@ class PostRestControllerTest {
     ObjectMapper objectMapper;
     //자바 오브젝트를 json으로 바꿔줌
 
-//    0. 테스크 등록하기 : 내가 뭘 하고 있지?
-//    1. 요구사항 확인
-//2. Test를 먼저 만들고
-//3. Service는 null을 리턴하게 처리
+    @MockBean
+    NotificationInterceptor notificationInterceptor;
 
-//    조회) 게시글 1개 조회
+//    조회 성공) 게시글 1개 조회
 //    조회 실패) 로그인 하지 않음
-//    조회) 전체 조회
-//    작성) 게시글 1개 작성
-//    작성 실패) 로그인 하지 않음
-//    수정) 게시글 1개 수정
+//    조회 성공) 전체 조회
+//    작성 성공) 게시글 1개 작성
+//    작성 실패) jwt 토큰값 없음
+//    작성 실패) 올바르지않는 토큰값
+//    수정 성공) 게시글 1개 수정
 //    수정 실패) 로그인 하지 않음
 //    수정 실패) 게시글 없음
 //    수정 실패) 작성자와 사용자가 다름
 //    수정 실패) 데이터베이스 오류
-//    삭제) 게시글 1개 삭제
+//    삭제 성공) 게시글 1개 삭제
 //    삭제 실패) 로그인 하지 않음
 //    삭제 실패) 게시글 없음
 //    삭제 실패) 작성자와 사용자가 다름
 //    삭제 실패) 데이터베이스 오류
-//    댓글) 댓글 1개 작성
-//    댓글 실패) 로그인 하지 않음
-//    좋아요) 좋아요 성공
-//    좋아요 실패) 좋아요 실패 로그인 하지 않음
-//    좋아요 실패) 게시글이 존재하지 않을 경우
-//    마이피드) 마이피드 조회성공
-//    마이피드 실패) 로그인 하지 않음
-//    ---------------------------------------------
-//    알림) 알림 성공
-//    댓글 조회)
-//    댓글 삭제)
-//
+//    마이피드 조회 성공
+//    마이피드 조회 실패 : 로그인 안함
 
+//    <테스트 코드 작성 팁>
+//    0. 테스크 등록하기 : 내가 뭘 하고 있지?
+//    1. 요구사항 확인
+//    2. Test를 먼저 만들고
+//    3. Service는 null을 리턴하게 처리
 
     @BeforeEach
     public void setUp(){
@@ -93,12 +85,17 @@ class PostRestControllerTest {
     @Test
     @WithMockUser
     public void Test1() throws Exception {
-        when(postService.get(any(),any())).thenReturn(new PostDetailResponse());
+        when(postService.get(any(),any())).thenReturn(new PostDetailResponse(1L,"","","","","",1,1));
 
         mockMvc.perform(get("/api/v1/posts/"+"1")
                             .with(csrf())
                             .contentType(MediaType.APPLICATION_JSON))
                     .andDo(print())
+                .andExpect(jsonPath("$.resultCode").value("SUCCESS"))
+                .andExpect(jsonPath("$.result.id").value(1L))
+                .andExpect(jsonPath("$.result.title").value(""))
+                .andExpect(jsonPath("$.result.body").value(""))
+                .andExpect(jsonPath("$.result.userName").value(""))
                     .andExpect(status().isOk());
     }
     @DisplayName("조회) 게시글 1개 조회 실패 : 로그인 하지 않음")
@@ -115,24 +112,39 @@ class PostRestControllerTest {
                 .andExpect(status().isUnauthorized());
     }
 
+    @DisplayName("조회) 게시글 전체 조회 성공")
+    @Test
+    @WithMockUser
+    public void view_all() throws Exception {
+        when(postService.list(any())).thenReturn(Page.empty());
+
+        mockMvc.perform(get("/api/v1/posts/"+"1")
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(jsonPath("$.resultCode").value("SUCCESS"))
+                .andExpect(status().isOk());
+    }
+
     @DisplayName("작성) 게시글 1개 작성 성공")
     @Test
     @WithMockUser
-    public void Test2() throws Exception {
-        PostRequest postRequest = PostRequest.builder().title("title").body("body").build();
-        when(postService.add("userName",new PostRequest("",""))).thenReturn(new PostResponse("message",1L));
+    public void write() throws Exception {
+        when(postService.add(any(),any())).thenReturn(new PostResponse("message",1L));
 
         mockMvc.perform(post("/api/v1/posts")
                 .with(csrf())
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsBytes(postRequest)))
+                .content(objectMapper.writeValueAsBytes(new PostRequest("body","title"))))
                 .andDo(print())
+                .andExpect(jsonPath("$.resultCode").value("SUCCESS"))
+                .andExpect(jsonPath("$.result.message").value("message"))
                 .andExpect(status().isOk());
     }
-    @DisplayName("작성) 게시글 1개 작성 실패 : 권한 없음")
+    @DisplayName("작성) 게시글 1개 작성 실패 : jwt 토큰이 없을 경우")
     @Test
     @WithMockUser
-    public void Test3() throws Exception {
+    public void writeFail() throws Exception {
         PostRequest postRequest = PostRequest.builder().title("title").body("body").build();
         when(postService.add(any(),any())).thenThrow(new AppException(ErrorCode.INVALID_PERMISSION,""));
 
@@ -143,6 +155,24 @@ class PostRestControllerTest {
                 .andDo(print())
                 .andExpect(status().isUnauthorized());
     }
+
+
+    @Test
+    @DisplayName("글 작성 실패 Test 2 : JWT Token이 유효하지 않은 경우")
+    @WithMockUser
+    public void writeFail2() throws Exception {
+
+        when(postService.add(any(), any())).thenThrow(new AppException(ErrorCode.INVALID_PERMISSION,""));
+
+        mockMvc.perform(post("/api/v1/posts")
+                        .content(objectMapper.writeValueAsString(new PostRequest("body","title")))
+                        .header("Authroization", "Bearer JwtToken123")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .with(csrf()))
+                .andExpect(status().isUnauthorized())
+                .andDo(print());
+    }
+
 
     @DisplayName("수정) 게시글 1개 수정 성공")
     @Test
@@ -180,7 +210,7 @@ class PostRestControllerTest {
 
     @Test
     @WithMockUser   // 인증된 상태
-    @DisplayName("수정) 게시글 1개 수정 실패 : 선택 게시글 불일치")
+    @DisplayName("수정) 게시글 1개 수정 실패 : 게시글이 없음")
     void modify_fail2() throws Exception {
 
         PostRequest postRequest = PostRequest.builder().title("title").body("body").build();
@@ -309,24 +339,6 @@ class PostRestControllerTest {
                 .andDo(print())
                 .andExpect(status().is(ErrorCode.DATABASE_ERROR.getHttpStatus().value()));
     }
-
-
-
-
-//    @Test
-//    @DisplayName("좋아요 실패 : 게시물이 존재하지 않는 경우")
-//    @WithMockUser
-//    void like_fail2() throws Exception {
-//        doThrow(new AppException(ErrorCode.POST_NOT_FOUND,""))
-//                .when()(any(), any());
-//
-//        mockMvc.perform(post("/api/v1/posts/1/likes")
-//                        .with(csrf())
-//                        .contentType(MediaType.APPLICATION_JSON))
-//                .andDo(print())
-//                .andExpect(status().isNotFound());
-//    }
-
 
     @Test
     @DisplayName("마이피드 조회 성공")

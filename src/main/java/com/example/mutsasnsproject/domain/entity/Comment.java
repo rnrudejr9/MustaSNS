@@ -46,7 +46,7 @@ public class Comment extends BaseEntity{
                 .comment(comment)
                 .postId(post.getId())
                 .userName(user.getUserName())
-                .createdAt(getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-mm-dd hh:mm:ss")))
+                .createdAt(getCreatedAt().format(DateTimeFormatter.ofPattern("YYYY-MM-DD hh:mm:ss")))
                 .build();
     }
 

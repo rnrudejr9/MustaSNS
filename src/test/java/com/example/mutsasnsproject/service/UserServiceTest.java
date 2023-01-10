@@ -9,8 +9,7 @@ import com.example.mutsasnsproject.domain.dto.user.UserLoginResponse;
 import com.example.mutsasnsproject.domain.entity.User;
 import com.example.mutsasnsproject.exception.AppException;
 import com.example.mutsasnsproject.exception.ErrorCode;
-import com.example.mutsasnsproject.fixture.TestInfoFixture;
-import com.example.mutsasnsproject.fixture.UserEntityFixture;
+import com.example.mutsasnsproject.fixture.UserEntity;
 import com.example.mutsasnsproject.repository.AlarmRepository;
 import com.example.mutsasnsproject.repository.CommentRepository;
 import com.example.mutsasnsproject.repository.PostRepository;
@@ -31,8 +30,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 class UserServiceTest {
 
@@ -44,67 +42,49 @@ class UserServiceTest {
 
     BCryptPasswordEncoder encoder = mock(BCryptPasswordEncoder.class);
     InValidChecker inValidChecker = mock(InValidChecker.class);
+
+    User user;
     @BeforeEach
     void setUp() {
         userService = new UserService(userRepository,encoder,alarmRepository,inValidChecker);
+        user = UserEntity.get();
     }
 
-//    @Test
-//    @DisplayName("로그인) 성공")
-//    void login(){
-//        TestInfoFixture.TestInfo fixture =TestInfoFixture.get();
-//        User user = mock(User.class);
-//
-//        when(JwtTokenUtils.generateAccessToken(any(),any(),any())).thenReturn(MOCK_TOKEN);
-//        when(userRepository.findByUserName(any())).thenReturn(Optional.of(user));
-//        when(encoder.matches(any(), any())).thenReturn(true);
-//
-//        Assertions.assertDoesNotThrow(()->userService.login(fixture.getUserName(), fixture.getPassword()));
-//    }
+//    로그인 실패 유저 없을 경우
+//    로그인 실패 비밀번호 다를 경우
+//    회원가입 성공
+//    회원가입 실패 유저 중복
+    @Test
+    @DisplayName("로그인 실패 : 유저 없는 경우")
+    @WithAnonymousUser
+    void login_fail1(){
+        when(inValidChecker.userCheck(any())).thenThrow(new AppException(ErrorCode.USERNAME_NOT_FOUND,""));
+        AppException exception = Assertions.assertThrows(AppException.class, () -> userService.login(new UserLoginRequest()));
+        assertEquals(ErrorCode.USERNAME_NOT_FOUND,exception.getErrorCode());
+    }
 
     @Test
-    @DisplayName("로그인) 실패")
+    @DisplayName("로그인 실패 : 비밀번호 다를 경우")
     @WithAnonymousUser
-    void login2(){
-        TestInfoFixture.TestInfo fixture =TestInfoFixture.get();
-        User user = mock(User.class);
-
-        when(userRepository.findByUserName(any())).thenReturn(Optional.of(user));
-        when(encoder.matches(any(),any())).thenReturn(true);
-        when(JwtTokenUtils.generateAccessToken(any(),"secketKey",any())).thenReturn("String");
-
-        Assertions.assertDoesNotThrow(()->userService.login(new UserLoginRequest()));
+    void login_fail2(){
+        when(inValidChecker.userCheck(any())).thenReturn(user);
+        doThrow(new AppException(ErrorCode.INVALID_PASSWORD,"")).when(inValidChecker).passwordCheck(any(),any());
+        AppException exception = Assertions.assertThrows(AppException.class, () -> userService.login(new UserLoginRequest()));
+        assertEquals(ErrorCode.INVALID_PASSWORD,exception.getErrorCode());
     }
 
     @Test
     @DisplayName("회원가입 성공")
     void join(){
-        TestInfoFixture.TestInfo fixture =TestInfoFixture.get();
-        User user = mock(User.class);
-
-        Assertions.assertDoesNotThrow(()->userService.join(new UserJoinRequest()));
+        Assertions.assertDoesNotThrow(()->userService.join(new UserJoinRequest("userName","password")));
     }
 
 
     @Test
     @DisplayName("회원가입 실패 : 유저 중복")
-    void join2(){
-        TestInfoFixture.TestInfo fixture =TestInfoFixture.get();
-        User user = mock(User.class);
-        when(userRepository.findByUserName(any())).thenReturn(Optional.of(User.builder().build()));
+    void join_fail(){;
+        doThrow(new AppException(ErrorCode.USERNAME_DUPLICATED,"")).when(inValidChecker).isDuplicatedUserName(any());
         AppException exception = Assertions.assertThrows(AppException.class, () -> userService.join(new UserJoinRequest()));
         assertEquals(ErrorCode.USERNAME_DUPLICATED, exception.getErrorCode());
-    }
-
-    @Test
-    @DisplayName("유저 권한 변경")
-    void userRoleChange(){
-        TestInfoFixture.TestInfo fixture =TestInfoFixture.get();
-        User user = mock(User.class);
-//        #1 통과
-        when(userRepository.findByUserName(any())).thenReturn(Optional.of(user));
-        when(userRepository.findById(any())).thenReturn(Optional.of(user));
-
-        Assertions.assertDoesNotThrow(()->userService.userRoleChange(any(), fixture.getUserId(), "USER"));
     }
 }

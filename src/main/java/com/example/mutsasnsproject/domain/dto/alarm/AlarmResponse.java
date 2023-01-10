@@ -29,14 +29,14 @@ public class AlarmResponse {
     private Long targetId;
     // 어떤글에 달렸는지
     private String text;
-    private LocalDateTime createdAt;
+    private String createdAt;
     private Boolean readCheck;
 
     public static Page<AlarmResponse> toDtoList(Page<Alarm> alarms){
         Page<AlarmResponse> alarmResponsePage = alarms.map(m -> AlarmResponse.builder()
                 .alarmType(m.getAlarmType())
                 .id(m.getId())
-                .createdAt(m.getCreatedAt())
+                .createdAt(m.getCreatedAt().format(DateTimeFormatter.ofPattern("YYYY-MM-DD hh:mm:ss")))
                 .text(m.getText())
                 .fromUserId(m.getFormUserId())
                 .targetId(m.getTargetId())

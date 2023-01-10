@@ -32,7 +32,7 @@
 * **서버** : AWS EC2
 * **배포** : Docker, gitlab
 * **데이터베이스** : MySql 8.0
-* **필수 라이브러리** : SpringBoot Web, MySQL, Spring Data JPA, Lombok, Spring Security
+* **필수 라이브러리** : SpringBoot Web, MySQL, Spring Data JPA, Lombok, Spring Security, thymeleaf
 
 
 <br>
@@ -43,10 +43,11 @@
 - [x] swagger 문서화 설정
 - [x] 회원가입과 로그인  
 - [x] 게시글 CRUD 구현
-- [x] 댓글 기능 구현
+- [x] 댓글 CRUD 구현
 - [x] 좋아요 기능 구현
-- [x] 게시글 CRUD 테스트 코드
-- [ ] 부가기능(댓글, 좋아요, 권한) 테스트 코드 작성하기 
+- [x] Controller 테스트(User,Post,Comment)
+- [x] Service 테스트(User,Post,Comment)
+- [x] 부가기능 테스트(알림, 좋아요, 권한) 작성 
 <hr>
 
 - [x] 마이피드 기능 구현
@@ -58,7 +59,7 @@
 
 - [x] UI : 화면 설정 (타임리프 템플릿 사용)
 - [x] UI : 게시글 CRUD 구현 (admin CRUD 가능)
-- [x] UI : 댓글 기능 구현
+- [x] UI : 댓글 CRUD 구현
 - [x] UI : 좋아요 기능 구현
 - [x] UI : 마이피드 기능 구현
 - [x] UI : 알람 기능 구현
@@ -95,17 +96,12 @@
 
 <br>
 
+## 🕹 핵심 로직
 
+### UI 알림기능
 
-<br>
+### InValidChecker
 
-![image](https://user-images.githubusercontent.com/49141751/209741337-49e7fe52-abb9-4c40-b6d1-525c3ab4d152.png)
-
-* `users`, `method.get` 을 제외한 `ENDPOINT`는 로그인 후 `result` 값인 `JWT`토큰 내용을 받아 
-
-![image](https://user-images.githubusercontent.com/49141751/209741359-80f5d3c0-01cc-4f61-a895-d2985c343ebe.png)
-
-* `Bearer Token` 으로 인증받아 `ENDPOINT` 활용한다.
 
 <br>
 
@@ -124,8 +120,13 @@
 * `Service` 단 비즈니스 로직 자체가 에러를 처리하기 위한 중복되는 코드들이 많다. 해당 부분들을 **간소화**하고 효율적으로 정리해야되겠다 생각이 들었다.
 * 마지막으로, 구글링을 통한 다양한 **이슈해결**과 짧은 시간에 계획대로 토이 프로젝트를 진행 할 수 있어서 개발에 좋은 경험이 되었다.
 
+##### 23.01.10 2차 제출) 회고
+
+* 
+
 <br>
 
 ## 🚀 ERD
 
-![image](https://user-images.githubusercontent.com/49141751/209630586-be6fa917-368e-45c0-9a3b-d0713e9ace80.png)
+
+![image](https://user-images.githubusercontent.com/49141751/211468923-203c8315-362d-43ed-aa70-2737f4d02c8d.png)

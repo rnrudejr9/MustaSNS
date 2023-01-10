@@ -68,4 +68,5 @@ public class InValidChecker {
     public Comment commentCheckById(Long commentId){
         return commentRepository.findById(commentId).orElseThrow(() -> new AppException(ErrorCode.COMMENT_NOT_FOUND,"댓글이 존재하지 않습니다."));
     }
+
 }

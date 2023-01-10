@@ -10,11 +10,6 @@
     
 <br>
 
-- [ ] 시연, 공유하고싶은 내용
-- [ ] 코드 로직설명, 추가 개발 기능
-- [ ] 리펙토링할 내용
-- [ ] 겪었던 시련, 해결방법
-- [ ] 느낀점
 
 ## ✏ 개요 설명
 <div align="center">
@@ -63,7 +58,8 @@
 - [x] UI : 좋아요 기능 구현
 - [x] UI : 마이피드 기능 구현
 - [x] UI : 알람 기능 구현
-- [ ] UI : admin 계정 user 데이터 관리
+- [x] UI : admin 계정 user 데이터 관리(user <-> admin)
+- [ ] UI : admin 계정 user 데이터 CRUD
 - [ ] UI : 화면에러처리
 
 > * 진행 간 발생했던 이슈 : https://gitlab.com/rnrudejr9/mustasns/-/issues/?sort=created_date&state=all&first_page_size=20

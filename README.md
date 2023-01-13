@@ -61,6 +61,7 @@
 - [x] UI : admin 계정 user 데이터 관리(user <-> admin)
 - [ ] UI : admin 계정 user 데이터 CRUD
 - [ ] UI : 화면에러처리
+- [ ] UI : react 적용
 
 > * 진행 간 발생했던 이슈 : https://gitlab.com/rnrudejr9/mustasns/-/issues/?sort=created_date&state=all&first_page_size=20
 

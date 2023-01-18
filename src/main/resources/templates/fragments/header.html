@@ -11,6 +11,10 @@
         <!-- Bootstrap CSS -->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
         <title th:text="${title}">정의되지않은 타이틀</title>
+
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
 </head>
 <body>
 
@@ -51,13 +55,13 @@
             </div>
 
             <div class="text-end">
-                <button type="submit" class="btn btn-warning me-2" sec:authorize="isAuthenticated()" th:onclick="|location.href='@{/chat}'|">채팅방</button>
+                <button type="submit" class="btn btn-warning me-2" sec:authorize="isAuthenticated()" th:onclick="|location.href='@{/chat/rooms}'|">채팅방</button>
             </div>
 
 
 
             <div>
-                <button type="submit" sec:authorize="isAuthenticated()" sec:authentication="name"></button>
+                <button type="submit" sec:authorize="isAuthenticated()" sec:authentication="name" id="myName"></button>
             </div>
 
             <li class="nav" sec:authorize="isAuthenticated()">

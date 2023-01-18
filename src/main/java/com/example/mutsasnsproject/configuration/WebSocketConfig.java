@@ -15,7 +15,10 @@ public class WebSocketConfig implements WebSocketConfigurer {
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry.addHandler(chatHandler,"ws/chat").setAllowedOrigins("*");
+        registry.addHandler(chatHandler,"ws/chat")
+                .setAllowedOrigins("http://*:8080","http://*.*.*.*:8080")
+                .withSockJS()
+                .setClientLibraryUrl("https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.2/sockjs.js");
         //도메인이 다른 서버에서도 접속 가능하도록 cors : setAllowedOrigins
         // ws://localhost:8080/chat 으로 커넥션 연결 및 통신 준비
     }

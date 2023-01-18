@@ -51,6 +51,10 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity
                 .httpBasic().disable()
+                .headers()
+                .frameOptions().sameOrigin()
+                //웹소켓
+                .and()
                 .csrf().disable()
                 .cors().and()
                 .authorizeRequests()
@@ -67,8 +71,8 @@ public class SecurityConfig {
                 .antMatchers(HttpMethod.GET,"/view/v1/**").permitAll()
                 .antMatchers("/css/**").permitAll()
                 .anyRequest().permitAll()
-                .and()
 
+                .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()

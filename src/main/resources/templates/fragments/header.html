@@ -50,6 +50,12 @@
                 <button type="submit" class="btn btn-warning me-2" sec:authorize="isAuthenticated()" th:onclick="|location.href='@{/view/v1/posts/my}'|">myPage</button>
             </div>
 
+            <div class="text-end">
+                <button type="submit" class="btn btn-warning me-2" sec:authorize="isAuthenticated()" th:onclick="|location.href='@{/chat}'|">채팅방</button>
+            </div>
+
+
+
             <div>
                 <button type="submit" sec:authorize="isAuthenticated()" sec:authentication="name"></button>
             </div>

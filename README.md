@@ -62,6 +62,7 @@
 - [ ] UI : admin 계정 user 데이터 CRUD
 - [ ] UI : 화면에러처리
 - [ ] UI : react 적용
+- [x] UI : 웹 소켓 사용 간단 채팅방 구현
 
 > * 진행 간 발생했던 이슈 : https://gitlab.com/rnrudejr9/mustasns/-/issues/?sort=created_date&state=all&first_page_size=20
 
@@ -90,6 +91,7 @@
 | `my` | GET | /api/v1/posts/my | 마이피드조회기능 |
 | `alarm` | GET | /api/v1/users/alarm | 알람조회기능 |
 | `view` | GET | /view/v1/home | UI 메인화면 |
+| `chat` | GET | /chat | UI 채팅방 |
 
 <br>
 

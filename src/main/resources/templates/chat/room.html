@@ -80,16 +80,61 @@
 
             //3. send(path, header, message)로 메세지를 보낼 수 있음
             stomp.send('/pub/chat/enter', {}, JSON.stringify({roomId: roomId, writer: username}))
+            loadFetcher();
         });
 
         $("#button-send").on("click", function(e){
             var msg = document.getElementById("msg");
 
             console.log(username + ":" + msg.value);
+            fetcher();
             stomp.send('/pub/chat/message', {}, JSON.stringify({roomId: roomId, message: msg.value, writer: username}));
             msg.value = '';
+
+
         });
     });
+
+    async function loadFetcher(){
+        let url = "/api/v1/chat/" + [[${room.name}]];
+        let response = await fetch(url,{
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            }
+        })
+        if(response.ok){
+            let json = await response.json();
+            console.log(json);
+            for(var i = 0;i<json.result.length;i++){
+                str = "<div class='col-6'>";
+                str += "<div class='alert alert-warning'>";
+                str += "<b>" + json.result[i].writer + " : " + json.result[i].message + "</b>";
+                str += "</div></div>";
+                $("#msgArea").append(str);
+            }
+        }else{
+            let json = await response.json();
+            console.log(json.result.message);
+        }
+    }
+
+    async function fetcher() {
+        let response = await fetch("/api/v1/chat", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                writer: document.getElementById("myName").innerHTML,
+                message: document.getElementById("msg").value,
+                roomId: [[${room.name}]]
+            })
+        })
+        console.log("end");
+        console.log(response);
+
+    }
 </script>
 </body>
 

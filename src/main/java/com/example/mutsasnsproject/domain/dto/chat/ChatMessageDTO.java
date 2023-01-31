@@ -1,5 +1,7 @@
 package com.example.mutsasnsproject.domain.dto.chat;
 
+import com.example.mutsasnsproject.domain.entity.chat.Chat;
+import com.example.mutsasnsproject.domain.entity.chat.ChatRoom;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -7,7 +9,15 @@ import lombok.Setter;
 @Setter
 public class ChatMessageDTO {
 
-    private String roomId;
+    private Long roomId;
     private String writer;
     private String message;
+
+    public Chat toChat(ChatRoom chatRoom){
+        return Chat.builder().message(message)
+                .writer(writer)
+                .chatRoom(chatRoom)
+                .isChecked(false)
+                .build();
+    }
 }

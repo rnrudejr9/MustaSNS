@@ -1,6 +1,7 @@
 package com.example.mutsasnsproject.controller.chat;
 
-import com.example.mutsasnsproject.repository.ChatRoomRepository;
+import com.example.mutsasnsproject.service.chat.ChatRoomService;
+import com.example.mutsasnsproject.service.chat.ChatService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Controller;
@@ -18,35 +19,29 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Log4j2
 public class RoomController {
 
-    private final ChatRoomRepository repository;
+    private final ChatRoomService chatRoomService;
+    private final ChatService chatService;
 
     //채팅방 목록 조회
     @GetMapping(value = "/rooms")
-    public ModelAndView rooms(){
-
+    public String rooms(Model model){
         log.info("# All Chat Rooms");
-        ModelAndView mv = new ModelAndView("chat/rooms");
-
-        mv.addObject("list", repository.findAllRooms());
-
-        return mv;
+        model.addAttribute("list",chatRoomService.findAllRooms());
+        return "chat/rooms";
     }
 
     //채팅방 개설
     @PostMapping(value = "/room")
     public String create(@RequestParam String name, RedirectAttributes rttr){
-
         log.info("# Create Chat Room , name: " + name);
-        rttr.addFlashAttribute("roomName", repository.createChatRoomDTO(name));
+        rttr.addFlashAttribute("roomName", chatRoomService.createChatRoomDTO(name));
         return "redirect:/chat/rooms";
     }
 
     //채팅방 조회
     @GetMapping("/room")
-    public void getRoom(String roomId, Model model){
-
+    public void getRoom(Long roomId, Model model){
         log.info("# get Chat Room, roomID : " + roomId);
-
-        model.addAttribute("room", repository.findRoomById(roomId));
+        model.addAttribute("room", chatRoomService.findRoomById(roomId));
     }
 }

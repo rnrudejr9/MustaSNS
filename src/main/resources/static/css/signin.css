@@ -47,3 +47,15 @@ body {
     border-top-left-radius: 0;
     border-top-right-radius: 0;
 }
+
+#chatback{
+    background-color: #9bbbd4;
+}
+
+#mychat{
+    background-color: #fef01b;
+}
+
+#anochat{
+    background-color: #ffffff;
+}

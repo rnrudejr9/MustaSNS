@@ -1,6 +1,7 @@
 package com.example.mutsasnsproject.domain.entity.chat;
 
 
+import com.example.mutsasnsproject.domain.entity.BaseEntity;
 import com.example.mutsasnsproject.domain.entity.Comment;
 import com.example.mutsasnsproject.domain.entity.User;
 import lombok.*;
@@ -15,7 +16,7 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
-public class Chat {
+public class Chat extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

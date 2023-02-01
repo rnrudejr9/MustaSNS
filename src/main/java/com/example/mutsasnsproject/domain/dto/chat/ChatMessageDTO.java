@@ -5,6 +5,8 @@ import com.example.mutsasnsproject.domain.entity.chat.ChatRoom;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 public class ChatMessageDTO {
@@ -13,6 +15,7 @@ public class ChatMessageDTO {
     private String writer;
     private String message;
 
+    private LocalDateTime createdAt;
     public Chat toChat(ChatRoom chatRoom){
         return Chat.builder().message(message)
                 .writer(writer)

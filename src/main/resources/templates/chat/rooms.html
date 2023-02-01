@@ -15,21 +15,21 @@
         <div class="container">
             <div>
                 <ul th:each="room : ${list}">
-                    <li><a th:href="@{/chat/room(roomId=${room.roomId})}">[[${room.name}]]</a></li>
+                    <li><div class="alert alert-primary" role="alert"><a th:href="@{/chat/room(roomId=${room.roomId})}" class="alert-link">[[${room.name}]]</a></div></li>
                 </ul>
             </div>
         </div>
         <form th:action="@{/chat/room}" method="post">
             <input type="text" name="name" class="form-control">
-            <button class="btn btn-secondary">개설하기</button>
+            <button class="btn btn-secondary" id="makeRoom">개설하기</button>
         </form>
     </th:block>
 </th:block>
 
 
 <script th:inline="javascript">
-    $(document).ready(function(){
-
+    document.getElementById("makeRoom").addEventListener('click',makeRoom);
+    function makeRoom() {
         var roomName = [[${roomName}]];
 
         if(roomName != null)
@@ -45,8 +45,8 @@
             else
                 $("form").submit();
         });
+    }
 
-    });
 </script>
 
 </body>

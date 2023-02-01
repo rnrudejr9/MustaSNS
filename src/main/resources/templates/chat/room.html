@@ -2,6 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head th:replace="fragments/header :: head('게시판')">
+
 </head>
 
 
@@ -17,9 +18,11 @@
             <div class="col-6">
                 <h1>[[${room.name}]]</h1>
             </div>
-            <div style="overflow:scroll; width:500px; height:150px;">
-                <div id="msgArea" class="col"></div>
-                <div class="col-6">
+            <div style="overflow:scroll; height: 535px; display: flex; flex-direction: column-reverse; overflow-y: auto;  background-color: #9bbbd4">
+                <div id="msgArea" style="background-color: #9bbbd4"></div>
+            </div>
+
+                <div class="col-5">
                     <div class="input-group mb-3">
                         <input type="text" id="msg" class="form-control">
                         <div class="input-group-append">
@@ -27,7 +30,6 @@
                         </div>
                     </div>
                 </div>
-            </div>
             <div class="col-6"></div>
         </div>
 
@@ -58,29 +60,32 @@
 
             //4. subscribe(path, callback)으로 메세지를 받을 수 있음
             stomp.subscribe("/sub/chat/room/" + roomId, function (chat) {
+
                 var content = JSON.parse(chat.body);
                 var writer = content.writer;
+                var dateTime = new Date().toDateString();
                 var str = '';
 
+
                 if(writer === username){
-                    str = "<div class='col-6'>";
-                    str += "<div class='alert alert-secondary'>";
-                    str += "<b>" + writer + " : " + content.message + "</b>";
+                    str = "<div class='col-6 offset-md-6'>";
+                    str += "<div class='alert alert-warning'>";
+                    str += "<b>" + writer + " : " + content.message + " : " + dateTime + "</b>";
                     str += "</div></div>";
                     $("#msgArea").append(str);
                 }
                 else{
                     str = "<div class='col-6'>";
-                    str += "<div class='alert alert-warning'>";
+                    str += "<div class='alert alert-success'>";
                     str += "<b>" + writer + " : " + content.message + "</b>";
                     str += "</div></div>";
                     $("#msgArea").append(str);
                 }
             });
 
+            loadFetcher();
             //3. send(path, header, message)로 메세지를 보낼 수 있음
             stomp.send('/pub/chat/enter', {}, JSON.stringify({roomId: roomId, writer: username}))
-            loadFetcher();
         });
 
         $("#button-send").on("click", function(e){
@@ -90,13 +95,11 @@
             fetcher();
             stomp.send('/pub/chat/message', {}, JSON.stringify({roomId: roomId, message: msg.value, writer: username}));
             msg.value = '';
-
-
         });
     });
 
     async function loadFetcher(){
-        let url = "/api/v1/chat/" + [[${room.name}]];
+        let url = "/api/v1/chat/" + [[${room.roomId}]];
         let response = await fetch(url,{
             method: "GET",
             headers: {
@@ -107,11 +110,19 @@
             let json = await response.json();
             console.log(json);
             for(var i = 0;i<json.result.length;i++){
-                str = "<div class='col-6'>";
+                if(json.result[i].writer === document.getElementById("myName").innerHTML ){
+                str = "<div class='col-6 offset-md-6'>";
                 str += "<div class='alert alert-warning'>";
-                str += "<b>" + json.result[i].writer + " : " + json.result[i].message + "</b>";
+                str += "<b>" + json.result[i].writer + " : " + json.result[i].message + " : " + json.result[i].createdAt + "</b>";
                 str += "</div></div>";
                 $("#msgArea").append(str);
+                }else{
+                    str = "<div class='col-6'>";
+                    str += "<div class='alert alert-success'>";
+                    str += "<b>" + json.result[i].writer + " : " + json.result[i].message + " : " + json.result[i].createdAt + "</b>";
+                    str += "</div></div>";
+                    $("#msgArea").append(str);
+                }
             }
         }else{
             let json = await response.json();
@@ -128,7 +139,7 @@
             body: JSON.stringify({
                 writer: document.getElementById("myName").innerHTML,
                 message: document.getElementById("msg").value,
-                roomId: [[${room.name}]]
+                roomId: [[${room.roomId}]]
             })
         })
         console.log("end");

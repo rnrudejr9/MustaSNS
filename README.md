@@ -5,8 +5,11 @@
 ##### <div align = "center" logoColor="green"> "로그인/회원가입, 게시글 CRUD, 댓글, 좋아요, 알림, 권한 기능이 있는 토이 프로젝트" </div>
 
 
-> * swagger주소 😊 t3(swagger) : http://ec2-13-209-65-19.ap-northeast-2.compute.amazonaws.com:8080/swagger-ui/
-> * project UI 주소 <`진행중`> 😊 t3(view) : http://ec2-13-209-65-19.ap-northeast-2.compute.amazonaws.com:8080/view/v1/home/ 
+> * DEMO 영상 : <a href="https://youtu.be/y4QBBqvU06o">유튜브 영상 주소</a>
+
+
+> * swagger주소 😊 t3(swagger) : <a href="http://ec2-13-209-65-19.ap-northeast-2.compute.amazonaws.com:8080/swagger-ui/">swagger</a>
+> * project UI 주소 <`진행중`> 😊 t3(view) : <a href="http://ec2-13-209-65-19.ap-northeast-2.compute.amazonaws.com:8080/view/v1/home/">DEMO</a>
     
 <br>
 
